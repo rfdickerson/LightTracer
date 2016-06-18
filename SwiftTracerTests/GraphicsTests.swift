@@ -30,8 +30,28 @@ class GraphicsTests: XCTestCase {
         
     }
     
-    func testRayTo() {
-        let _ = Vector3D(x: 0, y: 0, z: -1)
+    func testSphereIntersection() {
+        let v = Vector3D(x: 0, y: 0, z: 0)
+        
+        let direction = Vector3D(x: 0, y: 0, z: -1)
+        let direction2 = Vector3D(x: 1, y: 0, z: 0)
+        let direction3 = Vector3D(x: 0, y: 1, z: 0)
+        
+        let sphereCenter = Vector3D(x: 0, y: 0, z: -5)
+        
+        let sphere = Sphere(center: sphereCenter, radius: 1, material: defaultMaterial)
+        
+        let intersection = sphere.intersect(origin: v, direction: direction)
+        
+        XCTAssertNotNil(intersection)
+        
+        let intersection2 = sphere.intersect(origin: v, direction: direction2)
+        
+        XCTAssertNil(intersection2)
+        
+        let intersection3 = sphere.intersect(origin: v, direction: direction3)
+        
+        XCTAssertNil(intersection3)
         
     }
     

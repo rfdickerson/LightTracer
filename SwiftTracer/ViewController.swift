@@ -30,6 +30,7 @@ struct Camera {
 typealias Color = Vector3D
 
 let backgroundColor = Vector3D(x: 0.235294, y: 0.67451, z: 0.843137)
+let defaultMaterial = Material(emission: Color(x: 0,y: 0,z: 0), ks: 0.0, kd: 0.1, n: 0)
 
 struct Material {
     
@@ -80,6 +81,13 @@ struct Sphere {
 
 extension Sphere : Intersectable {
     
+    /**
+    Ray-sphere intersection test
+ 
+    - parameter origin: ray origin
+    - parameter direction: ray direction
+    - returns: distance from the ray origin to the intersection point
+    */
     func intersect(origin: Vector3D, direction: Vector3D) -> Float? {
         
         let L = origin - center
@@ -151,6 +159,7 @@ func redCanvas(width: Int, height: Int) -> [Pixel] {
  
  - parameter width: width of the pixel surface
  - parameter height: height of the pixel surface
+ - returns: an array of the pixels of the surface
  */
 func screenCoordinates(width: Int, height: Int) -> [Vector3D] {
     
@@ -162,18 +171,24 @@ func screenCoordinates(width: Int, height: Int) -> [Vector3D] {
             let x = -1 + 2*Float(i)/Float(width)
             let y = -1 + 2*Float(j)/Float(height)
             
-            coords.append(Vector3D(x: x, y: y, z: 0))
+            coords.append(Vector3D(x: x, y: y, z: -1))
         }
     }
     
     return coords
 }
 
+/**
+ Converts a color sample to a pixel representation
+ applies gamma correction
+ 
+ - parameter color: Color structure
+ - returns: a 24-bit Pixel
+ */
 func colorToPixel(color: Color) -> Pixel {
     let r = UInt8(pow(color.x, 2.2)*255)
     let g = UInt8(pow(color.y, 2.2)*255)
     let b = UInt8(pow(color.z, 2.2)*255)
-    
     return Pixel(r: r, g: g, b: b)
 }
 
@@ -185,7 +200,6 @@ class ViewController: UIViewController {
     
     var objects = [Sphere]()
     
-    
     var callback: CGDataProviderReleaseDataCallback = {_,_,_ in 
         
     }
@@ -194,10 +208,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let defaultMaterial = Material(emission: Color(x: 0,y: 0,z: 0), ks: 0.0, kd: 0.1, n: 0)
+        
         // let lightMaterial = Material(emission: Color(x: 0.6, y: 0.6, z: 0.6), ks: 0, kd: 0, n: 0)
         
-        objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: -5), radius: 0.01, material: defaultMaterial))
+        objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: 5), radius: 0.01, material: defaultMaterial))
         
         // let lightSphere = Sphere(center: Vector3D(x: 2, y: 1, z: 0), radius: 0.5, material: lightMaterial)
         // objects.append(lightSphere)
@@ -216,18 +230,21 @@ class ViewController: UIViewController {
         var colors = [Color]()
         // compute over the surface the pixel Color
         
-//        let cameraToWorld = Matrix44(x00: 0.945519,  x01: 0, x02: -0.325569, x03: 0,
-//                                     x10: -0.179534, x11: 0.834209, x12: -0.521403, x13: 0,
-//                                     x20: 0.271593,  x21: 0.551447, x22: 0.78876, x23: 0,
-//                                     x30: 4.208271, x31: 8.374532, x32: 17.932925, x33: 1);
+        let cameraToWorld = Matrix44(x00: 0.945519,  x01: 0, x02: -0.325569, x03: 0,
+                                     x10: -0.179534, x11: 0.834209, x12: -0.521403, x13: 0,
+                                     x20: 0.271593,  x21: 0.551447, x22: 0.78876, x23: 0,
+                                     x30: 4.208271, x31: 8.374532, x32: 17.932925, x33: 1);
     
         
         let screenCoords = screenCoordinates(width: width, height: height)
-        let origin = Vector3D(x: 0,y: 0, z: -1)
+        var origin = Vector3D(x: 0,y: 0, z: 0)
+        origin = cameraToWorld*origin
         
         for coord in screenCoords {
             
-            let direction = norm(coord - origin)
+            var direction = norm(coord - origin)
+            direction = cameraToWorld*direction
+            direction = norm(direction)
             let color = castRay(origin: origin, direction: direction, depth: 0, objects: objects)
             colors.append(color)
         }

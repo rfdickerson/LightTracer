@@ -42,6 +42,19 @@ class MathUtilsTests: XCTestCase {
         
     }
     
+    func testDotProduct() {
+        
+        let a = Vector3D(x: 1, y: 2, z: 3)
+        let b = Vector3D(x: 4, y: -5, z: 6)
+        
+        // 4 -10 + 18
+        
+        let product = dot(a,b)
+        
+        XCTAssertEqual(product, 12)
+        
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         let m1 = createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))

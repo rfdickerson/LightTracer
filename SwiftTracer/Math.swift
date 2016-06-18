@@ -99,8 +99,14 @@ func * (left: Matrix44, right: Vector3D) -> Vector3D {
 }
 
 
+/**
+ Scalar product of two vectors
+ - parameter left: Vector3D
+ - parameter right: Vector3D
+ - returns: the scalar product of the two vectors
+ */
 func dot(_ left: Vector3D, _ right: Vector3D) -> Float {
-    return left.x * right.x + left.y + right.y + left.z + right.z
+    return (left.x * right.x) + (left.y * right.y) + (left.z * right.z)
 }
 
 func cross(_ left: Vector3D, _ right: Vector3D) -> Vector3D {
@@ -162,10 +168,12 @@ func clamp(low: Float, high: Float, value: Float) -> Float {
 func solveQuadratic(a: Float, b: Float, c: Float) -> (Float, Float)? {
     
     let discriminant = b*b - 4*a*c
+    
     if discriminant < 0 {
         return nil
     } else {
-        let q = b > 0 ? -0.5 * b + sqrt(discriminant) :
+        let q = b > 0 ?
+            -0.5 * b + sqrt(discriminant) :
             -0.5 * b - sqrt(discriminant)
         
         let x0 = q / a
