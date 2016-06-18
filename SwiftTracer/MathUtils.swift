@@ -163,6 +163,10 @@ func clamp(low: Float, high: Float, value: Float) -> Float {
 /**
  Compute the roots of a quadratic equation
  
+ - parameter a: squared term 
+ - parameter b: linear term 
+ - parameter c: constant term 
+ 
  - returns: the roots of the solution
  */
 func solveQuadratic(a: Float, b: Float, c: Float) -> (Float, Float)? {
