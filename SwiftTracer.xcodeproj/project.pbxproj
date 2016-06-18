@@ -12,7 +12,21 @@
 		E104B2C11D0DE99C0006480E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E104B2BF1D0DE99C0006480E /* Main.storyboard */; };
 		E104B2C31D0DE99C0006480E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E104B2C21D0DE99C0006480E /* Assets.xcassets */; };
 		E104B2C61D0DE99C0006480E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E104B2C41D0DE99C0006480E /* LaunchScreen.storyboard */; };
+		E1A4BE351D137B0600E78F39 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A4BE341D137B0600E78F39 /* Math.swift */; };
+		E1A4BE3D1D146AE000E78F39 /* SwiftTracerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A4BE3C1D146AE000E78F39 /* SwiftTracerTests.swift */; };
+		E1A4BE451D146B0F00E78F39 /* MathUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A4BE441D146B0F00E78F39 /* MathUtilsTests.swift */; };
+		E1A4BE471D148DD600E78F39 /* GraphicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A4BE461D148DD600E78F39 /* GraphicsTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E1A4BE3F1D146AE000E78F39 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E104B2B01D0DE99C0006480E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E104B2B71D0DE99C0006480E;
+			remoteInfo = SwiftTracer;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		E104B2B81D0DE99C0006480E /* SwiftTracer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftTracer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -22,10 +36,23 @@
 		E104B2C21D0DE99C0006480E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E104B2C51D0DE99C0006480E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E104B2C71D0DE99C0006480E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E1A4BE341D137B0600E78F39 /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
+		E1A4BE3A1D146AE000E78F39 /* SwiftTracerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftTracerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1A4BE3C1D146AE000E78F39 /* SwiftTracerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftTracerTests.swift; sourceTree = "<group>"; };
+		E1A4BE3E1D146AE000E78F39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E1A4BE441D146B0F00E78F39 /* MathUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MathUtilsTests.swift; sourceTree = "<group>"; };
+		E1A4BE461D148DD600E78F39 /* GraphicsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphicsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E104B2B51D0DE99C0006480E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1A4BE371D146AE000E78F39 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -39,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				E104B2BA1D0DE99C0006480E /* SwiftTracer */,
+				E1A4BE3B1D146AE000E78F39 /* SwiftTracerTests */,
 				E104B2B91D0DE99C0006480E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -47,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				E104B2B81D0DE99C0006480E /* SwiftTracer.app */,
+				E1A4BE3A1D146AE000E78F39 /* SwiftTracerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -60,8 +89,20 @@
 				E104B2C21D0DE99C0006480E /* Assets.xcassets */,
 				E104B2C41D0DE99C0006480E /* LaunchScreen.storyboard */,
 				E104B2C71D0DE99C0006480E /* Info.plist */,
+				E1A4BE341D137B0600E78F39 /* Math.swift */,
 			);
 			path = SwiftTracer;
+			sourceTree = "<group>";
+		};
+		E1A4BE3B1D146AE000E78F39 /* SwiftTracerTests */ = {
+			isa = PBXGroup;
+			children = (
+				E1A4BE461D148DD600E78F39 /* GraphicsTests.swift */,
+				E1A4BE441D146B0F00E78F39 /* MathUtilsTests.swift */,
+				E1A4BE3C1D146AE000E78F39 /* SwiftTracerTests.swift */,
+				E1A4BE3E1D146AE000E78F39 /* Info.plist */,
+			);
+			path = SwiftTracerTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -84,18 +125,45 @@
 			productReference = E104B2B81D0DE99C0006480E /* SwiftTracer.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E1A4BE391D146AE000E78F39 /* SwiftTracerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1A4BE411D146AE000E78F39 /* Build configuration list for PBXNativeTarget "SwiftTracerTests" */;
+			buildPhases = (
+				E1A4BE361D146AE000E78F39 /* Sources */,
+				E1A4BE371D146AE000E78F39 /* Frameworks */,
+				E1A4BE381D146AE000E78F39 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E1A4BE401D146AE000E78F39 /* PBXTargetDependency */,
+			);
+			name = SwiftTracerTests;
+			productName = SwiftTracerTests;
+			productReference = E1A4BE3A1D146AE000E78F39 /* SwiftTracerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		E104B2B01D0DE99C0006480E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastSwiftUpdateCheck = 0800;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Swift@IBM Engineering";
 				TargetAttributes = {
 					E104B2B71D0DE99C0006480E = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = PP64RT7P8Z;
+						LastSwiftMigration = 0800;
+					};
+					E1A4BE391D146AE000E78F39 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = PP64RT7P8Z;
+						DevelopmentTeamName = "International Business Machines Corporation";
+						ProvisioningStyle = Automatic;
+						TestTargetID = E104B2B71D0DE99C0006480E;
 					};
 				};
 			};
@@ -113,6 +181,7 @@
 			projectRoot = "";
 			targets = (
 				E104B2B71D0DE99C0006480E /* SwiftTracer */,
+				E1A4BE391D146AE000E78F39 /* SwiftTracerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -128,6 +197,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E1A4BE381D146AE000E78F39 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -137,10 +213,29 @@
 			files = (
 				E104B2BE1D0DE99C0006480E /* ViewController.swift in Sources */,
 				E104B2BC1D0DE99C0006480E /* AppDelegate.swift in Sources */,
+				E1A4BE351D137B0600E78F39 /* Math.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E1A4BE361D146AE000E78F39 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1A4BE3D1D146AE000E78F39 /* SwiftTracerTests.swift in Sources */,
+				E1A4BE451D146B0F00E78F39 /* MathUtilsTests.swift in Sources */,
+				E1A4BE471D148DD600E78F39 /* GraphicsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E1A4BE401D146AE000E78F39 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E104B2B71D0DE99C0006480E /* SwiftTracer */;
+			targetProxy = E1A4BE3F1D146AE000E78F39 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		E104B2BF1D0DE99C0006480E /* Main.storyboard */ = {
@@ -251,10 +346,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = SwiftTracer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.rfdickerson.SwiftTracer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -262,10 +361,47 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = SwiftTracer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.rfdickerson.SwiftTracer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		E1A4BE421D146AE000E78F39 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				INFOPLIST_FILE = SwiftTracerTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.rfdickerson.SwiftTracerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftTracer.app/SwiftTracer";
+			};
+			name = Debug;
+		};
+		E1A4BE431D146AE000E78F39 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				INFOPLIST_FILE = SwiftTracerTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.rfdickerson.SwiftTracerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftTracer.app/SwiftTracer";
 			};
 			name = Release;
 		};
@@ -286,6 +422,15 @@
 			buildConfigurations = (
 				E104B2CB1D0DE99C0006480E /* Debug */,
 				E104B2CC1D0DE99C0006480E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1A4BE411D146AE000E78F39 /* Build configuration list for PBXNativeTarget "SwiftTracerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1A4BE421D146AE000E78F39 /* Debug */,
+				E1A4BE431D146AE000E78F39 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
