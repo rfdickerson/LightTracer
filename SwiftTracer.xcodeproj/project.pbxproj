@@ -155,7 +155,8 @@
 				TargetAttributes = {
 					E104B2B71D0DE99C0006480E = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = PP64RT7P8Z;
+						DevelopmentTeam = 57U96AW229;
+						DevelopmentTeamName = "Robert Dickerson";
 						LastSwiftMigration = 0800;
 					};
 					E1A4BE391D146AE000E78F39 = {

@@ -31,7 +31,7 @@ class GraphicsTests: XCTestCase {
     }
     
     func testRayTo() {
-        let v = Vector3D(x: 0, y: 0, z: -1)
+        let _ = Vector3D(x: 0, y: 0, z: -1)
         
     }
     

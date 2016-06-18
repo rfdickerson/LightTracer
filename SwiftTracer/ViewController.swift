@@ -49,17 +49,15 @@ struct Material {
 }
 
 
-
-// 0 is now -1 and 480 is now +1
-func screenSpaceToWorld(vector: Vector3D) -> Vector3D {
-    
-    let width: Float = 480
-    let height: Float = 200
-    let newX = -1 + 2 * vector.x/width
-    let newY = -1 + 2 * vector.y/height
-    return Vector3D(x: newX, y: newY, z: 0)
-    
-}
+//func screenSpaceToWorld(vector: Vector3D) -> Vector3D {
+//    
+//    let width: Float = 480
+//    let height: Float = 200
+//    let newX = -1 + 2 * vector.x/width
+//    let newY = -1 + 2 * vector.y/height
+//    return Vector3D(x: newX, y: newY, z: 0)
+//    
+//}
 
 protocol Intersectable {
     
@@ -69,7 +67,15 @@ protocol Intersectable {
 struct Sphere {
     let center: Vector3D
     let radius: Float
+    let radiusSquared: Float
     let material: Material
+    
+    init(center: Vector3D, radius: Float, material: Material) {
+        self.radiusSquared = radius*radius
+        self.center = center
+        self.radius = radius
+        self.material = material
+    }
 }
 
 extension Sphere : Intersectable {
@@ -79,7 +85,7 @@ extension Sphere : Intersectable {
         let L = origin - center
         let a = dot(direction, direction)
         let b = 2*dot(direction, L)
-        let c = dot(L, L) - radius
+        let c = dot(L, L) - radiusSquared
         
         guard let roots = solveQuadratic(a: a, b: b, c: c) else {
             return nil
@@ -108,7 +114,7 @@ extension Sphere : Intersectable {
 
 func castRay(origin: Vector3D, direction: Vector3D, depth: Int, objects: [Sphere]) -> Color {
     
-    var illuminance = Color(x: 1,y: 0, z: 0)
+    let illuminance = Color(x: 1.0,y: 0.5, z: 0)
     
     for object in objects {
         
@@ -189,12 +195,12 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         let defaultMaterial = Material(emission: Color(x: 0,y: 0,z: 0), ks: 0.0, kd: 0.1, n: 0)
-        let lightMaterial = Material(emission: Color(x: 0.6, y: 0.6, z: 0.6), ks: 0, kd: 0, n: 0)
+        // let lightMaterial = Material(emission: Color(x: 0.6, y: 0.6, z: 0.6), ks: 0, kd: 0, n: 0)
         
-        objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: 5), radius: 0.000001, material: defaultMaterial))
+        objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: -5), radius: 0.01, material: defaultMaterial))
         
-        let lightSphere = Sphere(center: Vector3D(x: 2, y: 1, z: 0), radius: 0.5, material: lightMaterial)
-        objects.append(lightSphere)
+        // let lightSphere = Sphere(center: Vector3D(x: 2, y: 1, z: 0), radius: 0.5, material: lightMaterial)
+        // objects.append(lightSphere)
         
         let width = 128
         let height = 128
@@ -209,6 +215,12 @@ class ViewController: UIViewController {
         // let pixels = redCanvas(width: width, height: height)
         var colors = [Color]()
         // compute over the surface the pixel Color
+        
+//        let cameraToWorld = Matrix44(x00: 0.945519,  x01: 0, x02: -0.325569, x03: 0,
+//                                     x10: -0.179534, x11: 0.834209, x12: -0.521403, x13: 0,
+//                                     x20: 0.271593,  x21: 0.551447, x22: 0.78876, x23: 0,
+//                                     x30: 4.208271, x31: 8.374532, x32: 17.932925, x33: 1);
+    
         
         let screenCoords = screenCoordinates(width: width, height: height)
         let origin = Vector3D(x: 0,y: 0, z: -1)
