@@ -12,7 +12,8 @@
 		E104B2C11D0DE99C0006480E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E104B2BF1D0DE99C0006480E /* Main.storyboard */; };
 		E104B2C31D0DE99C0006480E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E104B2C21D0DE99C0006480E /* Assets.xcassets */; };
 		E104B2C61D0DE99C0006480E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E104B2C41D0DE99C0006480E /* LaunchScreen.storyboard */; };
-		E1A4BE351D137B0600E78F39 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A4BE341D137B0600E78F39 /* Math.swift */; };
+		E10EA7E71D15A90700B23332 /* PathTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10EA7E61D15A90700B23332 /* PathTracer.swift */; };
+		E1A4BE351D137B0600E78F39 /* MathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A4BE341D137B0600E78F39 /* MathUtils.swift */; };
 		E1A4BE3D1D146AE000E78F39 /* SwiftTracerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A4BE3C1D146AE000E78F39 /* SwiftTracerTests.swift */; };
 		E1A4BE451D146B0F00E78F39 /* MathUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A4BE441D146B0F00E78F39 /* MathUtilsTests.swift */; };
 		E1A4BE471D148DD600E78F39 /* GraphicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A4BE461D148DD600E78F39 /* GraphicsTests.swift */; };
@@ -36,7 +37,8 @@
 		E104B2C21D0DE99C0006480E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E104B2C51D0DE99C0006480E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E104B2C71D0DE99C0006480E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E1A4BE341D137B0600E78F39 /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
+		E10EA7E61D15A90700B23332 /* PathTracer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathTracer.swift; sourceTree = "<group>"; };
+		E1A4BE341D137B0600E78F39 /* MathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MathUtils.swift; sourceTree = "<group>"; };
 		E1A4BE3A1D146AE000E78F39 /* SwiftTracerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftTracerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1A4BE3C1D146AE000E78F39 /* SwiftTracerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftTracerTests.swift; sourceTree = "<group>"; };
 		E1A4BE3E1D146AE000E78F39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -89,7 +91,8 @@
 				E104B2C21D0DE99C0006480E /* Assets.xcassets */,
 				E104B2C41D0DE99C0006480E /* LaunchScreen.storyboard */,
 				E104B2C71D0DE99C0006480E /* Info.plist */,
-				E1A4BE341D137B0600E78F39 /* Math.swift */,
+				E1A4BE341D137B0600E78F39 /* MathUtils.swift */,
+				E10EA7E61D15A90700B23332 /* PathTracer.swift */,
 			);
 			path = SwiftTracer;
 			sourceTree = "<group>";
@@ -213,8 +216,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E104B2BE1D0DE99C0006480E /* ViewController.swift in Sources */,
+				E10EA7E71D15A90700B23332 /* PathTracer.swift in Sources */,
 				E104B2BC1D0DE99C0006480E /* AppDelegate.swift in Sources */,
-				E1A4BE351D137B0600E78F39 /* Math.swift in Sources */,
+				E1A4BE351D137B0600E78F39 /* MathUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
