@@ -55,6 +55,16 @@ class MathUtilsTests: XCTestCase {
         
     }
     
+    func testNormalize() {
+        
+        let a = Vector3D(x: 3, y: 4, z: 5)
+        
+        let na = norm(a)
+        
+        XCTAssertEqual(na.x*na.x+na.y*na.y+na.z*na.z, 1)
+        
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         let m1 = createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))

@@ -82,6 +82,10 @@ func != (left: Vector3D, right: Vector3D) -> Bool {
     return !(left == right)
 }
 
+func * (left: Float, right: Vector3D) -> Vector3D {
+    return Vector3D(x: left * right.x, y: left * right.y, z: left * right.z)
+}
+
 func * (left: Float, right: Matrix44) -> Matrix44 {
     return Matrix44(x00: left*right.x00, x01: left*right.x01, x02: left*right.x02, x03: left*right.x03,
                     x10: left*right.x10, x11: left*right.x11, x12: left*right.x12, x13: left*right.x13,

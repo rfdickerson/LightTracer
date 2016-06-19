@@ -28,13 +28,22 @@ class ViewController: UIViewController {
         
         let lightMaterial = Material(emission: Color(x: 0.6, y: 0.6, z: 0.6), ks: 0, kd: 0, n: 0)
         
+//        for i in 1...5 {
+//            objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: Float(-5*i)), radius: 0.3, material: defaultMaterial))
+//        }
+        
         objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: -5), radius: 0.3, material: defaultMaterial))
+        
+        // left wall
+        // objects.append(Sphere(center: Vector3D(x: -5000, y: 0, z: -5), radius: 5000, material: defaultMaterial))
+        
+        // objects.append(Sphere(center: Vector3D(x: 5000, y: 0, z: -5), radius: 5000, material: defaultMaterial))
         
         let lightSphere = Sphere(center: Vector3D(x: 2, y: 1, z: 0), radius: 0.5, material: lightMaterial)
         objects.append(lightSphere)
         
-        let width = 320
-        let height = 200
+        let width = 200
+        let height = 400
         let bytesPerPixel = 3
         
         let colorSpace = CGColorSpaceCreateDeviceRGB()
@@ -57,8 +66,9 @@ class ViewController: UIViewController {
         
         for coord in screenCoords {
             
-            var direction = norm(coord - origin)
-            direction = cameraToWorld*direction
+            let newCoord = cameraToWorld*coord
+            var direction = norm(newCoord - origin)
+            //direction = cameraToWorld*direction
             direction = norm(direction)
             let color = castRay(origin: origin, direction: direction, depth: 0, objects: objects)
             colors.append(color)

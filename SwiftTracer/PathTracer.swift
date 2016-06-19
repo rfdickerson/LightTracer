@@ -31,7 +31,12 @@ struct Camera {
 typealias Color = Vector3D
 
 let backgroundColor = Vector3D(x: 0.235294, y: 0.67451, z: 0.843137)
-let defaultMaterial = Material(emission: Color(x: 0,y: 0,z: 0), ks: 0.0, kd: 0.1, n: 0)
+let defaultMaterial = Material(emission: Color(x: 0.8 , y: 0, z: 0.4), ks: 0.0, kd: 0.1, n: 0)
+
+// map values [-1 : 1] to [0 : 1 ]
+func normalColor(_ v: Vector3D)->Vector3D {
+    return Vector3D(x: (v.x+1)/2, y: (v.y+1)/2, z: (v.z+1)/2)
+}
 
 struct Material {
     
@@ -123,13 +128,25 @@ extension Sphere : Intersectable {
 
 func castRay(origin: Vector3D, direction: Vector3D, depth: Int, objects: [Sphere]) -> Color {
     
-    let illuminance = Color(x: 1.0,y: 0.5, z: 0)
+    var illuminance = Color(x: 1.0, y: 0.5, z: 0)
     
     for object in objects {
         
-        if object.intersect(origin: origin, direction: direction) != nil {
+        if let depth = object.intersect(origin: origin, direction: direction) {
             
-            // illuminance = object.material.emission
+            illuminance = object.material.emission
+            // illuminance = (collision*0.5) * object.material.emission
+            //illuminance = Vector3D(x: collision/6, y: 0, z: 0)
+            
+            // compute normal at intersection point
+            // trace another ray from intersection point to a random selection of 
+            // points in a hemisphere
+            
+            let intersection = origin + depth * direction
+            let normal = norm(intersection - object.center)
+            
+            
+            illuminance = normalColor(normal)
             
             return illuminance
             
