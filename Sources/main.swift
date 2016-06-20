@@ -9,14 +9,24 @@ let lightMaterial = Material(emission: Color(x: 0.8, y: 0.2, z: 0.2),
                              diffuseColor: Color(x: 0.0, y: 0.0, z: 0.0),
                              ks: 0, kd: 0, n: 0)
 
+let redMaterial = Material(emission: Color(x: 0.0 , y: 0, z: 0.0),
+                           diffuseColor: Color(x: 1.0, y: 0.0, z: 0.0),
+                           ks: 0.0, kd: 0.7, n: 0)
+
+let greenMaterial = Material(emission: Color(x: 0.0 , y: 0.0, z: 0.0),
+                             diffuseColor: Color(x: 0.0, y: 1.0, z: 0.0),
+                             ks: 0.0, kd: 0.3, n: 0)
+
 //        for i in 1...5 {
 //            objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: Float(-5*i)), radius: 0.3, material: defaultMaterial))
 //        }
 
-objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: -5), radius: 0.3, material: redMaterial))
+objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: -5), radius: 0.3, material: greenMaterial))
+objects.append(Sphere(center: Vector3D(x: 0, y: 1, z: -5), radius: 0.3, material: greenMaterial))
+objects.append(Sphere(center: Vector3D(x: 0, y: 2, z: -5), radius: 0.3, material: greenMaterial))
 
 // left wall
-objects.append(Sphere(center: Vector3D(x: -5000, y: 0, z: -5), radius: 5000, material: greenMaterial))
+objects.append(Sphere(center: Vector3D(x: -7000, y: 0, z: -5), radius: 5000, material: greenMaterial))
 
 // objects.append(Sphere(center: Vector3D(x: 5000, y: 0, z: -5), radius: 5000, material: defaultMaterial))
 
@@ -24,7 +34,7 @@ let lightSphere = Sphere(center: Vector3D(x: 0, y: 0, z: 2), radius: 1.0, materi
 objects.append(lightSphere)
 
 let width = 200
-let height = 200
+let height = 120
 let bytesPerPixel = 3
 
 let bitmapBytesPerRow = (width) * 3
@@ -53,6 +63,8 @@ for coord in screenCoords {
     let color = castRay(origin: origin, direction: direction, bounceDepth: 0, objects: objects)
     colors.append(color)
 }
+
+//let pixels = redCanvas(width: width, height: height)
 
 let pixels = colors.map(colorToPixel)
 

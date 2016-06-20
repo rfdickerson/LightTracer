@@ -32,14 +32,6 @@ typealias Color = Vector3D
 
 let backgroundColor = Vector3D(x: 0.235294, y: 0.67451, z: 0.843137)
 
-let redMaterial = Material(emission: Color(x: 0.0 , y: 0, z: 0.0),
-                           diffuseColor: Color(x: 1.0, y: 0.0, z: 0.0),
-                           ks: 0.0, kd: 0.7, n: 0)
-
-let greenMaterial = Material(emission: Color(x: 0.0 , y: 0.0, z: 0.0),
-                             diffuseColor: Color(x: 0.0, y: 1.0, z: 0.0),
-                             ks: 0.0, kd: 0.3, n: 0)
-
 // map values [-1 : 1] to [0 : 1 ]
 func normalColor(_ v: Vector3D)->Vector3D {
     return Vector3D(x: (v.x+1)/2, y: (v.y+1)/2, z: (v.z+1)/2)
@@ -141,46 +133,61 @@ func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, objects: [
     
     if bounceDepth > 1 { return backgroundColor }
     
+    // find the closest object
+    
+    var shortestDepth: Float = 50000
+    var closestObject: Sphere? = nil
+    
     for object in objects {
         
         if let depth = object.intersect(origin: origin, direction: direction) {
             
-            // illuminance = object.material.emission
-            // illuminance = (collision*0.5) * object.material.emission
-            //illuminance = Vector3D(x: collision/6, y: 0, z: 0)
-            
-            // compute normal at intersection point
-            // trace another ray from intersection point to a random selection of 
-            // points in a hemisphere
-            
-            let intersection = origin + depth * direction
-            let normal = norm(intersection - object.center)
-            
-            for _ in 0...20 {
-                
-                let rn = 2*Float(M_PI)*Float(arc4random())/Float(UINT32_MAX)
-                // let rphi = Float(M_PI)*Float(arc4random())/Float(UINT32_MAX)
-                
-                
-                let randomVector = createTransform(withRotation: rn) * Vector3D(x: 0, y: 1, z: 0)
-                //let randomVector = Vector3D(x: cos(rn), y: sin(rphi), z: 0)
-                let r = norm(normal + randomVector)
-                
-                
-                let bounceColor = castRay(origin: intersection, direction: r,
-                                          bounceDepth: bounceDepth + 1, objects: objects)
-                
-                illuminance = illuminance + dot(normal, r) * object.material.diffuseColor * bounceColor
-                
+            if depth < shortestDepth {
+                shortestDepth = depth
+                closestObject = object
             }
-            
-            
-            // illuminance = normalColor(normal)
-            
-            return object.material.emission + 0.15 * (1/20) * illuminance
-            
+       
         }
         
+    }
+    
+    // compute the illumination
+    
+    if let closestObject = closestObject {
+        
+        let intersection = origin + shortestDepth * direction
+        let normal = norm(intersection - closestObject.center)
+        
+            return closestObject.material.diffuseColor
+        
+//        for _ in 0...20 {
+//            
+//            // compute normal at intersection point
+//            // trace another ray from intersection point to a random selection of
+//            // points in a hemisphere
+//
+//            
+//            let rn = 2*Float(M_PI)*Float(arc4random())/Float(UINT32_MAX)
+//            // let rphi = Float(M_PI)*Float(arc4random())/Float(UINT32_MAX)
+//            
+//            
+//            let randomVector = createTransform(withRotation: rn) * Vector3D(x: 0, y: 1, z: 0)
+//            //let randomVector = Vector3D(x: cos(rn), y: sin(rphi), z: 0)
+//            let r = norm(normal + randomVector)
+//            
+//            
+//            let bounceColor = castRay(origin: intersection, direction: r,
+//                                      bounceDepth: bounceDepth + 1, objects: objects)
+//            
+//            illuminance = illuminance + dot(normal, r) * bounceColor
+//            
+//        }
+        
+        
+        // illuminance = normalColor(normal)
+        
+//        return closestObject.material.emission + (1/20) * illuminance
+
     }
     
     return backgroundColor
@@ -189,7 +196,7 @@ func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, objects: [
 
 func ppmHeader(width: Int, height: Int, maxValue: Int = 255) -> [CChar]? {
     
-    return "P6 \(width) \(height) \(maxValue)\n".cString(using: NSASCIIStringEncoding)
+    return "P6 \(width) \(height) \(maxValue) \r\n".cString(using: NSASCIIStringEncoding)
     
 }
 
@@ -243,4 +250,35 @@ func colorToPixel(color: Color) -> Pixel {
     let g = clamp(low: 0, high: 1, value: pow(color.y, 2.2))
     let b = clamp(low: 0, high: 1, value: pow(color.z, 2.2))
     return Pixel(r: UInt8(r*255), g: UInt8(g*255), b: UInt8(b*255))
+}
+
+
+func perspectiveMatrix(near: Float, far: Float, fov: Float, aspect: Float) -> Matrix44 {
+    
+    let right = near * atan(deg2rad(degrees: fov) * 0.5)
+    let top = right/aspect
+    
+    return Matrix44(x00: near/right, x01: 0, x02: 0, x03: 0,
+                    x10: 0, x11: near/top, x12: 0, x13: 0,
+                    x20: 0, x21: 0, x22: -(far + near) / (far - near), x23: -1,
+                    x30: 0, x31: 0, x32: -(2 * far * near) / (far - near), x33: 0)
+    
+}
+
+func lookAtMatrix(eye: Vector3D, lookAt: Vector3D, up: Vector3D, rightHanded: Bool = true) {
+
+    let forward = norm(rightHanded ? eye-lookAt : lookAt - eye)
+    var upNormalized = norm(up)
+    let side = cross(up, forward)
+    upNormalized = norm(cross(forward, side))
+    
+    let viewMatrix = Matrix44(x00: side.x, x01: upNormalized.x, x02: forward.x, x03: 0,
+                    x10: side.y, x11: upNormalized.y, x12: forward.y, x13: 0,
+                    x20: side.z, x21: upNormalized.z, x22: forward.z, x23: 0,
+                    x30: 0, x31: 0, x32: 0, x33: 1)
+
+    let translationMatrix = createTransform(withTranslation: Vector3D(x: -eye.x, y: -eye.y, z: -eye.z))
+    
+    return viewMatrix * translationMatrix
+    
 }
