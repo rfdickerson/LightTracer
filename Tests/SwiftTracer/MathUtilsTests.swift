@@ -79,6 +79,24 @@ class MathUtilsTests: XCTestCase {
         
     }
     
+    func testCrossProduct() {
+        
+        let a1 = Vector3D(x: 3, y: -3, z: 1)
+        let b1 = Vector3D(x: 4, y: 9, z: 2)
+        
+        let c1 = cross(a1, b1)
+        
+        let correct1 = Vector3D(x: -15, y: -2, z: 39)
+        XCTAssertEqual(c1, correct1)
+        
+        let a2 = Vector3D(x: 3, y: -3, z: 1)
+        let b2 = Vector3D(x: 4, y: 9, z: 2)
+        
+        let c2 = cross(a2, b2)
+        let correct2 = Vector3D(x: -15, y: -2, z: 39)
+        XCTAssertEqual(c2, correct2)
+    }
+    
     func testNormalize() {
         
         let a = Vector3D(x: 3, y: 4, z: 5)

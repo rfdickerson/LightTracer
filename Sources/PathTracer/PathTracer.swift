@@ -140,7 +140,7 @@ extension Sphere : Intersectable {
 
 public func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, objects: [Sphere]) -> Color {
     
-    var illuminance = Color(x: 0.0, y: 0.0, z: 0.0)
+    // var illuminance = Color(x: 0.0, y: 0.0, z: 0.0)
     
     if bounceDepth > 1 { return backgroundColor }
     
@@ -169,7 +169,7 @@ public func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, obj
         let intersection = origin + shortestDepth * direction
         let normal = norm(intersection - closestObject.center)
         
-            return closestObject.material.diffuseColor
+        return closestObject.material.diffuseColor
         
 //        for _ in 0...20 {
 //            
@@ -271,25 +271,25 @@ public func perspectiveMatrix(near: Float, far: Float, fov: Float, aspect: Float
     
     return Matrix44(x00: near/right, x01: 0, x02: 0, x03: 0,
                     x10: 0, x11: near/top, x12: 0, x13: 0,
-                    x20: 0, x21: 0, x22: -(far + near) / (far - near), x23: -1,
-                    x30: 0, x31: 0, x32: -(2 * far * near) / (far - near), x33: 0)
+                    x20: 0, x21: 0, x22: -(far + near) / (far - near), x23: -(2 * far * near) / (far - near),
+                    x30: 0, x31: 0, x32: -1, x33: 0)
     
 }
 
-public func lookAtMatrix(eye: Vector3D, lookAt: Vector3D, up: Vector3D, rightHanded: Bool = true) -> Matrix44 {
+public func lookAtMatrix(eye: Vector3D, target: Vector3D, up: Vector3D) -> Matrix44 {
 
-    let forward = norm(rightHanded ? eye-lookAt : lookAt - eye)
-    var upNormalized = norm(up)
-    let side = cross(up, forward)
-    upNormalized = norm(cross(forward, side))
-    
-    let viewMatrix = Matrix44(x00: side.x, x01: upNormalized.x, x02: forward.x, x03: 0,
-                    x10: side.y, x11: upNormalized.y, x12: forward.y, x13: 0,
-                    x20: side.z, x21: upNormalized.z, x22: forward.z, x23: 0,
-                    x30: 0, x31: 0, x32: 0, x33: 1)
+    let zaxis = norm(eye - target)
+    let xaxis = norm(cross( up, zaxis))
+    let yaxis = norm(cross(zaxis, xaxis))
 
-    let translationMatrix = createTransform(withTranslation: Vector3D(x: -eye.x, y: -eye.y, z: -eye.z))
+    let translation = createTransform(withTranslation: Vector3D(x: -eye.x, y: -eye.y, z: -eye.z))
     
-    return viewMatrix * translationMatrix
+    let viewMatrix = Matrix44(x00: xaxis.x, x01: xaxis.y, x02: xaxis.z, x03: 0,
+                              x10: yaxis.x, x11: yaxis.y, x12: yaxis.z, x13: 0,
+                              x20: zaxis.x, x21: zaxis.y, x22: zaxis.z, x23: 0,
+                              x30: 0, x31: 0, x32: 0, x33: 1)
+    
+    return transpose(viewMatrix) * translation
+
     
 }

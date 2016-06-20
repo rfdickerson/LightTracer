@@ -21,7 +21,7 @@ public struct Vector3D {
     
 }
 
-
+extension Vector3D: Equatable { }
 
 public func mix(a: Float, b: Float, mixAmount: Float) -> Float {
     return a * (1-mixAmount) + b*mixAmount
@@ -65,7 +65,7 @@ public func dot(_ left: Vector3D, _ right: Vector3D) -> Float {
 
 public func cross(_ left: Vector3D, _ right: Vector3D) -> Vector3D {
     return Vector3D(x: left.y * right.z - left.z * right.y,
-                    y: left.x * right.z - left.z * right.x,
+                    y: left.z * right.x - left.x * right.z,
                     z: left.x * right.y - left.y * right.x
     )
 }

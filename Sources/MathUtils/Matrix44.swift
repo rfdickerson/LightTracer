@@ -159,3 +159,12 @@ public func invert(_ matrix: Matrix44) -> Matrix44? {
     return Matrix44.identity()
     
 }
+
+public func transpose(_ m: Matrix44) -> Matrix44 {
+    
+    return Matrix44(x00: m.x00, x01: m.x10, x02: m.x20, x03: m.x30,
+                    x10: m.x01, x11: m.x11, x12: m.x21, x13: m.x31,
+                    x20: m.x02, x21: m.x12, x22: m.x22, x23: m.x32,
+                    x30: m.x03, x31: m.x13, x32: m.x23, x33: m.x33)
+    
+}
