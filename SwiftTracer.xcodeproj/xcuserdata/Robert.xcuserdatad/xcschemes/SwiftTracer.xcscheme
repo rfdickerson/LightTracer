@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E104B2B71D0DE99C0006480E"
-               BuildableName = "SwiftTracer.app"
+               BlueprintIdentifier = "______Target_SwiftTracer"
+               BuildableName = "SwiftTracer"
                BlueprintName = "SwiftTracer"
                ReferencedContainer = "container:SwiftTracer.xcodeproj">
             </BuildableReference>
@@ -38,12 +38,22 @@
                ReferencedContainer = "container:SwiftTracer.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_SwiftTracerTestSuite"
+               BuildableName = "SwiftTracerTestSuite.xctest"
+               BlueprintName = "SwiftTracerTestSuite"
+               ReferencedContainer = "container:SwiftTracer.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E104B2B71D0DE99C0006480E"
-            BuildableName = "SwiftTracer.app"
+            BlueprintIdentifier = "______Target_SwiftTracer"
+            BuildableName = "SwiftTracer"
             BlueprintName = "SwiftTracer"
             ReferencedContainer = "container:SwiftTracer.xcodeproj">
          </BuildableReference>
@@ -65,8 +75,8 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E104B2B71D0DE99C0006480E"
-            BuildableName = "SwiftTracer.app"
+            BlueprintIdentifier = "______Target_SwiftTracer"
+            BuildableName = "SwiftTracer"
             BlueprintName = "SwiftTracer"
             ReferencedContainer = "container:SwiftTracer.xcodeproj">
          </BuildableReference>
@@ -84,8 +94,8 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E104B2B71D0DE99C0006480E"
-            BuildableName = "SwiftTracer.app"
+            BlueprintIdentifier = "______Target_SwiftTracer"
+            BuildableName = "SwiftTracer"
             BlueprintName = "SwiftTracer"
             ReferencedContainer = "container:SwiftTracer.xcodeproj">
          </BuildableReference>
