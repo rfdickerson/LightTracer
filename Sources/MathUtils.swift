@@ -86,6 +86,9 @@ func * (left: Float, right: Vector3D) -> Vector3D {
     return Vector3D(x: left * right.x, y: left * right.y, z: left * right.z)
 }
 
+/**
+ Multiply scalar by a vector
+ */
 func * (left: Float, right: Matrix44) -> Matrix44 {
     return Matrix44(x00: left*right.x00, x01: left*right.x01, x02: left*right.x02, x03: left*right.x03,
                     x10: left*right.x10, x11: left*right.x11, x12: left*right.x12, x13: left*right.x13,
@@ -93,6 +96,9 @@ func * (left: Float, right: Matrix44) -> Matrix44 {
                     x30: left*right.x30, x31: left*right.x31, x32: left*right.x32, x33: left*right.x33)
 }
 
+/**
+ Multiply a matrix by a vector
+ */
 func * (left: Matrix44, right: Vector3D) -> Vector3D {
     let x = left.x00 * right.x + left.x01 * right.y + left.x02 * right.z + left.x03
     let y = left.x10 * right.x + left.x11 * right.y + left.x12 * right.z + left.x13
@@ -100,6 +106,34 @@ func * (left: Matrix44, right: Vector3D) -> Vector3D {
     let w = left.x30 + left.x31 + left.x32 + left.x33
     
     return Vector3D(x: x/w, y: y/w, z: z/w)
+}
+
+/**
+ Multiply two matrices together
+ */
+func * (left: Matrix44, right: Matrix44) -> Matrix44 {
+    let x00 = left.x00*right.x00 + left.x01*right.x10 + left.x02*right.x20 + left.x03*right.x30
+    let x10 = left.x10*right.x00 + left.x11*right.x10 + left.x12*right.x20 + left.x13*right.x30
+    let x20 = left.x20*right.x00 + left.x21*right.x10 + left.x22*right.x20 + left.x23*right.x30
+    let x30 = left.x30*right.x00 + left.x31*right.x10 + left.x32*right.x20 + left.x33*right.x30
+    let x01 = left.x00*right.x01 + left.x01*right.x11 + left.x02*right.x21 + left.x03*right.x31
+    let x11 = left.x10*right.x01 + left.x11*right.x11 + left.x12*right.x21 + left.x13*right.x31
+    let x21 = left.x20*right.x01 + left.x21*right.x11 + left.x22*right.x21 + left.x23*right.x31
+    let x31 = left.x30*right.x00 + left.x31*right.x10 + left.x32*right.x20 + left.x33*right.x30
+    let x02 = left.x00*right.x02 + left.x01*right.x12 + left.x02*right.x22 + left.x03*right.x32
+    let x12 = left.x10*right.x02 + left.x11*right.x12 + left.x12*right.x22 + left.x13*right.x32
+    let x22 = left.x20*right.x02 + left.x21*right.x12 + left.x22*right.x22 + left.x23*right.x32
+    let x32 = left.x30*right.x02 + left.x31*right.x12 + left.x32*right.x22 + left.x33*right.x32
+    let x03 = left.x00*right.x03 + left.x01*right.x13 + left.x02*right.x23 + left.x03*right.x33
+    let x13 = left.x10*right.x03 + left.x11*right.x13 + left.x12*right.x23 + left.x13*right.x33
+    let x23 = left.x20*right.x03 + left.x21*right.x13 + left.x22*right.x23 + left.x23*right.x33
+    let x33 = left.x30*right.x03 + left.x31*right.x13 + left.x32*right.x23 + left.x33*right.x33
+    
+    return Matrix44(x00: x00, x01: x01, x02: x02, x03: x03,
+                   x10: x10, x11: x11, x12: x12, x13: x13,
+                   x20: x20, x21: x21, x22: x22, x23: x23,
+                   x30: x30, x31: x31, x32: x32, x33: x33)
+   
 }
 
 
