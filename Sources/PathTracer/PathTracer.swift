@@ -8,8 +8,9 @@
 
 import Foundation
 
+import MathUtils
 
-struct Pixel {
+public struct Pixel {
     let r: UInt8
     let g: UInt8
     let b: UInt8
@@ -21,23 +22,23 @@ struct Pixel {
     }
 }
 
-struct Camera {
+public struct Camera {
     let fieldOfView: Float
     let aspectRatio: Float
     let position: Vector3D
 }
 
 
-typealias Color = Vector3D
+public typealias Color = Vector3D
 
-let backgroundColor = Vector3D(x: 0.235294, y: 0.67451, z: 0.843137)
+public let backgroundColor = Vector3D(x: 0.235294, y: 0.67451, z: 0.843137)
 
 // map values [-1 : 1] to [0 : 1 ]
 func normalColor(_ v: Vector3D)->Vector3D {
     return Vector3D(x: (v.x+1)/2, y: (v.y+1)/2, z: (v.z+1)/2)
 }
 
-struct Material {
+public struct Material {
     
     /// emission color, typically if a light
     let emission: Color
@@ -52,6 +53,16 @@ struct Material {
     
     /// specular exponent
     let n: Float
+    
+    public init(emission: Color, diffuseColor: Color,
+                ks: Float, kd: Float, n: Float) {
+        self.emission = emission
+        self.diffuseColor = diffuseColor
+        self.ks = ks
+        self.kd = kd
+        self.n = n
+        
+    }
     
     
 }
@@ -72,13 +83,13 @@ protocol Intersectable {
     func intersect(origin: Vector3D, direction: Vector3D) -> Float?
 }
 
-struct Sphere {
+public struct Sphere {
     let center: Vector3D
     let radius: Float
     let radiusSquared: Float
     let material: Material
     
-    init(center: Vector3D, radius: Float, material: Material) {
+    public init(center: Vector3D, radius: Float, material: Material) {
         self.radiusSquared = radius*radius
         self.center = center
         self.radius = radius
@@ -95,7 +106,7 @@ extension Sphere : Intersectable {
      - parameter direction: ray direction
      - returns: distance from the ray origin to the intersection point
      */
-    func intersect(origin: Vector3D, direction: Vector3D) -> Float? {
+    public func intersect(origin: Vector3D, direction: Vector3D) -> Float? {
         
         let L = origin - center
         let a = dot(direction, direction)
@@ -127,7 +138,7 @@ extension Sphere : Intersectable {
 
 
 
-func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, objects: [Sphere]) -> Color {
+public func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, objects: [Sphere]) -> Color {
     
     var illuminance = Color(x: 0.0, y: 0.0, z: 0.0)
     
@@ -194,13 +205,13 @@ func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, objects: [
     
 }
 
-func ppmHeader(width: Int, height: Int, maxValue: Int = 255) -> [CChar]? {
+public func ppmHeader(width: Int, height: Int, maxValue: Int = 255) -> [CChar]? {
     
     return "P6 \(width) \(height) \(maxValue) \r\n".cString(using: NSASCIIStringEncoding)
     
 }
 
-func pixelsToBytes(pixels: [Pixel]) -> [UInt8] {
+public func pixelsToBytes(pixels: [Pixel]) -> [UInt8] {
     
     return pixels.flatMap() { value in
         
@@ -208,7 +219,7 @@ func pixelsToBytes(pixels: [Pixel]) -> [UInt8] {
     }
 }
 
-func redCanvas(width: Int, height: Int) -> [Pixel] {
+public func redCanvas(width: Int, height: Int) -> [Pixel] {
     let pixels = [Pixel](repeating: Pixel(r: 128, g: 0, b: 0), count: width*height)
     
     return pixels
@@ -221,7 +232,7 @@ func redCanvas(width: Int, height: Int) -> [Pixel] {
  - parameter height: height of the pixel surface
  - returns: an array of the pixels of the surface
  */
-func screenCoordinates(width: Int, height: Int) -> [Vector3D] {
+public func screenCoordinates(width: Int, height: Int) -> [Vector3D] {
     
     var coords = [Vector3D]()
     
@@ -245,7 +256,7 @@ func screenCoordinates(width: Int, height: Int) -> [Vector3D] {
  - parameter color: Color structure
  - returns: a 24-bit Pixel
  */
-func colorToPixel(color: Color) -> Pixel {
+public func colorToPixel(color: Color) -> Pixel {
     let r = clamp(low: 0, high: 1, value: pow(color.x, 2.2))
     let g = clamp(low: 0, high: 1, value: pow(color.y, 2.2))
     let b = clamp(low: 0, high: 1, value: pow(color.z, 2.2))
@@ -253,7 +264,7 @@ func colorToPixel(color: Color) -> Pixel {
 }
 
 
-func perspectiveMatrix(near: Float, far: Float, fov: Float, aspect: Float) -> Matrix44 {
+public func perspectiveMatrix(near: Float, far: Float, fov: Float, aspect: Float) -> Matrix44 {
     
     let right = near * atan(deg2rad(degrees: fov) * 0.5)
     let top = right/aspect
@@ -265,7 +276,7 @@ func perspectiveMatrix(near: Float, far: Float, fov: Float, aspect: Float) -> Ma
     
 }
 
-func lookAtMatrix(eye: Vector3D, lookAt: Vector3D, up: Vector3D, rightHanded: Bool = true) {
+public func lookAtMatrix(eye: Vector3D, lookAt: Vector3D, up: Vector3D, rightHanded: Bool = true) -> Matrix44 {
 
     let forward = norm(rightHanded ? eye-lookAt : lookAt - eye)
     var upNormalized = norm(up)

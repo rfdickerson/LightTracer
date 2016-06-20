@@ -8,7 +8,12 @@
 
 import XCTest
 
-@testable import SwiftTracer
+@testable import PathTracer
+@testable import MathUtils
+
+let redMaterial = Material(emission: Color(x: 0.0 , y: 0, z: 0.0),
+                           diffuseColor: Color(x: 1.0, y: 0.0, z: 0.0),
+                           ks: 0.0, kd: 0.7, n: 0)
 
 class GraphicsTests: XCTestCase {
     
