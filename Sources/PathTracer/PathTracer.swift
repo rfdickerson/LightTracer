@@ -265,20 +265,18 @@ public func perspectiveMatrix(near: Float, far: Float, fov: Float, aspect: Float
     
 }
 
-public func lookAtMatrix(eye: Vector3D, target: Vector3D, up: Vector3D) -> Matrix44 {
+public func lookAtMatrix(pos: Vector3D, look: Vector3D, up: Vector3D) -> Matrix44 {
 
-    let zaxis = norm(eye - target)
-    let xaxis = norm(cross( up, zaxis))
-    let yaxis = norm(cross(zaxis, xaxis))
+    let dir = norm(look - pos)
+    let right = cross( dir, norm(up))
+    let newUp = cross(right, dir)
 
-    let translation = createTransform(withTranslation: Vector3D(x: -eye.x, y: -eye.y, z: -eye.z))
+    let viewMatrix = Matrix44(x00: right.x, x01: newUp.x, x02: dir.x, x03: pos.x,
+                              x10: right.y, x11: newUp.y, x12: dir.y, x13: pos.y,
+                              x20: right.z, x21: newUp.z, x22: dir.z, x23: pos.z,
+                              x30: 0,       x31: 0,       x32: 0,       x33: 1)
     
-    let viewMatrix = Matrix44(x00: xaxis.x, x01: xaxis.y, x02: xaxis.z, x03: 0,
-                              x10: yaxis.x, x11: yaxis.y, x12: yaxis.z, x13: 0,
-                              x20: zaxis.x, x21: zaxis.y, x22: zaxis.z, x23: 0,
-                              x30: 0, x31: 0, x32: 0, x33: 1)
-    
-    return transpose(viewMatrix) * translation
+    return viewMatrix
 
     
 }

@@ -105,7 +105,11 @@ public func * (left: Matrix44, right: Vector3D) -> Vector3D {
     let x = left.x00 * right.x + left.x01 * right.y + left.x02 * right.z + left.x03
     let y = left.x10 * right.x + left.x11 * right.y + left.x12 * right.z + left.x13
     let z = left.x20 * right.x + left.x21 * right.y + left.x22 * right.z + left.x23
-    let w = left.x30 + left.x31 + left.x32 + left.x33
+    let w = left.x30 * right.x + left.x31 * right.y + left.x32 * right.z + left.x33
+    
+    if w == 1 {
+        return Vector3D(x: x, y: y, z: z)
+    }
     
     return Vector3D(x: x/w, y: y/w, z: z/w)
 }
