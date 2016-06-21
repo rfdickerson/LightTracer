@@ -67,17 +67,6 @@ public struct Material {
     
 }
 
-
-//func screenSpaceToWorld(vector: Vector3D) -> Vector3D {
-//
-//    let width: Float = 480
-//    let height: Float = 200
-//    let newX = -1 + 2 * vector.x/width
-//    let newY = -1 + 2 * vector.y/height
-//    return Vector3D(x: newX, y: newY, z: 0)
-//
-//}
-
 protocol Intersectable {
     
     func intersect(origin: Vector3D, direction: Vector3D) -> Float?

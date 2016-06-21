@@ -25,14 +25,22 @@ let yellowMaterial = Material(emission: Color(x: 0.0 , y: 0.0, z: 0.0),
                              ks: 0.0, kd: 0.3, n: 0)
 
 
-//        for i in 1...5 {
-//            objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: Float(-5*i)), radius: 0.3, material: defaultMaterial))
-//        }
+for j in 0...6 {
+    for i in 0...6 {
+        
+        let mat = Material(emission: Color(x: 0.0 , y: 0.0, z: 0.0),
+                                      diffuseColor: Color(x: Float(i+1)/6, y: Float(j+1)/6, z: 0.2),
+                                      ks: 0.0, kd: 0.3, n: 0)
+        
+        objects.append(Sphere(center: Vector3D(x: Float(j*5)+5, y: Float(i*5)+5, z: 0 ),
+                              radius: 1.0, material: mat))
+    }
+}
 
-objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: -5), radius: 1.1, material: greenMaterial))
-objects.append(Sphere(center: Vector3D(x: 0, y: 7, z: -15), radius: 1.0, material: redMaterial))
-objects.append(Sphere(center: Vector3D(x: 0, y: 14, z: -10), radius: 1.0, material: yellowMaterial))
-objects.append(Sphere(center: Vector3D(x: 5, y: 0, z: -5), radius: 1.0, material: yellowMaterial))
+//objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: -5), radius: 1.0, material: greenMaterial))
+//objects.append(Sphere(center: Vector3D(x: 0, y: 7, z: -5), radius: 1.0, material: redMaterial))
+//objects.append(Sphere(center: Vector3D(x: 0, y: 14, z: -5), radius: 1.0, material: yellowMaterial))
+//objects.append(Sphere(center: Vector3D(x: 5, y: 0, z: -5), radius: 1.0, material: yellowMaterial))
 
 // left wall
 // objects.append(Sphere(center: Vector3D(x: -7000, y: 0, z: -5), radius: 5000, material: greenMaterial))
@@ -52,14 +60,14 @@ var colors = [Color]()
 
 // let cameraTransform = createTransform(withTranslation: Vector3D(x: 0, y: 0, z: -20))
 
-let lookAt = lookAtMatrix(eye: Vector3D(x: 0, y: 0, z: 0),
-                          target: Vector3D(x: 0, y: 0, z: -1),
-                          up: Vector3D(x: 0, y: -1, z: 0))
+let lookAt = lookAtMatrix(eye: Vector3D(x: 0, y: 5, z: -5),
+                          target: Vector3D(x: 1, y: -2, z: 5),
+                          up: Vector3D(x: 0, y: 1, z: 0))
 
-let perspective = perspectiveMatrix(near: 0.1, far: 1000.0, fov: 30,
+let perspective = perspectiveMatrix(near: 0.01, far: 100.0, fov: 30,
                                     aspect: Float(height)/Float(width))
 
-let cameraToWorld =  perspective * lookAt
+let cameraToWorld = perspective * lookAt
 
 //let cameraToWorld = Matrix44(x00: 0.945519,  x01: 0, x02: -0.325569, x03: 0,
 //                             x10: -0.179534, x11: 0.834209, x12: -0.521403, x13: 0,

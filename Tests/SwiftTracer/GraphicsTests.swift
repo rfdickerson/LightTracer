@@ -60,6 +60,34 @@ class GraphicsTests: XCTestCase {
         
     }
     
+    func testTranslation() {
+        
+        let v = Vector3D(x: 4, y: 5, z: 6)
+        
+        let t = createTransform(withTranslation: Vector3D(x: 2, y: 3, z: 4))
+        
+        let tv = t * v
+        
+        let correct = Vector3D(x: 6, y: 8, z: 10)
+        
+        XCTAssertEqual(tv, correct)
+        
+    }
+    
+    func testScale() {
+        
+        let v = Vector3D(x: 4, y: 5, z: 6)
+        
+        let t = createTransform(withScale: 2)
+        
+        let tv = t * v
+        
+        let correct = Vector3D(x: 8, y: 10, z: 12)
+        
+        XCTAssertEqual(tv, correct)
+        
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {
