@@ -97,6 +97,9 @@ extension Sphere : Intersectable {
      */
     public func intersect(origin: Vector3D, direction: Vector3D) -> Float? {
         
+        
+        // transform ray to object space
+        
         let L = origin - center
         let a = dot(direction, direction)
         let b = 2*dot(direction, L)
@@ -194,9 +197,10 @@ public func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, obj
     
 }
 
-public func ppmHeader(width: Int, height: Int, maxValue: Int = 255) -> [CChar]? {
+public func ppmHeader(width: Int, height: Int, maxValue: Int = 255) -> Data {
     
-    return "P6 \(width) \(height) \(maxValue) \r\n".cString(using: NSASCIIStringEncoding)
+    return "P6 \(width) \(height) \(maxValue)  \r\n".data(using: String.Encoding.ascii)!
+    // return "P6 \(width) \(height) \(maxValue) \r\n".cString(using: String.Encoding.ascii)
     
 }
 
@@ -231,7 +235,7 @@ public func screenCoordinates(width: Int, height: Int) -> [Vector3D] {
             let x = -1 + 2*Float(i)/Float(width)
             let y = -1 + 2*Float(j)/Float(height)
             
-            coords.append(Vector3D(x: x, y: y, z: -1))
+            coords.append(Vector3D(x: x, y: y, z: 1))
         }
     }
     
@@ -255,13 +259,16 @@ public func colorToPixel(color: Color) -> Pixel {
 
 public func perspectiveMatrix(near: Float, far: Float, fov: Float, aspect: Float) -> Matrix44 {
     
-    let right = near * atan(deg2rad(degrees: fov) * 0.5)
-    let top = right/aspect
+    let invDenom = 1.0/(far-near)
+    let inverseTanAngle = 1.0/tan(deg2rad(degrees: fov)/2)
     
-    return Matrix44(x00: near/right, x01: 0, x02: 0, x03: 0,
-                    x10: 0, x11: near/top, x12: 0, x13: 0,
-                    x20: 0, x21: 0, x22: -(far + near) / (far - near), x23: -(2 * far * near) / (far - near),
-                    x30: 0, x31: 0, x32: -1, x33: 0)
+    
+    let persp = Matrix44(x00: inverseTanAngle, x01: 0, x02: 0, x03: 0,
+                         x10: 0, x11: inverseTanAngle, x12: 0, x13: 0,
+                         x20: 0, x21: 0, x22: far*invDenom, x23: -far*near*invDenom,
+                         x30: 0, x31: 0, x32: 1, x33: 0)
+    return persp
+    
     
 }
 

@@ -15,9 +15,9 @@ public struct Matrix44 {
     let x30, x31, x32, x33: Float
     
     public init(x00: Float, x01: Float, x02: Float, x03: Float,
-    x10: Float, x11: Float, x12: Float, x13: Float,
-    x20: Float, x21: Float, x22: Float, x23: Float,
-    x30: Float, x31: Float, x32: Float, x33: Float) {
+                x10: Float, x11: Float, x12: Float, x13: Float,
+                x20: Float, x21: Float, x22: Float, x23: Float,
+                x30: Float, x31: Float, x32: Float, x33: Float) {
         
         self.x00 = x00
         self.x01 = x01
@@ -35,7 +35,7 @@ public struct Matrix44 {
         self.x31 = x31
         self.x32 = x32
         self.x33 = x33
-
+        
     }
 }
 
@@ -59,32 +59,50 @@ extension Matrix44 {
                         x20: 0, x21: 0, x22: 1, x23: 0,
                         x30: 0, x31: 0, x32: 0, x33: 1)
     }
-}
-
-public func createTransform(withTranslation vector: Vector3D) -> Matrix44 {
     
-    return Matrix44(x00: 1, x01: 0, x02: 0, x03: vector.x,
-                    x10: 0, x11: 1, x12: 0, x13: vector.y,
-                    x20: 0, x21: 0, x22: 1, x23: vector.z,
-                    x30: 0, x31: 0, x32: 0, x33: 1)
     
-}
-
-public func createTransform(withRotation angle: Float) -> Matrix44 {
+    public static func createTransform(withTranslation vector: Vector3D) -> Matrix44 {
+        
+        return Matrix44(x00: 1, x01: 0, x02: 0, x03: vector.x,
+                        x10: 0, x11: 1, x12: 0, x13: vector.y,
+                        x20: 0, x21: 0, x22: 1, x23: vector.z,
+                        x30: 0, x31: 0, x32: 0, x33: 1)
+        
+    }
     
-    return Matrix44(x00: 1, x01: 0, x02: 0, x03: 0,
-                    x10: 0, x11: cos(angle), x12: -sin(angle), x13: 0,
-                    x20: 0, x21: sin(angle), x22: cos(angle), x23: 0,
-                    x30: 0, x31: 0, x32: 0, x33: 1)
+    /**
+     Rotate about the x axis
+     
+     */
+    public static func createTransform(withRotation angle: Float) -> Matrix44 {
+        
+        return Matrix44(x00: 1, x01: 0, x02: 0, x03: 0,
+                        x10: 0, x11: cos(angle), x12: -sin(angle), x13: 0,
+                        x20: 0, x21: sin(angle), x22: cos(angle), x23: 0,
+                        x30: 0, x31: 0, x32: 0, x33: 1)
+        
+    }
     
-}
-
-public func createTransform(withScale amount: Float) -> Matrix44 {
+    /**
+     Scale by a uniform amount on the x,y,z axis
+     */
+    public static func createTransform(withScale amount: Float) -> Matrix44 {
+        
+        return Matrix44(x00: amount, x01: 0, x02: 0, x03: 0,
+                        x10: 0, x11: amount, x12: 0, x13: 0,
+                        x20: 0, x21: 0, x22: amount, x23: 0,
+                        x30: 0, x31: 0, x32: 0, x33: 1)
+        
+    }
     
-    return Matrix44(x00: amount, x01: 0, x02: 0, x03: 0,
-                    x10: 0, x11: amount, x12: 0, x13: 0,
-                    x20: 0, x21: 0, x22: amount, x23: 0,
-                    x30: 0, x31: 0, x32: 0, x33: 1)
+    public static func createTransform(withScale amount: Vector3D) -> Matrix44 {
+        
+        return Matrix44(x00: amount.x, x01: 0, x02: 0, x03: 0,
+                        x10: 0, x11: amount.y, x12: 0, x13: 0,
+                        x20: 0, x21: 0, x22: amount.z, x23: 0,
+                        x30: 0, x31: 0, x32: 0, x33: 1)
+        
+    }
     
 }
 
