@@ -64,7 +64,7 @@ class GraphicsTests: XCTestCase {
         
         let v = Vector3D(x: 4, y: 5, z: 6)
         
-        let t = createTransform(withTranslation: Vector3D(x: 2, y: 3, z: 4))
+        let t = Matrix44.createTransform(withTranslation: Vector3D(x: 2, y: 3, z: 4))
         
         let tv = t * v
         
@@ -78,7 +78,7 @@ class GraphicsTests: XCTestCase {
         
         let v = Vector3D(x: 4, y: 5, z: 6)
         
-        let t = createTransform(withScale: 2)
+        let t = Matrix44.createTransform(withScale: 2)
         
         let tv = t * v
         

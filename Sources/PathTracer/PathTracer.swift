@@ -97,10 +97,12 @@ extension Sphere : Intersectable {
      */
     public func intersect(origin: Vector3D, direction: Vector3D) -> Float? {
         
-        
         // transform ray to object space
+        // let transform = Matrix44.createTransform(withTranslation: Vector3D(x: -center.x, y: -center.y, z: -center.z))
         
+        // let L = transform * origin
         let L = origin - center
+        
         let a = dot(direction, direction)
         let b = 2*dot(direction, L)
         let c = dot(L, L) - radiusSquared
@@ -121,14 +123,6 @@ extension Sphere : Intersectable {
     }
     
 }
-
-
-
-//func createRay(start: Vector3D, viewPlane: Vector3D ) -> Vector3D {
-//
-//}
-
-
 
 public func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, objects: [Sphere]) -> Color {
     
@@ -161,7 +155,9 @@ public func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, obj
         let intersection = origin + shortestDepth * direction
         let normal = norm(intersection - closestObject.center)
         
-        return closestObject.material.diffuseColor
+        return normalColor(normal)
+        
+        // return closestObject.material.diffuseColor
         
 //        for _ in 0...20 {
 //            
@@ -227,6 +223,8 @@ public func redCanvas(width: Int, height: Int) -> [Pixel] {
  */
 public func screenCoordinates(width: Int, height: Int) -> [Vector3D] {
     
+    let aspectRatio = height/width
+    
     var coords = [Vector3D]()
     
     for j in 0...height-1 {
@@ -235,7 +233,7 @@ public func screenCoordinates(width: Int, height: Int) -> [Vector3D] {
             let x = -1 + 2*Float(i)/Float(width)
             let y = -1 + 2*Float(j)/Float(height)
             
-            coords.append(Vector3D(x: x, y: y, z: 1))
+            coords.append(Vector3D(x: x, y: y, z: 0.1))
         }
     }
     
@@ -260,12 +258,11 @@ public func colorToPixel(color: Color) -> Pixel {
 public func perspectiveMatrix(near: Float, far: Float, fov: Float, aspect: Float) -> Matrix44 {
     
     let invDenom = 1.0/(far-near)
-    let inverseTanAngle = 1.0/tan(deg2rad(degrees: fov)/2)
-    
+    let inverseTanAngle = 1.0/atan(deg2rad(fov/2.0))
     
     let persp = Matrix44(x00: inverseTanAngle, x01: 0, x02: 0, x03: 0,
                          x10: 0, x11: inverseTanAngle, x12: 0, x13: 0,
-                         x20: 0, x21: 0, x22: far*invDenom, x23: -far*near*invDenom,
+                         x20: 0, x21: 0, x22: far*invDenom, x23: -near*far*invDenom ,
                          x30: 0, x31: 0, x32: 1, x33: 0)
     return persp
     

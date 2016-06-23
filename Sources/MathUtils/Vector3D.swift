@@ -84,8 +84,12 @@ public func norm(_ v: Vector3D) -> Vector3D {
 }
 
 
-public func deg2rad(degrees: Float) -> Float {
-    return degrees * Float(M_PI) / 180
+public func deg2rad(_ degrees: Float) -> Float {
+    return degrees * (Float(M_PI) / 180.0)
+}
+
+public func degrees(_ radians: Float) -> Float {
+    return (180.0/Float(M_PI)) * radians
 }
 
 /**

@@ -61,6 +61,11 @@ extension Matrix44 {
     }
     
     
+    /// <#Description#>
+    ///
+    /// - parameter vector: <#vector description#>
+    ///
+    /// - returns: <#return value description#>
     public static func createTransform(withTranslation vector: Vector3D) -> Matrix44 {
         
         return Matrix44(x00: 1, x01: 0, x02: 0, x03: vector.x,

@@ -25,8 +25,8 @@ class MathUtilsTests: XCTestCase {
     func testVectorMultiply() {
         
         let v1 = Vector3D(x: 1, y: 2, z: 3)
-        let m1 = createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))
-        let m2 = createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))
+        let m1 = Matrix44.createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))
+        let m2 = Matrix44.createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))
         
         let v2 = m1 * v1
         let v3 = m2 * v2
@@ -109,7 +109,7 @@ class MathUtilsTests: XCTestCase {
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        let m1 = createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))
+        let m1 = Matrix44.createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))
         
         self.measure {
             let _ = determinant(m1)
