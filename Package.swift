@@ -5,12 +5,8 @@ let package = Package(
     targets: [
                  Target(
                     name: "SwiftTracer",
-                    dependencies: [.Target(name: "MathUtils"), .Target(name: "PathTracer")]),
+                    dependencies: [.Target(name: "PathTracer")]),
                  Target(
-                    name: "MathUtils"
-                    ),
-                 Target(
-                    name: "PathTracer",
-                    dependencies: [.Target(name: "MathUtils")])
+                    name: "PathTracer")
                  ]
 )

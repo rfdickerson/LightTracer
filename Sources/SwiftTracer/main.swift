@@ -1,7 +1,6 @@
 import Foundation
 import Dispatch
 
-import MathUtils
 import PathTracer
 
 print("Swift Monte-Carlo Path Tracing renderer")

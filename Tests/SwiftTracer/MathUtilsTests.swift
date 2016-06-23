@@ -8,7 +8,7 @@
 
 import XCTest
 
-@testable import MathUtils
+@testable import PathTracer
 
 class MathUtilsTests: XCTestCase {
     
@@ -105,6 +105,25 @@ class MathUtilsTests: XCTestCase {
         
         XCTAssertEqual(na.x*na.x+na.y*na.y+na.z*na.z, 1)
         
+    }
+    
+    func testInverse() {
+        
+        let B = Matrix44(x00: 1, x01: 0, x02: 0, x03: 1,
+                         x10: 0, x11: 2, x12: 1, x13: 2,
+                         x20: 2, x21: 1, x22: 0, x23: 1,
+                         x30: 2, x31: 0, x32: 1, x33: 4)
+        
+        let invB = invert(B)
+        
+        let correctInvB = Matrix44(x00: -2, x01: -1/2, x02: 1, x03: 1/2,
+                         x10: 1, x11: 1/2, x12: 0, x13: -1/2,
+                         x20: -8, x21: -1, x22: 2, x23: 2,
+                         x30: 3, x31: 1/2, x32: -1, x33: -1/2)
+        
+        XCTAssertEqual(invB, correctInvB)
+        
+        XCTAssertEqual(B * invB!, Matrix44.identity())
     }
     
     func testPerformanceExample() {

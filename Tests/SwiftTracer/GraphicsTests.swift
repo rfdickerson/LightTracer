@@ -9,7 +9,6 @@
 import XCTest
 
 @testable import PathTracer
-@testable import MathUtils
 
 let redMaterial = Material(emission: Color(x: 0.0 , y: 0, z: 0.0),
                            diffuseColor: Color(x: 1.0, y: 0.0, z: 0.0),
