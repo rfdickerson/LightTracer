@@ -36,9 +36,9 @@ for j in 0...6 {
     }
 }
 
-objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: 0.2), radius: 0.02, material: greenMaterial))
-objects.append(Sphere(center: Vector3D(x: 0, y: 0.07, z: 0.2), radius: 0.02, material: redMaterial))
-objects.append(Sphere(center: Vector3D(x: 0, y: 0.14, z: 0.2), radius: 0.02, material: yellowMaterial))
+objects.append(Sphere(center: Vector3D(x: 0, y: 0, z: 10.2), radius: 2.02, material: greenMaterial))
+//objects.append(Sphere(center: Vector3D(x: 0, y: 0.07, z: 10.2), radius: 1.02, material: redMaterial))
+//objects.append(Sphere(center: Vector3D(x: 0, y: 0.14, z: 10.2), radius: 0.02, material: yellowMaterial))
 
 
 //objects.append(Sphere(center: Vector3D(x: 5, y: 0, z: -5), radius: 1.0, material: yellowMaterial))
@@ -48,35 +48,59 @@ objects.append(Sphere(center: Vector3D(x: 0, y: 0.14, z: 0.2), radius: 0.02, mat
 
 // objects.append(Sphere(center: Vector3D(x: 5000, y: 0, z: -5), radius: 5000, material: defaultMaterial))
 
-let lightSphere = Sphere(center: Vector3D(x: 0, y: 0, z: 2), radius: 1.0, material: lightMaterial)
+//let lightSphere = Sphere(center: Vector3D(x: 0, y: 0, z: 5), radius: 1.0, material: lightMaterial)
 //objects.append(lightSphere)
 
-let width = 300
-let height = 200
+let width: Float = 300
+let height: Float = 200
 let bytesPerPixel = 3
 
 let bitmapBytesPerRow = (width) * 3
 
 var colors = [Color]()
 
-let lookAt = lookAtMatrix(pos:  Vector3D(x: 0, y: 0.19, z: 0.0),
-                          look: Vector3D(x: 0, y: 0.00, z: 1),
+let aspectRatio = width/height
+
+let lookAt = lookAtMatrix(pos:  Vector3D(x: 0, y: 0.00, z: 0.0),
+                          look: Vector3D(x: 0, y: 0.51, z: 1),
                           up:   Vector3D(x: 0, y: 1, z: 0))
 
-let perspective = perspectiveMatrix(near: 0.0001, far: 100.0, fov: 90,
+let perspective = perspectiveMatrix(near: 0.01, far: 100.0, fov: 55,
                                     aspect: Float(height)/Float(width))
 
-let cameraToWorld = perspective * lookAt
+// converts -1:1 coordinates to 0:300
+let screenToRaster = Matrix44.createTransform(withScale: Vector3D(x: Float(width), y: Float(height), z: 1.0))
+    * Matrix44.createTransform(withScale: Vector3D(x: 1/(2*aspectRatio), y: 1/2, z: 1))
+    * Matrix44.createTransform(withTranslation: Vector3D(x: 1, y: 1, z: 0.0))
 
-let screenCoords = screenCoordinates(width: width, height: height)
+let rasterToScreen = invert(screenToRaster)!
+
+let sample = Vector3D(x: 100, y: 100, z: 0)
+
+let sampleScreen = rasterToScreen * sample
+
+let cameraToScreen = perspective
+let screenToCamera = invert(cameraToScreen)!
+
+let cameraToWorld = invert(lookAt)!
+
+//let rasterToCamera = rasterToScreen
+
+// let rasterToWorld = rasterToScreen * screenToCamera * cameraToWorld
+
+//let cameraToWorld = invert(worldToCamera)
+
+// let camera = Camera(worldToCamera: worldToCamera, hither: 0.01, yon: 100.0, fieldOfView: 54 )
+
+let screenCoords = rasterCoordinates(width: Int(width), height: Int(height))
 var origin = Vector3D(x: 0, y: 0, z: 0)
 
 print("Rendering...")
 for coord in screenCoords {
     
-    var direction = norm(coord)
+    var direction = coord
 
-    direction = cameraToWorld*direction
+    direction = cameraToWorld*screenToCamera*rasterToScreen*direction
     direction = norm(direction)
     
     let color = castRay(origin: origin, direction: direction, bounceDepth: 0, objects: objects)
@@ -88,7 +112,7 @@ let pixels = colors.map(colorToPixel)
 let data = pixelsToBytes(pixels: pixels)
 
 let ndata = Data(bytes: data)
-let header = ppmHeader(width: width, height: height)
+let header = ppmHeader(width: Int(width), height: Int(height))
 
 var output = Data()
 

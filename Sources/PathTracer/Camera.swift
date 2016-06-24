@@ -12,12 +12,11 @@ public typealias Transform = Matrix44
 
 public struct Camera {
     
-    let worldToCamera: Transform
-    let cameraToWorld: Transform
-    let clipHither: Float
-    let clipYon: Float
-    
-    let fieldOfView: Float
+    public let worldToCamera: Transform
+    public let cameraToWorld: Transform
+    public let clipHither: Float
+    public let clipYon: Float
+    public let fieldOfView: Float
 
     public init(worldToCamera: Transform, hither: Float, yon: Float, fieldOfView: Float) {
         

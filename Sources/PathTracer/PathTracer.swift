@@ -135,17 +135,17 @@ public func redCanvas(width: Int, height: Int) -> [Pixel] {
  - parameter height: height of the pixel surface
  - returns: an array of the pixels of the surface
  */
-public func screenCoordinates(width: Int, height: Int) -> [Vector3D] {
+public func rasterCoordinates(width: Int, height: Int) -> [Vector3D] {
     
     var coords = [Vector3D]()
     
     for j in 0...height-1 {
         for i in 0...width-1 {
             
-            let x = Float(i)/Float(width)
-            let y = Float(j)/Float(height)
+            let x = Float(i)
+            let y = Float(j)
             
-            coords.append(Vector3D(x: x, y: y, z: 0.1))
+            coords.append(Vector3D(x: x, y: y, z: 0.0))
         }
     }
     
