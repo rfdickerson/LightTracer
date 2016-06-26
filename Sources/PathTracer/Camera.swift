@@ -8,12 +8,11 @@
 
 import Foundation
 
-public typealias Transform = Matrix44
 
 public struct Camera {
     
     public let worldToCamera: Transform
-    public let cameraToWorld: Transform
+   
     public let clipHither: Float
     public let clipYon: Float
     public let fieldOfView: Float
@@ -21,10 +20,6 @@ public struct Camera {
     public init(worldToCamera: Transform, hither: Float, yon: Float, fieldOfView: Float) {
         
         self.worldToCamera = worldToCamera
-        
-        let cameraToWorld = invert(worldToCamera)
-        
-        self.cameraToWorld = cameraToWorld!
         self.clipHither = hither
         self.clipYon = yon
         self.fieldOfView = fieldOfView

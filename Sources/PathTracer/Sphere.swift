@@ -34,9 +34,7 @@ extension Sphere : Intersectable {
     public func intersect(origin: Vector3D, direction: Vector3D) -> Float? {
         
         // transform ray to object space
-        // let transform = Matrix44.createTransform(withTranslation: Vector3D(x: -center.x, y: -center.y, z: -center.z))
-        
-        // let L = transform * origin
+    
         let L = origin - center
         
         let a = dot(direction, direction)

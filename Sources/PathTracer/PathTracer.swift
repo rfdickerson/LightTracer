@@ -68,41 +68,64 @@ public func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, obj
         let intersection = origin + shortestDepth * direction
         let normal = norm(intersection - closestObject.center)
         
-        return normalColor(normal)
+        // return normalColor(normal)
         
-        // return closestObject.material.diffuseColor
+        //return closestObject.material.diffuseColor
+        var illuminance = Vector3D(x: 0, y: 0, z: 0)
         
-//        for _ in 0...20 {
-//            
-//            // compute normal at intersection point
-//            // trace another ray from intersection point to a random selection of
-//            // points in a hemisphere
-//
-//            
-//            let rn = 2*Float(M_PI)*Float(arc4random())/Float(UINT32_MAX)
-//            // let rphi = Float(M_PI)*Float(arc4random())/Float(UINT32_MAX)
-//            
-//            
-//            let randomVector = createTransform(withRotation: rn) * Vector3D(x: 0, y: 1, z: 0)
-//            //let randomVector = Vector3D(x: cos(rn), y: sin(rphi), z: 0)
-//            let r = norm(normal + randomVector)
-//            
-//            
-//            let bounceColor = castRay(origin: intersection, direction: r,
-//                                      bounceDepth: bounceDepth + 1, objects: objects)
-//            
-//            illuminance = illuminance + dot(normal, r) * bounceColor
-//            
-//        }
+        let numSamples = 20
+        
+        for _ in 0...numSamples {
+            
+            // compute normal at intersection point
+            // trace another ray from intersection point to a random selection of
+            // points in a hemisphere
+
+            let r = cosWeightedRandomHemisphere(n: normal)
+            
+            let bounceColor = castRay(origin: intersection, direction: r,
+                                      bounceDepth: bounceDepth + 1, objects: objects)
+            
+            illuminance = illuminance + dot(normal, r) * bounceColor
+            
+        }
         
         
         // illuminance = normalColor(normal)
         
-//        return closestObject.material.emission + (1/20) * illuminance
+        return closestObject.material.emission + (1/Float(numSamples)) * illuminance
 
     }
     
     return backgroundColor
+    
+}
+
+public func cosWeightedRandomHemisphere( n: Vector3D) -> Vector3D {
+    let Xi1 = Float(arc4random())/Float(UINT32_MAX)
+    let Xi2 = Float(arc4random())/Float(UINT32_MAX)
+
+    let theta = acos(sqrt(1.0-Xi1))
+    let phi = 2.0 * Float(M_PI) * Xi2
+    
+    let xs = sin(theta) * cos(phi)
+    let ys = cos(theta)
+    let zs = sin(theta) * sin(phi)
+    
+    var h: Vector3D
+    if fabs(n.x) <= fabs(n.y) && fabs(n.x) <= fabs(n.z) {
+        h = Vector3D(x: 1.0, y: n.y, z: n.z)
+    } else if fabs(n.y) <= fabs(n.x) && fabs(n.y) <= fabs(n.z) {
+        h = Vector3D(x: n.x, y: 1.0, z: n.z)
+    } else {
+        h = Vector3D(x: n.x, y: n.y, z: 1.0)
+    }
+    
+    let x = norm(cross(h, n))
+    let z = norm(cross(x, n))
+    
+    let direction =  xs * x + ys * n + zs * z
+    return norm(direction)
     
 }
 
@@ -145,7 +168,7 @@ public func rasterCoordinates(width: Int, height: Int) -> [Vector3D] {
             let x = Float(i)
             let y = Float(j)
             
-            coords.append(Vector3D(x: x, y: y, z: 0.0))
+            coords.append(Vector3D(x: x, y: y, z: 1.0))
         }
     }
     
