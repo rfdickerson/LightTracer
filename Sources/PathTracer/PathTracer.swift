@@ -22,19 +22,16 @@ public struct Pixel {
 
 public typealias Color = Vector3D
 
-public let backgroundColor = Vector3D(x: 0.235294, y: 0.67451, z: 0.843137)
+public let backgroundColor = Vector3D(0.235294, 0.67451, 0.843137)
 
 // map values [-1 : 1] to [0 : 1 ]
 func normalColor(_ v: Vector3D)->Vector3D {
-    return Vector3D(x: (v.x+1)/2, y: (v.y+1)/2, z: (v.z+1)/2)
+    return Vector3D((v.x+1)/2, (v.y+1)/2, (v.z+1)/2)
 }
 
 
 
-protocol Intersectable {
-    
-    func intersect(origin: Vector3D, direction: Vector3D) -> Float?
-}
+
 
 
 public func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, objects: [Sphere]) -> Color {
@@ -61,41 +58,24 @@ public func castRay(origin: Vector3D, direction: Vector3D, bounceDepth: Int, obj
         
     }
     
+    
+    let sampleLight = Vector3D(5, 5, 5)
     // compute the illumination
     
     if let closestObject = closestObject {
         
         let intersection = origin + shortestDepth * direction
-        let normal = norm(intersection - closestObject.center)
         
-        // return normalColor(normal)
+        let center = closestObject.objectToWorld.matrix * Vector3D(0,0,0)
         
-        //return closestObject.material.diffuseColor
-        var illuminance = Vector3D(x: 0, y: 0, z: 0)
+        let normal = norm(center - intersection  )
         
-        let numSamples = 20
+        let lightDirection = norm(intersection - sampleLight)
         
-        for _ in 0...numSamples {
-            
-            // compute normal at intersection point
-            // trace another ray from intersection point to a random selection of
-            // points in a hemisphere
-
-            let r = cosWeightedRandomHemisphere(n: normal)
-            
-            let bounceColor = castRay(origin: intersection, direction: r,
-                                      bounceDepth: bounceDepth + 1, objects: objects)
-            
-            illuminance = illuminance + dot(normal, r) * bounceColor
-            
-        }
+        let illuminance = 0.5*dot(normal, lightDirection) * closestObject.material.diffuseColor
+        return illuminance
         
-        
-        // illuminance = normalColor(normal)
-        
-        return closestObject.material.emission + (1/Float(numSamples)) * illuminance
-
-    }
+      }
     
     return backgroundColor
     
@@ -114,11 +94,11 @@ public func cosWeightedRandomHemisphere( n: Vector3D) -> Vector3D {
     
     var h: Vector3D
     if fabs(n.x) <= fabs(n.y) && fabs(n.x) <= fabs(n.z) {
-        h = Vector3D(x: 1.0, y: n.y, z: n.z)
+        h = Vector3D(1.0, n.y, n.z)
     } else if fabs(n.y) <= fabs(n.x) && fabs(n.y) <= fabs(n.z) {
-        h = Vector3D(x: n.x, y: 1.0, z: n.z)
+        h = Vector3D(n.x, 1.0, n.z)
     } else {
-        h = Vector3D(x: n.x, y: n.y, z: 1.0)
+        h = Vector3D(n.x, n.y, 1.0)
     }
     
     let x = norm(cross(h, n))
@@ -168,7 +148,7 @@ public func rasterCoordinates(width: Int, height: Int) -> [Vector3D] {
             let x = Float(i)
             let y = Float(j)
             
-            coords.append(Vector3D(x: x, y: y, z: 1.0))
+            coords.append(Vector3D(x, y, 1.0))
         }
     }
     

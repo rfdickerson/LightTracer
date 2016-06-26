@@ -13,7 +13,7 @@ public struct Vector3D {
     public let y: Float
     public let z: Float
     
-    public init(x: Float, y: Float, z: Float) {
+    public init(_ x: Float, _ y: Float, _ z: Float) {
         self.x = x
         self.y = y
         self.z = z
@@ -28,15 +28,15 @@ public func mix(a: Float, b: Float, mixAmount: Float) -> Float {
 }
 
 public func + (left: Vector3D, right: Vector3D) -> Vector3D {
-    return Vector3D(x: left.x + right.x, y: left.y + right.y, z: left.z + right.z)
+    return Vector3D(left.x + right.x, left.y + right.y, left.z + right.z)
 }
 
 public func - (left: Vector3D, right: Vector3D) -> Vector3D {
-    return Vector3D(x: left.x - right.x, y: left.y - right.y, z: left.z - right.z)
+    return Vector3D(left.x - right.x, left.y - right.y, left.z - right.z)
 }
 
 public func * (left: Vector3D, right: Vector3D) -> Vector3D {
-    return Vector3D(x: left.x * right.x, y: left.y * right.y, z: left.z * right.z)
+    return Vector3D(left.x * right.x, left.y * right.y, left.z * right.z)
 }
 
 public func == (left: Vector3D, right: Vector3D) -> Bool {
@@ -48,7 +48,7 @@ public func != (left: Vector3D, right: Vector3D) -> Bool {
 }
 
 public func * (left: Float, right: Vector3D) -> Vector3D {
-    return Vector3D(x: left * right.x, y: left * right.y, z: left * right.z)
+    return Vector3D(left * right.x, left * right.y, left * right.z)
 }
 
 
@@ -64,14 +64,11 @@ public func dot(_ left: Vector3D, _ right: Vector3D) -> Float {
 }
 
 public func cross(_ left: Vector3D, _ right: Vector3D) -> Vector3D {
-    return Vector3D(x: left.y * right.z - left.z * right.y,
-                    y: left.z * right.x - left.x * right.z,
-                    z: left.x * right.y - left.y * right.x
+    return Vector3D(left.y * right.z - left.z * right.y,
+                    left.z * right.x - left.x * right.z,
+                    left.x * right.y - left.y * right.x
     )
 }
-
-
-
 
     
 public func magnitude(_ v: Vector3D) -> Float {
@@ -80,7 +77,7 @@ public func magnitude(_ v: Vector3D) -> Float {
     
 public func norm(_ v: Vector3D) -> Vector3D {
         let mag = magnitude(v)
-        return Vector3D(x: v.x/mag, y: v.y/mag, z: v.z/mag)
+        return Vector3D(v.x/mag, v.y/mag, v.z/mag)
 }
 
 

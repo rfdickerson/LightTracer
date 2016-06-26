@@ -61,54 +61,9 @@ extension Matrix44 {
     }
     
     
-    /// <#Description#>
-    ///
-    /// - parameter vector: <#vector description#>
-    ///
-    /// - returns: <#return value description#>
-    public static func createTransform(withTranslation vector: Vector3D) -> Matrix44 {
-        
-        return Matrix44(x00: 1, x01: 0, x02: 0, x03: vector.x,
-                        x10: 0, x11: 1, x12: 0, x13: vector.y,
-                        x20: 0, x21: 0, x22: 1, x23: vector.z,
-                        x30: 0, x31: 0, x32: 0, x33: 1)
-        
-    }
     
-    /**
-     Rotate about the x axis
-     
-     */
-    public static func createTransform(withRotation angle: Float) -> Matrix44 {
-        
-        return Matrix44(x00: 1, x01: 0, x02: 0, x03: 0,
-                        x10: 0, x11: cos(angle), x12: -sin(angle), x13: 0,
-                        x20: 0, x21: sin(angle), x22: cos(angle), x23: 0,
-                        x30: 0, x31: 0, x32: 0, x33: 1)
-        
-    }
     
-    /**
-     Scale by a uniform amount on the x,y,z axis
-     */
-    public static func createTransform(withScale amount: Float) -> Matrix44 {
         
-        return Matrix44(x00: amount, x01: 0, x02: 0, x03: 0,
-                        x10: 0, x11: amount, x12: 0, x13: 0,
-                        x20: 0, x21: 0, x22: amount, x23: 0,
-                        x30: 0, x31: 0, x32: 0, x33: 1)
-        
-    }
-    
-    public static func createTransform(withScale amount: Vector3D) -> Matrix44 {
-        
-        return Matrix44(x00: amount.x, x01: 0, x02: 0, x03: 0,
-                        x10: 0, x11: amount.y, x12: 0, x13: 0,
-                        x20: 0, x21: 0, x22: amount.z, x23: 0,
-                        x30: 0, x31: 0, x32: 0, x33: 1)
-        
-    }
-    
 }
 
 /**
@@ -131,10 +86,10 @@ public func * (left: Matrix44, right: Vector3D) -> Vector3D {
     let w = left.x30 * right.x + left.x31 * right.y + left.x32 * right.z + left.x33
     
     if w == 1 {
-        return Vector3D(x: x, y: y, z: z)
+        return Vector3D(x, y, z)
     }
     
-    return Vector3D(x: x/w, y: y/w, z: z/w)
+    return Vector3D(x/w, y/w, z/w)
 }
 
 /**
@@ -208,8 +163,7 @@ public func invert(_ a: Matrix44) -> Matrix44? {
     if det == 0 {
         return nil
     }
-    
-    // TODO
+
     return (1.0/det) * cofactor
     
 }
