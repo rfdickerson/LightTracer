@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Dispatch
 
 public struct Pixel {
     let r: UInt8
