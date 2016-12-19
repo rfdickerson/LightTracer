@@ -1,14 +1,7 @@
-//
-//  Math.swift
-//  SwiftTracer
-//
-//  Created by Robert Dickerson on 6/16/16.
-//  Copyright © 2016 Swift@IBM Engineering. All rights reserved.
-//
-
 import Foundation
 
 public struct Vector3D {
+    
     public let x: Float
     public let y: Float
     public let z: Float
@@ -52,13 +45,6 @@ public func * (left: Float, right: Vector3D) -> Vector3D {
 }
 
 
-
-/**
- Scalar product of two vectors
- - parameter left: Vector3D
- - parameter right: Vector3D
- - returns: the scalar product of the two vectors
- */
 public func dot(_ left: Vector3D, _ right: Vector3D) -> Float {
     return (left.x * right.x) + (left.y * right.y) + (left.z * right.z)
 }
@@ -89,25 +75,12 @@ public func degrees(_ radians: Float) -> Float {
     return (180.0/Float(M_PI)) * radians
 }
 
-/**
- Clamps the value to a specified range
- 
- */
 public func clamp(low: Float, high: Float, value: Float) -> Float {
     assert(low < high)
     
     return max(low, min(high, value))
 }
 
-/**
- Compute the roots of a quadratic equation
- 
- - parameter a: squared term 
- - parameter b: linear term 
- - parameter c: constant term 
- 
- - returns: the roots of the solution
- */
 public func solveQuadratic(a: Float, b: Float, c: Float) -> (Float, Float)? {
     
     let discriminant = b*b - 4*a*c

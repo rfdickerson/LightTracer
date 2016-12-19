@@ -1,11 +1,3 @@
-//
-//  Transform.swift
-//  SwiftTracer
-//
-//  Created by Robert Dickerson on 6/25/16.
-//
-//
-
 import Foundation
 
 public struct Transform {
@@ -39,7 +31,10 @@ public func * (left: Transform, right: Vector3D) -> Vector3D {
 
 extension Transform {
     
-    public static func perspectiveMatrix(near: Float, far: Float, fov: Float, aspect: Float) -> Transform {
+    public static func perspectiveMatrix(near: Float,
+                                         far: Float,
+                                         fov: Float,
+                                         aspect: Float) -> Transform {
         
         let invDenom = 1.0/(far-near)
         let inverseTanAngle = 1.0/atan(deg2rad(fov/2.0))
@@ -56,7 +51,9 @@ extension Transform {
         
     }
     
-    public static func lookAtMatrix(pos: Vector3D, look: Vector3D, up: Vector3D) -> Transform {
+    public static func lookAtMatrix(pos: Vector3D,
+                                    look: Vector3D,
+                                    up: Vector3D) -> Transform {
         
         let dir = norm(look - pos)
         let right = cross( dir, norm(up))
@@ -74,11 +71,6 @@ extension Transform {
         
     }
     
-    /// <#Description#>
-    ///
-    /// - parameter vector: <#vector description#>
-    ///
-    /// - returns: <#return value description#>
     public static func translate(delta vector: Vector3D) -> Transform {
         
         let m = Matrix44(x00: 1, x01: 0, x02: 0, x03: vector.x,
@@ -95,10 +87,6 @@ extension Transform {
         
     }
     
-    /**
-     Rotate about the x axis
-     
-     */
     public static func rotate(withAngle angle: Float) -> Transform {
         
         let m = Matrix44(x00: 1, x01: 0, x02: 0, x03: 0,
@@ -110,9 +98,6 @@ extension Transform {
         
     }
     
-    /**
-     Scale by a uniform amount on the x,y,z axis
-     */
     public static func scale(withScale amount: Float) -> Transform {
         
         let m = Matrix44(x00: amount, x01: 0, x02: 0, x03: 0,

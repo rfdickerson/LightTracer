@@ -1,38 +1,26 @@
-//
-//  Sphere.swift
-//  SwiftTracer
-//
-//  Created by Robert Dickerson on 6/23/16.
-//
-//
-
 import Foundation
 
 public struct Sphere {
+    
     let objectToWorld: Transform
     let radius: Float
     let radiusSquared: Float
     let material: Material
     
     public init(objectToWorld: Transform,
-        radius: Float, material: Material) {
+                radius: Float,
+                material: Material) {
         
         self.objectToWorld = objectToWorld
         self.radiusSquared = radius*radius
         self.radius = radius
         self.material = material
     }
+    
 }
 
 extension Sphere : Intersectable {
     
-    /**
-     Ray-sphere intersection test
-     
-     - parameter origin: ray origin
-     - parameter direction: ray direction
-     - returns: distance from the ray origin to the intersection point
-     */
     public func intersect(origin: Vector3D, direction: Vector3D) -> Float? {
         
         // transform ray to object space

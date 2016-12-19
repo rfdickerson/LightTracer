@@ -1,11 +1,3 @@
-//
-//  Material.swift
-//  SwiftTracer
-//
-//  Created by Robert Dickerson on 6/23/16.
-//
-//
-
 import Foundation
 
 public struct Material {
@@ -24,8 +16,11 @@ public struct Material {
     /// specular exponent
     let n: Float
     
-    public init(emission: Color, diffuseColor: Color,
-                ks: Float, kd: Float, n: Float) {
+    public init(emission: Color,
+                diffuseColor: Color,
+                ks: Float,
+                kd: Float,
+                n: Float) {
         
         self.emission = emission
         self.diffuseColor = diffuseColor

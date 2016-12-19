@@ -1,11 +1,3 @@
-//
-//  Math.swift
-//  SwiftTracer
-//
-//  Created by Robert Dickerson on 6/16/16.
-//  Copyright © 2016 Swift@IBM Engineering. All rights reserved.
-//
-
 import Foundation
 
 public struct Matrix44 {
