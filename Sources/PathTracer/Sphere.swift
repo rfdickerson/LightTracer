@@ -2,10 +2,13 @@ import Foundation
 
 public struct Sphere {
     
-    let objectToWorld: Transform
-    let radius: Float
-    let radiusSquared: Float
-    let material: Material
+    // Intersectable properties
+    public var objectToWorld: Transform
+    public var material: Material
+    
+    public let radius: Float
+    public let radiusSquared: Float
+    
     
     public init(objectToWorld: Transform,
                 radius: Float,
@@ -20,6 +23,9 @@ public struct Sphere {
 }
 
 extension Sphere : Intersectable {
+    
+    
+
     
     public func intersect(origin: Vector3D, direction: Vector3D) -> Float? {
         

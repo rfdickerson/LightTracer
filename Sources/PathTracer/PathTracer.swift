@@ -4,7 +4,7 @@ import Dispatch
 
 public typealias Color = Vector3D
 
-public let backgroundColor = Vector3D(0.235294, 0.67451, 0.843137)
+public let backgroundColor = Vector3D(0.435294, 0.67451, 0.843137)
 
 // map values [-1 : 1] to [0 : 1 ]
 func normalColor(_ v: Vector3D ) -> Vector3D {
@@ -19,7 +19,7 @@ func normalColor(_ v: Vector3D ) -> Vector3D {
 public func castRay(origin: Vector3D,
                     direction: Vector3D,
                     bounceDepth: Int,
-                    objects: [Sphere]) -> Color {
+                    objects: [Intersectable]) -> Color {
     
     // var illuminance = Color(x: 0.0, y: 0.0, z: 0.0)
     
@@ -28,7 +28,7 @@ public func castRay(origin: Vector3D,
     // find the closest object
     
     var shortestDepth: Float = 50000
-    var closestObject: Sphere? = nil
+    var closestObject: Intersectable? = nil
     
     for object in objects {
         
@@ -44,7 +44,7 @@ public func castRay(origin: Vector3D,
     }
     
     
-    let sampleLight = Vector3D(5, 5, 5)
+    let sampleLight = Vector3D(5, 5, 0)
     // compute the illumination
     
     if let closestObject = closestObject {
@@ -57,7 +57,8 @@ public func castRay(origin: Vector3D,
         
         let lightDirection = norm(intersection - sampleLight)
         
-        let illuminance = 0.5*dot(normal, lightDirection) * closestObject.material.diffuseColor
+        let illuminance = 0.5 * dot(normal, lightDirection) * closestObject.material.diffuseColor
+        
         return illuminance
         
       }
