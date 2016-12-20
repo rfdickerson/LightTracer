@@ -4,7 +4,7 @@ import Dispatch
 
 public typealias Color = Vector3D
 
-public let backgroundColor = Vector3D(0.435294, 0.67451, 0.843137)
+public let backgroundColor = Vector3D(0.1, 0.1, 0.1)
 
 // map values [-1 : 1] to [0 : 1 ]
 func normalColor(_ v: Vector3D ) -> Vector3D {
@@ -44,20 +44,26 @@ public func castRay(origin: Vector3D,
     }
     
     
-    let sampleLight = Vector3D(5, 5, 0)
+    let sampleLight = Vector3D(1, 1, 3)
     // compute the illumination
     
     if let closestObject = closestObject {
         
         let intersection = origin + shortestDepth * direction
         
-        let center = closestObject.objectToWorld.matrix * Vector3D(0,0,0)
+        let center = closestObject.objectToWorld * Vector3D(0,0,0)
         
         let normal = norm(center - intersection  )
         
         let lightDirection = norm(intersection - sampleLight)
         
-        let illuminance = 0.5 * dot(normal, lightDirection) * closestObject.material.diffuseColor
+        let lightAngle = clamp(low: 0, high: 1, value: dot( lightDirection, normal ) )
+        
+        // print(lightAngle)
+        
+        let illuminance = 1.0 * lightAngle * closestObject.material.diffuseColor
+        
+        // return normalColor( normal )
         
         return illuminance
         
@@ -95,12 +101,6 @@ public func cosWeightedRandomHemisphere( n: Vector3D) -> Vector3D {
     
 }
 
-public func ppmHeader(width: Int, height: Int, maxValue: Int = 255) -> Data {
-    
-    return "P6 \(width) \(height) \(maxValue)  \r\n".data(using: String.Encoding.ascii)!
-    // return "P6 \(width) \(height) \(maxValue) \r\n".cString(using: String.Encoding.ascii)
-    
-}
 
 
 

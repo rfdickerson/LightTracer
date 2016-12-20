@@ -42,3 +42,5 @@ public func colorToPixel(color: Color) -> Pixel {
     let b = clamp(low: 0, high: 1, value: pow(color.z, 2.2))
     return Pixel(r: UInt8(r*255), g: UInt8(g*255), b: UInt8(b*255))
 }
+
+
