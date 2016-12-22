@@ -27,7 +27,7 @@ public func castRay(origin: Vector3D,
     
     // find the closest object
     
-    var shortestDepth: Float = 50000
+    var shortestDepth = 50000.0
     var closestObject: Intersectable? = nil
     
     for object in objects {
@@ -44,7 +44,7 @@ public func castRay(origin: Vector3D,
     }
     
     
-    let sampleLight = Vector3D(1, 1, 3)
+    let sampleLight = Vector3D(343.0, 548.8, 227.0)
     // compute the illumination
     
     if let closestObject = closestObject {
@@ -59,13 +59,16 @@ public func castRay(origin: Vector3D,
         
         let lightAngle = clamp(low: 0, high: 1, value: dot( lightDirection, normal ) )
         
+        let material = closestObject.material
+        
         // print(lightAngle)
         
-        let illuminance = 1.0 * lightAngle * closestObject.material.diffuseColor
+        let diffuseIlluminance = lightAngle * material.diffuseColor
+        let emissionIlluminance = material.emission
         
         // return normalColor( normal )
         
-        return illuminance
+        return (material.kd * diffuseIlluminance) + emissionIlluminance
         
       }
     
@@ -73,33 +76,34 @@ public func castRay(origin: Vector3D,
     
 }
 
-public func cosWeightedRandomHemisphere( n: Vector3D) -> Vector3D {
-    let Xi1 = Float(arc4random())/Float(UINT32_MAX)
-    let Xi2 = Float(arc4random())/Float(UINT32_MAX)
-
-    let theta = acos(sqrt(1.0-Xi1))
-    let phi = 2.0 * Float(M_PI) * Xi2
-    
-    let xs = sin(theta) * cos(phi)
-    let ys = cos(theta)
-    let zs = sin(theta) * sin(phi)
-    
-    var h: Vector3D
-    if fabs(n.x) <= fabs(n.y) && fabs(n.x) <= fabs(n.z) {
-        h = Vector3D(1.0, n.y, n.z)
-    } else if fabs(n.y) <= fabs(n.x) && fabs(n.y) <= fabs(n.z) {
-        h = Vector3D(n.x, 1.0, n.z)
-    } else {
-        h = Vector3D(n.x, n.y, 1.0)
-    }
-    
-    let x = norm(cross(h, n))
-    let z = norm(cross(x, n))
-    
-    let direction =  xs * x + ys * n + zs * z
-    return norm(direction)
-    
-}
+//public func cosWeightedRandomHemisphere( n: Vector3D) -> Vector3D {
+//    
+//    let Xi1 = Float(arc4random())/Float(UINT32_MAX)
+//    let Xi2 = Float(arc4random())/Float(UINT32_MAX)
+//
+//    let theta = acos(sqrt(1.0-Xi1))
+//    let phi = 2.0 * Number(M_PI) * Xi2
+//    
+//    let xs = sin(theta) * cos(phi)
+//    let ys = cos(theta)
+//    let zs = sin(theta) * sin(phi)
+//    
+//    var h: Vector3D
+//    if fabs(n.x) <= fabs(n.y) && fabs(n.x) <= fabs(n.z) {
+//        h = Vector3D(1.0, n.y, n.z)
+//    } else if fabs(n.y) <= fabs(n.x) && fabs(n.y) <= fabs(n.z) {
+//        h = Vector3D(n.x, 1.0, n.z)
+//    } else {
+//        h = Vector3D(n.x, n.y, 1.0)
+//    }
+//    
+//    let x = norm(cross(h, n))
+//    let z = norm(cross(x, n))
+//    
+//    let direction =  xs * x + ys * n + zs * z
+//    return norm(direction)
+//    
+//}
 
 
 
@@ -121,8 +125,8 @@ public func rasterCoordinates(width: Int, height: Int) -> [Vector3D] {
     for j in 0...height-1 {
         for i in 0...width-1 {
             
-            let x = Float(i)
-            let y = Float(j)
+            let x = Number(i)
+            let y = Number(j)
             
             coords.append(Vector3D(x, y, 1.0))
         }

@@ -1,6 +1,6 @@
 import Foundation
 
-public class PPMFileExporter {
+public struct PPMFileExporter {
     
     public init() { }
 

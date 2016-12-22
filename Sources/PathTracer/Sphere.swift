@@ -6,16 +6,16 @@ public struct Sphere {
     public var objectToWorld: Transform
     public var material: Material
     
-    public let radius: Float
-    public let radiusSquared: Float
+    public let radius: Number
+    public let radiusSquared: Number
     
     
     public init(objectToWorld: Transform,
-                radius: Float,
+                radius: Number,
                 material: Material) {
         
         self.objectToWorld = objectToWorld
-        self.radiusSquared = radius*radius
+        self.radiusSquared = radius * radius
         self.radius = radius
         self.material = material
     }
@@ -27,7 +27,7 @@ extension Sphere : Intersectable {
     
 
     
-    public func intersect(origin: Vector3D, direction: Vector3D) -> Float? {
+    public func intersect(origin: Vector3D, direction: Vector3D) -> Number? {
         
         // transform ray to object space
         let center = self.objectToWorld.matrix * Vector3D(0, 0, 0)

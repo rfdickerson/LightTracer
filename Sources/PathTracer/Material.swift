@@ -8,19 +8,19 @@ public struct Material {
     let diffuseColor: Color
     
     /// specular weight
-    let ks: Float
+    let ks: Number
     
     /// diffuse weight
-    let kd: Float
+    let kd: Number
     
     /// specular exponent
-    let n: Float
+    let n: Number
     
     public init(emission: Color,
                 diffuseColor: Color,
-                ks: Float,
-                kd: Float,
-                n: Float) {
+                ks: Number,
+                kd: Number,
+                n: Number) {
         
         self.emission = emission
         self.diffuseColor = diffuseColor

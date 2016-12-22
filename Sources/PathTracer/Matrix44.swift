@@ -1,15 +1,15 @@
 import Foundation
 
 public struct Matrix44 {
-    let x00, x01, x02, x03: Float
-    let x10, x11, x12, x13: Float
-    let x20, x21, x22, x23: Float
-    let x30, x31, x32, x33: Float
+    let x00, x01, x02, x03: Number
+    let x10, x11, x12, x13: Number
+    let x20, x21, x22, x23: Number
+    let x30, x31, x32, x33: Number
     
-    public init(x00: Float, x01: Float, x02: Float, x03: Float,
-                x10: Float, x11: Float, x12: Float, x13: Float,
-                x20: Float, x21: Float, x22: Float, x23: Float,
-                x30: Float, x31: Float, x32: Float, x33: Float) {
+    public init(x00: Number, x01: Number, x02: Number, x03: Number,
+                x10: Number, x11: Number, x12: Number, x13: Number,
+                x20: Number, x21: Number, x22: Number, x23: Number,
+                x30: Number, x31: Number, x32: Number, x33: Number) {
         
         self.x00 = x00
         self.x01 = x01
@@ -61,7 +61,7 @@ extension Matrix44 {
 /**
  Multiply scalar by a vector
  */
-public func * (left: Float, right: Matrix44) -> Matrix44 {
+public func * (left: Number, right: Matrix44) -> Matrix44 {
     return Matrix44(x00: left*right.x00, x01: left*right.x01, x02: left*right.x02, x03: left*right.x03,
                     x10: left*right.x10, x11: left*right.x11, x12: left*right.x12, x13: left*right.x13,
                     x20: left*right.x20, x21: left*right.x21, x22: left*right.x22, x23: left*right.x23,
@@ -112,7 +112,7 @@ public func * (left: Matrix44, right: Matrix44) -> Matrix44 {
     
 }
 
-public func determinant(_ m: Matrix44) -> Float {
+public func determinant(_ m: Matrix44) -> Number {
     return    m.x00*m.x11*m.x22*m.x33 + m.x00*m.x12*m.x23*m.x31 + m.x00*m.x13*m.x21*m.x32
         + m.x01*m.x10*m.x23*m.x32 + m.x01*m.x12*m.x20*m.x33 + m.x01*m.x13*m.x22*m.x30
         + m.x02*m.x10*m.x21*m.x33 + m.x02*m.x11*m.x23*m.x30 + m.x02*m.x13*m.x20*m.x31

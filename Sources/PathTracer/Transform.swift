@@ -31,10 +31,10 @@ public func * (left: Transform, right: Vector3D) -> Vector3D {
 
 extension Transform {
     
-    public static func perspectiveMatrix(near: Float,
-                                         far: Float,
-                                         fov: Float,
-                                         aspect: Float) -> Transform {
+    public static func perspectiveMatrix(near: Number,
+                                         far: Number,
+                                         fov: Number,
+                                         aspect: Number) -> Transform {
         
         let invDenom = 1.0/(far-near)
         let inverseTanAngle = 1.0/atan(deg2rad(fov/2.0))
@@ -55,19 +55,18 @@ extension Transform {
                                     look: Vector3D,
                                     up: Vector3D) -> Transform {
         
-        let dir = norm(look - pos)
+        let dir = norm(look)
         let right = cross( dir, norm(up))
         let newUp = cross(right, dir)
         
         let viewMatrix = Matrix44(x00: right.x, x01: newUp.x, x02: dir.x, x03: pos.x,
                                   x10: right.y, x11: newUp.y, x12: dir.y, x13: pos.y,
                                   x20: right.z, x21: newUp.z, x22: dir.z, x23: pos.z,
-                                  x30: 0,       x31: 0,       x32: 0,       x33: 1)
+                                  x30: 0.0,     x31: 0.0,     x32: 0.0,   x33: 1.0)
         
         let inverse = invert(viewMatrix)
         
         return Transform(matrix: viewMatrix, inverseMatrix: inverse!)
-        
         
     }
     
@@ -87,10 +86,10 @@ extension Transform {
         
     }
     
-    public static func rotate(withAngle angle: Float) -> Transform {
+    public static func rotate(withAngle angle: Number) -> Transform {
         
         let m = Matrix44(x00: 1, x01: 0, x02: 0, x03: 0,
-                        x10: 0, x11: cos(angle), x12: -sin(angle), x13: 0,
+                        x10: 0, x11: cos(Double(angle)), x12: -sin(angle), x13: 0,
                         x20: 0, x21: sin(angle), x22: cos(angle), x23: 0,
                         x30: 0, x31: 0, x32: 0, x33: 1)
         
@@ -98,7 +97,7 @@ extension Transform {
         
     }
     
-    public static func scale(withScale amount: Float) -> Transform {
+    public static func scale(withScale amount: Number) -> Transform {
         
         let m = Matrix44(x00: amount, x01: 0, x02: 0, x03: 0,
                         x10: 0, x11: amount, x12: 0, x13: 0,
