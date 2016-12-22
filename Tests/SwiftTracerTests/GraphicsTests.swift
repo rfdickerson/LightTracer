@@ -29,17 +29,19 @@ class GraphicsTests: XCTestCase {
     func testTriangleIntersection() {
         
         let triangle = Triangle(
-            a: Vector3D(552.8, 0, 0),
-            b: Vector3D(0,     0, 0),
-            c: Vector3D(0,     0, 559.2),
+            a: Vector3D(-1, -1, 0),
+            b: Vector3D( 1, -1, 0),
+            c: Vector3D( 0,  1, 0),
             material: redMaterial,
             objectToWorld: Transform()
         )
         
-        let ray = Ray(origin: Vector3D(0,0,0),
-                      direction: Vector3D(0,-1,0))
+        let ray = Ray(origin: Vector3D(0, 0, -5),
+                      direction: Vector3D(0, 0, 1))
         
         let intersection = triangle.intersect(ray: ray)
+        
+        XCTAssertNotNil(intersection)
         
         print(intersection ?? "No intersection")
     }
@@ -51,7 +53,7 @@ class GraphicsTests: XCTestCase {
         let direction2 = Vector3D(1, 0, 0)
         let direction3 = Vector3D(0, 1, 0)
         
-        let sphereCenter = Vector3D(0, 0, -5)
+        // let sphereCenter = Vector3D(0, 0, -5)
         
         let objectToWorld = Transform.translate(delta: Vector3D(0,0,-5))
         

@@ -48,10 +48,10 @@ for j in 0...6 {
 }
 
 let triangle = Triangle(
-                        a: Vector3D(552.8, 0, 0),
-                        b: Vector3D(0,     0, 0),
-                        c: Vector3D(0,     0, 559.2),
-                        material: redMaterial,
+                        a: Vector3D(552.8, -20, 20),
+                        b: Vector3D(0,     -20, 20),
+                        c: Vector3D(0,     -20, 559.2),
+                        material: whiteMaterial,
                         objectToWorld: Transform()
 )
 

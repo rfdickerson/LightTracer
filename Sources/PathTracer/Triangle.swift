@@ -46,7 +46,7 @@ extension Triangle: Intersectable {
         let t = ray.origin - a
         
         // calculate u parameter and test bounds
-        let u = dot(t, ray.origin) * invDet
+        let u = dot(t, p) * invDet
         
         // The intersection lies outside of the triangle
         if u < 0.0  || u > 1.0 {
@@ -54,7 +54,7 @@ extension Triangle: Intersectable {
         }
         
         // prepare to test v parameter
-        let q = cross(t, a)
+        let q = cross(t, e1)
         let v = dot(ray.direction, q) * invDet
         
         // the intersection lies outside of the triangle
@@ -62,7 +62,7 @@ extension Triangle: Intersectable {
             return nil
         }
     
-        let t2 = dot(b, q) * invDet
+        let t2 = dot(e2, q) * invDet
         
         // ray intersects!
         if t2 > rayEpsilon {
