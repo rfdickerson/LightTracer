@@ -5,13 +5,19 @@ public struct Transform {
     public let matrix: Matrix44
     public let inverseMatrix: Matrix44
     
-    init(matrix: Matrix44, inverseMatrix: Matrix44) {
+    public init() {
+        self.matrix = Matrix44.identity()
+        self.inverseMatrix = Matrix44.identity()
+    }
+    
+    public init(matrix: Matrix44, inverseMatrix: Matrix44) {
         self.matrix = matrix
         self.inverseMatrix = inverseMatrix
     }
     
     public var inverse: Transform {
-        return Transform(matrix: self.inverseMatrix, inverseMatrix: self.matrix)
+        return Transform(matrix: self.inverseMatrix,
+                         inverseMatrix: self.matrix)
     }
     
 }
@@ -59,14 +65,18 @@ extension Transform {
         let right = cross( dir, norm(up))
         let newUp = cross(right, dir)
         
-        let viewMatrix = Matrix44(x00: right.x, x01: newUp.x, x02: dir.x, x03: pos.x,
-                                  x10: right.y, x11: newUp.y, x12: dir.y, x13: pos.y,
-                                  x20: right.z, x21: newUp.z, x22: dir.z, x23: pos.z,
-                                  x30: 0.0,     x31: 0.0,     x32: 0.0,   x33: 1.0)
+        let translationMatrix = Transform.translate(delta: Vector3D(-pos.x, -pos.y, pos.z))
         
-        let inverse = invert(viewMatrix)
+        let viewMatrix = Matrix44(x00: right.x, x01: newUp.x, x02: dir.x, x03: 0.0,
+                                  x10: right.y, x11: newUp.y, x12: dir.y, x13: 0.0,
+                                  x20: right.z, x21: newUp.z, x22: dir.z, x23: 0.0,
+                                  x30: 0,       x31: 0,       x32: 0,     x33: 1)
         
-        return Transform(matrix: viewMatrix, inverseMatrix: inverse!)
+        let view = translationMatrix.matrix * viewMatrix
+        
+        let inverse = invert(view)
+        
+        return Transform(matrix: view, inverseMatrix: inverse!)
         
     }
     

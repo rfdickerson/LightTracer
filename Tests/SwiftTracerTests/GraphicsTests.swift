@@ -1,17 +1,9 @@
-//
-//  GraphicsTests.swift
-//  SwiftTracer
-//
-//  Created by Robert Dickerson on 6/17/16.
-//  Copyright © 2016 Swift@IBM Engineering. All rights reserved.
-//
-
 import XCTest
 
 @testable import PathTracer
 
-let redMaterial = Material(emission: Color(x: 0.0 , y: 0, z: 0.0),
-                           diffuseColor: Color(x: 1.0, y: 0.0, z: 0.0),
+let redMaterial = Material(emission: Color(0.0 , 0, 0.0),
+                           diffuseColor: Color(1.0, 0.0, 0.0),
                            ks: 0.0, kd: 0.7, n: 0)
 
 class GraphicsTests: XCTestCase {
@@ -28,32 +20,52 @@ class GraphicsTests: XCTestCase {
     
     func testScreenSpaceToWorld() {
         
-        let coords = screenCoordinates(width: 10, height: 10)
+        // let coords = screenCoordinates(width: 10, height: 10)
         
-        XCTAssertEqual(coords.count, 100)
+        // XCTAssertEqual(coords.count, 100)
         
     }
     
+    func testTriangleIntersection() {
+        
+        let triangle = Triangle(
+            a: Vector3D(552.8, 0, 0),
+            b: Vector3D(0,     0, 0),
+            c: Vector3D(0,     0, 559.2),
+            material: redMaterial,
+            objectToWorld: Transform()
+        )
+        
+        let ray = Ray(origin: Vector3D(0,0,0),
+                      direction: Vector3D(0,-1,0))
+        
+        let intersection = triangle.intersect(ray: ray)
+        
+        print(intersection ?? "No intersection")
+    }
+    
     func testSphereIntersection() {
-        let v = Vector3D(x: 0, y: 0, z: 0)
+        let v = Vector3D(0, 0, 0)
         
-        let direction = Vector3D(x: 0, y: 0, z: -1)
-        let direction2 = Vector3D(x: 1, y: 0, z: 0)
-        let direction3 = Vector3D(x: 0, y: 1, z: 0)
+        let direction = Vector3D(0, 0, -1)
+        let direction2 = Vector3D(1, 0, 0)
+        let direction3 = Vector3D(0, 1, 0)
         
-        let sphereCenter = Vector3D(x: 0, y: 0, z: -5)
+        let sphereCenter = Vector3D(0, 0, -5)
         
-        let sphere = Sphere(center: sphereCenter, radius: 1, material: redMaterial)
+        let objectToWorld = Transform.translate(delta: Vector3D(0,0,-5))
         
-        let intersection = sphere.intersect(origin: v, direction: direction)
+        let sphere = Sphere(objectToWorld: objectToWorld, radius: 1, material: redMaterial)
+        
+        let intersection = sphere.intersect(ray: Ray(origin: v, direction: direction))
         
         XCTAssertNotNil(intersection)
         
-        let intersection2 = sphere.intersect(origin: v, direction: direction2)
+        let intersection2 = sphere.intersect(ray: Ray(origin: v, direction: direction2))
         
         XCTAssertNil(intersection2)
         
-        let intersection3 = sphere.intersect(origin: v, direction: direction3)
+        let intersection3 = sphere.intersect(ray: Ray(origin: v, direction: direction3))
         
         XCTAssertNil(intersection3)
         
@@ -61,13 +73,13 @@ class GraphicsTests: XCTestCase {
     
     func testTranslation() {
         
-        let v = Vector3D(x: 4, y: 5, z: 6)
+        let v = Vector3D(4, 5, 6)
         
-        let t = Matrix44.createTransform(withTranslation: Vector3D(x: 2, y: 3, z: 4))
+        let t = Transform.translate(delta: Vector3D(2, 3, 4))
         
         let tv = t * v
         
-        let correct = Vector3D(x: 6, y: 8, z: 10)
+        let correct = Vector3D(6, 8, 10)
         
         XCTAssertEqual(tv, correct)
         
@@ -75,13 +87,13 @@ class GraphicsTests: XCTestCase {
     
     func testScale() {
         
-        let v = Vector3D(x: 4, y: 5, z: 6)
+        let v = Vector3D(4, 5, 6)
         
-        let t = Matrix44.createTransform(withScale: 2)
+        let t = Transform.scale(withScale: 2)
         
         let tv = t * v
         
-        let correct = Vector3D(x: 8, y: 10, z: 12)
+        let correct = Vector3D(8, 10, 12)
         
         XCTAssertEqual(tv, correct)
         

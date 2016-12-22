@@ -20,12 +20,12 @@ let greenMaterial = Material(emission: Color(0.0 , 0.0, 0.0),
                              ks: 0.0, kd: 0.3, n: 0)
 
 let yellowMaterial = Material(emission: Color(0.5 , 0.5, 0.5),
-                             diffuseColor: Color(1.0, 1.0, 0.0),
-                             ks: 0.0, kd: 1.3, n: 0)
+                              diffuseColor: Color(1.0, 1.0, 0.0),
+                              ks: 0.0, kd: 1.3, n: 0)
 
 let whiteMaterial = Material(emission: Color(0.5 , 0.5, 0.5),
-                              diffuseColor: Color(1.0, 1.0, 1.0),
-                              ks: 0.0, kd: 1.3, n: 0)
+                             diffuseColor: Color(1.0, 1.0, 1.0),
+                             ks: 0.0, kd: 1.3, n: 0)
 
 
 for j in 0...6 {
@@ -37,13 +37,25 @@ for j in 0...6 {
                            kd: 0.3,
                            n: 0)
         
-        let objectToWorld = Transform.translate(delta: Vector3D(-0.5 + Number(j)/6, -0.5 + Number(i)/6, 5))
+        let objectToWorld = Transform.translate(delta: Vector3D(-0.5 + Number(j)/6,
+                                                                -0.5 + Number(i)/6,
+                                                                5))
         
         objects.append(Sphere(objectToWorld: objectToWorld,
                               radius: 0.050,
                               material: mat))
     }
 }
+
+let triangle = Triangle(
+                        a: Vector3D(552.8, 0, 0),
+                        b: Vector3D(0,     0, 0),
+                        c: Vector3D(0,     0, 559.2),
+                        material: redMaterial,
+                        objectToWorld: Transform()
+)
+
+objects.append(triangle)
 
 //let floorMatrix = Transform.translate(delta: Vector3D(0.0, -5000.0, 0.0))
 //objects.append(Sphere(  objectToWorld: floorMatrix,
@@ -78,13 +90,15 @@ let screenToRaster = Transform.scale(withVector: Vector3D(image.width, image.hei
 let rasterToScreen = screenToRaster.inverse
 
 let cameraToScreen = perspective
+let screenToCamera = cameraToScreen.inverse
 
-let cameraToWorld = lookAt
+let cameraToWorld = lookAt.inverse
+let worldToCamera = cameraToWorld.inverse
 
-let worldToScreen = cameraToScreen * cameraToWorld.inverse
+let worldToScreen = cameraToScreen * cameraToWorld
 
-let rasterToCamera = cameraToScreen.inverse * rasterToScreen
-let rasterToWorld = cameraToWorld * cameraToScreen.inverse * rasterToScreen
+//let rasterToCamera = cameraToScreen.inverse * rasterToScreen
+let rasterToWorld =  screenToCamera * rasterToScreen
 
 let screenCoords = rasterCoordinates(width: Int(image.width),
                                      height: Int(image.height))
@@ -99,11 +113,13 @@ print("Rendering...")
 
 for coord in screenCoords {
     
-    var direction = rasterToCamera * coord
+    var direction = rasterToWorld * coord
     direction = norm(direction)
     
-    let color = castRay(origin: origin,
-                        direction: direction,
+    let ray = Ray(origin: origin,
+                  direction: direction)
+    
+    let color = castRay(ray: ray,
                         bounceDepth: 0,
                         objects: objects)
     
@@ -112,5 +128,9 @@ for coord in screenCoords {
 
 let exporter = PPMFileExporter()
 
-try! exporter.export(image: image, fileName: "image.ppm")
+do {
+    try exporter.export(image: image, fileName: "image.ppm")
+} catch {
+   print("Could not export the image")
+}
 

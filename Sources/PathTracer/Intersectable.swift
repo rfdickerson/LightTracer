@@ -2,7 +2,7 @@ import Foundation
 
 public protocol Intersectable {
     
-    func intersect(origin: Vector3D, direction: Vector3D) -> Number?
+    func intersect(ray: Ray) -> Number?
     
     var objectToWorld: Transform { get set }
     

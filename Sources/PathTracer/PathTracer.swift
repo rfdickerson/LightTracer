@@ -16,8 +16,7 @@ func normalColor(_ v: Vector3D ) -> Vector3D {
 
 
 
-public func castRay(origin: Vector3D,
-                    direction: Vector3D,
+public func castRay(ray: Ray,
                     bounceDepth: Int,
                     objects: [Intersectable]) -> Color {
     
@@ -32,7 +31,7 @@ public func castRay(origin: Vector3D,
     
     for object in objects {
         
-        if let depth = object.intersect(origin: origin, direction: direction) {
+        if let depth = object.intersect(ray: ray) {
             
             if depth < shortestDepth {
                 shortestDepth = depth
@@ -49,7 +48,7 @@ public func castRay(origin: Vector3D,
     
     if let closestObject = closestObject {
         
-        let intersection = origin + shortestDepth * direction
+        let intersection = ray.origin + shortestDepth * ray.direction
         
         let center = closestObject.objectToWorld * Vector3D(0,0,0)
         

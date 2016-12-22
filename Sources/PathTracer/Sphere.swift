@@ -9,7 +9,6 @@ public struct Sphere {
     public let radius: Number
     public let radiusSquared: Number
     
-    
     public init(objectToWorld: Transform,
                 radius: Number,
                 material: Material) {
@@ -24,18 +23,15 @@ public struct Sphere {
 
 extension Sphere : Intersectable {
     
-    
-
-    
-    public func intersect(origin: Vector3D, direction: Vector3D) -> Number? {
+    public func intersect(ray: Ray) -> Number? {
         
         // transform ray to object space
         let center = self.objectToWorld.matrix * Vector3D(0, 0, 0)
     
-        let L = origin - center
+        let L = ray.origin - center
         
-        let a = dot(direction, direction)
-        let b = 2*dot(direction, L)
+        let a = dot(ray.direction, ray.direction)
+        let b = 2 * dot(ray.direction, L)
         let c = dot(L, L) - radiusSquared
         
         guard let roots = solveQuadratic(a: a, b: b, c: c) else {

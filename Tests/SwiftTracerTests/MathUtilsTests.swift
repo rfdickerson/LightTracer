@@ -21,27 +21,7 @@ class MathUtilsTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
-    func testVectorMultiply() {
         
-        let v1 = Vector3D(x: 1, y: 2, z: 3)
-        let m1 = Matrix44.createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))
-        let m2 = Matrix44.createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))
-        
-        let v2 = m1 * v1
-        let v3 = m2 * v2
-        
-        
-        XCTAssertEqual(v2.x, 4)
-        XCTAssertEqual(v2.y, 7)
-        XCTAssertEqual(v2.z, 9)
-        
-        XCTAssertEqual(v3.x, 7)
-        XCTAssertEqual(v3.y, 12)
-        XCTAssertEqual(v3.z, 15)
-        
-    }
-    
     func testMatrixMultiply() {
         
         let m1 = Matrix44(x00: 1, x01: 2, x02: 3, x03: 4,
@@ -68,8 +48,8 @@ class MathUtilsTests: XCTestCase {
     
     func testDotProduct() {
         
-        let a = Vector3D(x: 1, y: 2, z: 3)
-        let b = Vector3D(x: 4, y: -5, z: 6)
+        let a = Vector3D(1, 2, 3)
+        let b = Vector3D(4, -5, 6)
         
         // 4 -10 + 18
         
@@ -81,25 +61,25 @@ class MathUtilsTests: XCTestCase {
     
     func testCrossProduct() {
         
-        let a1 = Vector3D(x: 3, y: -3, z: 1)
-        let b1 = Vector3D(x: 4, y: 9, z: 2)
+        let a1 = Vector3D(3, -3, 1)
+        let b1 = Vector3D(4, 9, 2)
         
         let c1 = cross(a1, b1)
         
-        let correct1 = Vector3D(x: -15, y: -2, z: 39)
+        let correct1 = Vector3D(-15, -2, 39)
         XCTAssertEqual(c1, correct1)
         
-        let a2 = Vector3D(x: 3, y: -3, z: 1)
-        let b2 = Vector3D(x: 4, y: 9, z: 2)
+        let a2 = Vector3D(3, -3, 1)
+        let b2 = Vector3D(4, 9, 2)
         
         let c2 = cross(a2, b2)
-        let correct2 = Vector3D(x: -15, y: -2, z: 39)
+        let correct2 = Vector3D(-15, -2, 39)
         XCTAssertEqual(c2, correct2)
     }
     
     func testNormalize() {
         
-        let a = Vector3D(x: 3, y: 4, z: 5)
+        let a = Vector3D(3, 4, 5)
         
         let na = norm(a)
         
@@ -126,14 +106,5 @@ class MathUtilsTests: XCTestCase {
         XCTAssertEqual(B * invB!, Matrix44.identity())
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        let m1 = Matrix44.createTransform(withTranslation: Vector3D(x: 3,y: 5,z: 6))
-        
-        self.measure {
-            let _ = determinant(m1)
-            // Put the code you want to measure the time of here.
-        }
-    }
     
 }
