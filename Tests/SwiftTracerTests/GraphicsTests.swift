@@ -44,6 +44,13 @@ class GraphicsTests: XCTestCase {
         XCTAssertNotNil(intersection)
         
         print(intersection ?? "No intersection")
+        
+        let ray2 = Ray(origin: Vector3D(0, 0, -5),
+                       direction: Vector3D(0, 0, -1))
+        
+        let intersection2 = triangle.intersect(ray: ray2)
+        
+        XCTAssertNil(intersection2)
     }
     
     func testSphereIntersection() {

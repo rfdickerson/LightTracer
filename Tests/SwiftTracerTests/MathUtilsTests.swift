@@ -83,7 +83,7 @@ class MathUtilsTests: XCTestCase {
         
         let na = norm(a)
         
-        XCTAssertEqual(na.x*na.x+na.y*na.y+na.z*na.z, 1)
+        XCTAssertEqual(na.x*na.x + na.y*na.y + na.z*na.z, 1)
         
     }
     

@@ -11,9 +11,9 @@ let lightMaterial = Material(emission: Color(0.8, 0.2, 0.2),
                              diffuseColor: Color(0.0, 0.0, 0.0),
                              ks: 0, kd: 0, n: 0)
 
-let redMaterial = Material(emission: Color(0.0 , 0, 0.0),
+let redMaterial = Material(emission: Color(0.5 , 0.5, 0.5),
                            diffuseColor: Color(1.0, 0.0, 0.0),
-                           ks: 0.0, kd: 0.7, n: 0)
+                           ks: 0.0, kd: 1.3, n: 0)
 
 let greenMaterial = Material(emission: Color(0.0 , 0.0, 0.0),
                              diffuseColor: Color(0.0, 0.5, 0.0),
@@ -55,7 +55,17 @@ let triangle = Triangle(
                         objectToWorld: Transform()
 )
 
-objects.append(triangle)
+// objects.append(triangle)
+
+let triangle2 = Triangle(
+    a: Vector3D(552.8, -200, 20),
+    b: Vector3D(200,     -20, 20),
+    c: Vector3D(0,     -20, 559.2),
+    material: redMaterial,
+    objectToWorld: Transform()
+)
+
+objects.append(triangle2)
 
 //let floorMatrix = Transform.translate(delta: Vector3D(0.0, -5000.0, 0.0))
 //objects.append(Sphere(  objectToWorld: floorMatrix,
