@@ -4,7 +4,7 @@ import Dispatch
 
 public typealias Color = Vector3D
 
-public let backgroundColor = Vector3D(0.1, 0.1, 0.1)
+public let backgroundColor = Vector3D(0.01, 0.01, 0.01)
 
 // map values [-1 : 1] to [0 : 1 ]
 func normalColor(_ v: Vector3D ) -> Vector3D {
@@ -17,38 +17,54 @@ public func castRay(ray: Ray,
                     objects: [Intersectable]) -> Color {
     
     // var illuminance = Color(x: 0.0, y: 0.0, z: 0.0)
-    let sampleLight = Vector3D(343.0, 548.8, 0.0)
+    let sampleLight = Vector3D(1.0, 1.0, -3.0)
     
     if bounceDepth > 1 { return backgroundColor }
     
     // find the closest object
     
-    var shortestDepth = 50000.0
+    var shortestDepth = Double.greatestFiniteMagnitude
     var closestObject: Intersectable? = nil
+    var closestCollision: Collision? = nil
     
     for object in objects {
         
-        if let (intersection, normal) = object.intersect(ray: ray) {
+        if let collision = object.intersect(ray: ray) {
 
-            closestObject = object
-            
-            let lightDirection = norm(intersection - sampleLight)
-            
-            let lightAngle = clamp(low: 0, high: 1, value: dot( lightDirection, normal ) )
-            
-//            if depth < shortestDepth {
-//                shortestDepth = depth
-//                closestObject = object
-//            }
-            
-            let material = closestObject!.material
-            
-            let diffuseIlluminance = lightAngle * material.diffuseColor
-            let emissionIlluminance = material.emission
-       
-            return (material.kd * diffuseIlluminance) + emissionIlluminance
+            if collision.depth < shortestDepth {
+                shortestDepth = collision.depth
+                closestCollision = collision
+                closestObject = object
+            }
             
         }
+    }
+    
+    // Compute lighting
+    
+    if let closestObject = closestObject, let closestCollision = closestCollision {
+     
+        let lightDirection = norm(closestCollision.intersection - sampleLight)
+        
+        let lightAngle = clamp(low: 0, high: 1, value: dot( lightDirection, closestCollision.normal ) )
+        
+        let material = closestObject.material
+        
+        let diffuseIlluminance = lightAngle * material.diffuseColor
+        let emissionIlluminance = material.emission
+        
+        if diffuseIlluminance.x < 0 || diffuseIlluminance.x > 1 {
+            print("Can't be less than zero!!!")
+        }
+        
+        let light = (material.kd * diffuseIlluminance) + emissionIlluminance
+        
+        // return Vector3D(1.0, 0.0, 0.0)
+        // return normalColor( closestCollision.normal )
+        
+        return light
+
+        
     }
     
     return backgroundColor

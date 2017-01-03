@@ -24,7 +24,7 @@ public struct Triangle {
 
 extension Triangle: Intersectable {
 
-    public func intersect(ray: Ray) -> (Vector3D, Vector3D)? {
+    public func intersect(ray: Ray) -> Collision? {
         
         let a = objectToWorld * v1
         let b = objectToWorld * v2
@@ -71,8 +71,9 @@ extension Triangle: Intersectable {
         // ray intersects!
         if t2 > rayEpsilon {
             let intersection = ray.origin + t2 * ray.direction
+            let normal = cross(e1, e2)
             
-            return (intersection, Vector3D(0, 0, -1))
+            return Collision(intersection: intersection, normal: normal, depth: t2)
         }
         
         return nil

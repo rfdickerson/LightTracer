@@ -23,7 +23,7 @@ public struct Sphere {
 
 extension Sphere : Intersectable {
     
-    public func intersect(ray: Ray) -> (Vector3D, Vector3D)? {
+    public func intersect(ray: Ray) -> Collision? {
         
         // transform ray to object space
         let center = objectToWorld * Vector3D(0, 0, 0)
@@ -49,10 +49,9 @@ extension Sphere : Intersectable {
         
         // let center = objectToWorld * Vector3D(0,0,0)
         
-        let normal = norm(center - intersection  )
+        let normal = norm(center - intersection)
         
-        
-        return (intersection, normal)
+        return Collision(intersection: intersection, normal: normal, depth: t0)
         
     }
     

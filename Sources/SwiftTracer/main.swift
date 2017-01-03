@@ -13,34 +13,34 @@ print("Swift Monte-Carlo Path Tracing renderer")
 
 var objects = [Intersectable]()
 
-let lightMaterial = Material(emission: Color(0.8, 0.2, 0.2),
+let lightMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                              diffuseColor: Color(0.0, 0.0, 0.0),
                              ks: 0, kd: 0, n: 0)
 
-let redMaterial = Material(emission: Color(0.5 , 0.5, 0.5),
+let redMaterial = Material(emission: Color(0.0 , 0.0, 0.0),
                            diffuseColor: Color(1.0, 0.0, 0.0),
-                           ks: 0.0, kd: 1.3, n: 0)
+                           ks: 0.0, kd: 0.3, n: 0)
 
 let greenMaterial = Material(emission: Color(0.0 , 0.0, 0.0),
                              diffuseColor: Color(0.0, 0.5, 0.0),
                              ks: 0.0, kd: 0.3, n: 0)
 
-let yellowMaterial = Material(emission: Color(0.5 , 0.5, 0.5),
+let yellowMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                               diffuseColor: Color(1.0, 1.0, 0.0),
-                              ks: 0.0, kd: 1.3, n: 0)
+                              ks: 0.0, kd: 0.3, n: 0)
 
-let whiteMaterial = Material(emission: Color(0.5 , 0.5, 0.5),
+let whiteMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                              diffuseColor: Color(1.0, 1.0, 1.0),
-                             ks: 0.0, kd: 1.3, n: 0)
+                             ks: 0.0, kd: 0.9, n: 0)
 
 
 for j in 0...6 {
     for i in 0...6 {
         
-        let mat = Material(emission: Color(0.4 , 0.4, 0.4),
-                           diffuseColor: Color(Number(i+1)/6 + 0.2, Number(j+1)/6 + 0.2, 0.8),
+        let mat = Material(emission: Color(0.0 , 0.0, 0.0),
+                           diffuseColor: Color(Number(i)/6, Number(j)/6, 0.8),
                            ks: 0.0,
-                           kd: 0.3,
+                           kd: 0.8,
                            n: 0)
         
         let objectToWorld = Transform.translate(delta: Vector3D(-0.5 + Number(j)/6,
@@ -57,7 +57,7 @@ let triangle = Triangle(
     v1: Vector3D(-1, -1, 0),
     v2: Vector3D(1,  -1, 0),
     v3: Vector3D(-1,  1, 0),
-    material: whiteMaterial,
+    material: redMaterial,
     objectToWorld: Transform.translate(delta: Vector3D(0,0,10)) * Transform.rotate(withAngle: 0.54)
 )
 
@@ -161,6 +161,7 @@ var image = Image( width: width,
 
 do {
     try image.write(to: URL(fileURLWithPath: "image.png"))
+    print("Wrote image to image.png")
 } catch {
    print("Could not export the image")
 }
