@@ -12,10 +12,6 @@ func normalColor(_ v: Vector3D ) -> Vector3D {
 }
 
 
-
-
-
-
 public func castRay(ray: Ray,
                     bounceDepth: Int,
                     objects: [Intersectable]) -> Color {
@@ -65,7 +61,7 @@ public func castRay(ray: Ray,
         let diffuseIlluminance = lightAngle * material.diffuseColor
         let emissionIlluminance = material.emission
         
-        // return normalColor( normal )
+        return normalColor( normal )
         
         return (material.kd * diffuseIlluminance) + emissionIlluminance
         

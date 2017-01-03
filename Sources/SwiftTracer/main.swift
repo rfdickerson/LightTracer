@@ -87,8 +87,8 @@ objects.append(triangle2)
 
 
 let lookAt = Transform.lookAtMatrix(
-                            pos:  Vector3D(278.0, 273.0, -800.0),
-                            look: Vector3D(0.0,   0.0,    1.0),
+                            pos:  Vector3D(0.0,   1.0,    -3.0),
+                            look: Vector3D(0.0,   0.02,    1.0),
                             up:   Vector3D(0.0,   1.0,    0.0))
 
 let perspective = Transform.perspectiveMatrix(
@@ -113,8 +113,7 @@ let worldToCamera = cameraToWorld.inverse
 
 let worldToScreen = cameraToScreen * cameraToWorld
 
-//let rasterToCamera = cameraToScreen.inverse * rasterToScreen
-let rasterToWorld =  screenToCamera * rasterToScreen
+let rasterToWorld =  cameraToWorld * screenToCamera * rasterToScreen
 
 let screenCoords = rasterCoordinates(width: Int(width),
                                      height: Int(height))
