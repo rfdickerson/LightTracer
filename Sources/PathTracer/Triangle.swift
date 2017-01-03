@@ -1,20 +1,20 @@
 
 public struct Triangle {
 
-    public let a: Vector3D
-    public let b: Vector3D
-    public let c: Vector3D
+    public let v1: Vector3D
+    public let v2: Vector3D
+    public let v3: Vector3D
     
     public var material: Material
     public var objectToWorld: Transform
 
-    public init(a: Vector3D, b: Vector3D, c: Vector3D,
+    public init(v1: Vector3D, v2: Vector3D, v3: Vector3D,
                 material: Material,
                 objectToWorld: Transform) {
      
-        self.a = a
-        self.b = b
-        self.c = c
+        self.v1 = v1
+        self.v2 = v2
+        self.v3 = v3
         self.material = material
         self.objectToWorld = objectToWorld
         
@@ -24,7 +24,11 @@ public struct Triangle {
 
 extension Triangle: Intersectable {
 
-    public func intersect(ray: Ray) -> Number? {
+    public func intersect(ray: Ray) -> (Vector3D, Vector3D)? {
+        
+        let a = objectToWorld * v1
+        let b = objectToWorld * v2
+        let c = objectToWorld * v3
         
         // find vectors for the edges sharing
         let e1 = b - a
@@ -66,7 +70,9 @@ extension Triangle: Intersectable {
         
         // ray intersects!
         if t2 > rayEpsilon {
-            return t2
+            let intersection = ray.origin + t2 * ray.direction
+            
+            return (intersection, Vector3D(0, 0, -1))
         }
         
         return nil

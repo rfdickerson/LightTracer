@@ -23,10 +23,10 @@ public struct Sphere {
 
 extension Sphere : Intersectable {
     
-    public func intersect(ray: Ray) -> Number? {
+    public func intersect(ray: Ray) -> (Vector3D, Vector3D)? {
         
         // transform ray to object space
-        let center = self.objectToWorld.matrix * Vector3D(0, 0, 0)
+        let center = objectToWorld * Vector3D(0, 0, 0)
     
         let L = ray.origin - center
         
@@ -45,7 +45,14 @@ extension Sphere : Intersectable {
             return nil
         }
         
-        return t0
+        let intersection = ray.origin + t0 * ray.direction
+        
+        // let center = objectToWorld * Vector3D(0,0,0)
+        
+        let normal = norm(center - intersection  )
+        
+        
+        return (intersection, normal)
         
     }
     

@@ -2,7 +2,10 @@ import Foundation
 
 public protocol Intersectable {
     
-    func intersect(ray: Ray) -> Number?
+    /**
+    Returns the intersection point and the normal at that point
+    */
+    func intersect(ray: Ray) -> (Vector3D, Vector3D)?
     
     var objectToWorld: Transform { get set }
     

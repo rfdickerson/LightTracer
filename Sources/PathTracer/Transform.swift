@@ -99,7 +99,7 @@ extension Transform {
     public static func rotate(withAngle angle: Number) -> Transform {
         
         let m = Matrix44(x00: 1, x01: 0, x02: 0, x03: 0,
-                        x10: 0, x11: cos(Double(angle)), x12: -sin(angle), x13: 0,
+                        x10: 0, x11: cos(angle), x12: -sin(angle), x13: 0,
                         x20: 0, x21: sin(angle), x22: cos(angle), x23: 0,
                         x30: 0, x31: 0, x32: 0, x33: 1)
         

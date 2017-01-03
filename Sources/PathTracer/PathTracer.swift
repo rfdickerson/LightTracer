@@ -17,6 +17,7 @@ public func castRay(ray: Ray,
                     objects: [Intersectable]) -> Color {
     
     // var illuminance = Color(x: 0.0, y: 0.0, z: 0.0)
+    let sampleLight = Vector3D(343.0, 548.8, 0.0)
     
     if bounceDepth > 1 { return backgroundColor }
     
@@ -27,45 +28,28 @@ public func castRay(ray: Ray,
     
     for object in objects {
         
-        if let depth = object.intersect(ray: ray) {
+        if let (intersection, normal) = object.intersect(ray: ray) {
+
+            closestObject = object
             
-            if depth < shortestDepth {
-                shortestDepth = depth
-                closestObject = object
-            }
+            let lightDirection = norm(intersection - sampleLight)
+            
+            let lightAngle = clamp(low: 0, high: 1, value: dot( lightDirection, normal ) )
+            
+//            if depth < shortestDepth {
+//                shortestDepth = depth
+//                closestObject = object
+//            }
+            
+            let material = closestObject!.material
+            
+            let diffuseIlluminance = lightAngle * material.diffuseColor
+            let emissionIlluminance = material.emission
        
+            return (material.kd * diffuseIlluminance) + emissionIlluminance
+            
         }
-        
     }
-    
-    
-    let sampleLight = Vector3D(343.0, 548.8, 227.0)
-    // compute the illumination
-    
-    if let closestObject = closestObject {
-        
-        let intersection = ray.origin + shortestDepth * ray.direction
-        
-        let center = closestObject.objectToWorld * Vector3D(0,0,0)
-        
-        let normal = norm(center - intersection  )
-        
-        let lightDirection = norm(intersection - sampleLight)
-        
-        let lightAngle = clamp(low: 0, high: 1, value: dot( lightDirection, normal ) )
-        
-        let material = closestObject.material
-        
-        // print(lightAngle)
-        
-        let diffuseIlluminance = lightAngle * material.diffuseColor
-        let emissionIlluminance = material.emission
-        
-        return normalColor( normal )
-        
-        return (material.kd * diffuseIlluminance) + emissionIlluminance
-        
-      }
     
     return backgroundColor
     

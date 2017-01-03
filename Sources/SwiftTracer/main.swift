@@ -54,24 +54,24 @@ for j in 0...6 {
 }
 
 let triangle = Triangle(
-                        a: Vector3D(552.8, -20, 20),
-                        b: Vector3D(0,     -20, 20),
-                        c: Vector3D(0,     -20, 559.2),
-                        material: whiteMaterial,
-                        objectToWorld: Transform()
+    v1: Vector3D(-1, -1, 0),
+    v2: Vector3D(1,  -1, 0),
+    v3: Vector3D(-1,  1, 0),
+    material: whiteMaterial,
+    objectToWorld: Transform.translate(delta: Vector3D(0,0,10)) * Transform.rotate(withAngle: 0.54)
 )
 
-// objects.append(triangle)
+objects.append(triangle)
 
-let triangle2 = Triangle(
-    a: Vector3D(552.8, -200, 20),
-    b: Vector3D(200,     -20, 20),
-    c: Vector3D(0,     -20, 559.2),
-    material: redMaterial,
-    objectToWorld: Transform()
-)
-
-objects.append(triangle2)
+//let triangle2 = Triangle(
+//    a: Vector3D(552.8, -200, 20),
+//    b: Vector3D(200,     -20, 20),
+//    c: Vector3D(0,     -20, 559.2),
+//    material: redMaterial,
+//    objectToWorld: Transform()
+//)
+//
+//objects.append(triangle2)
 
 //let floorMatrix = Transform.translate(delta: Vector3D(0.0, -5000.0, 0.0))
 //objects.append(Sphere(  objectToWorld: floorMatrix,
@@ -89,7 +89,7 @@ objects.append(triangle2)
 let lookAt = Transform.lookAtMatrix(
                             pos:  Vector3D(0.0,   1.0,    -3.0),
                             look: Vector3D(0.0,   0.02,    1.0),
-                            up:   Vector3D(0.0,   1.0,    0.0))
+                            up:   Vector3D(0.0,   -1.0,    0.0))
 
 let perspective = Transform.perspectiveMatrix(
                             near: 0.01,
@@ -119,10 +119,7 @@ let screenCoords = rasterCoordinates(width: Int(width),
                                      height: Int(height))
 var origin = Vector3D(0.0, 0.0, 0.0)
 
-print("Camera to world matrix is \(cameraToWorld)")
-
 let sampleOrigin = cameraToWorld * origin
-print("Origin in world space is \(sampleOrigin)")
 
 print("Rendering...")
 
