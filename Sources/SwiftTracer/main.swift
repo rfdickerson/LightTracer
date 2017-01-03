@@ -1,7 +1,13 @@
 import Foundation
 import Dispatch
 
+import SimplePNG
+
 import PathTracer
+
+let width = 300
+let height = 200
+let aspectRatio = Double(width)/Double(height)
 
 print("Swift Monte-Carlo Path Tracing renderer")
 
@@ -77,8 +83,7 @@ objects.append(triangle2)
 //                        radius: 5000,
 //                        material: yellowMaterial))
 
-var image = Image( width: 400,
-                   height: 300)
+
 
 
 let lookAt = Transform.lookAtMatrix(
@@ -90,12 +95,13 @@ let perspective = Transform.perspectiveMatrix(
                             near: 0.01,
                             far:  100.0,
                             fov:  55,
-                            aspect: image.aspectRatio)
+                            aspect: aspectRatio)
 
 // converts -1:1 coordinates to 0:300
-let screenToRaster = Transform.scale(withVector: Vector3D(image.width, image.height, 1.0))
-    * Transform.scale(withVector: Vector3D(1, 1/image.aspectRatio, 1))
-    * Transform.translate(delta: Vector3D(-image.width/2, -image.height/2, 0.0))
+let screenToRaster = Transform.scale(withVector: Vector3D(
+    Number(width), Number(height), 1.0))
+    * Transform.scale(withVector: Vector3D(1, 1/aspectRatio, 1))
+    * Transform.translate(delta: Vector3D(-Number(width)/2, -Number(height)/2, 0.0))
 
 let rasterToScreen = screenToRaster.inverse
 
@@ -110,8 +116,8 @@ let worldToScreen = cameraToScreen * cameraToWorld
 //let rasterToCamera = cameraToScreen.inverse * rasterToScreen
 let rasterToWorld =  screenToCamera * rasterToScreen
 
-let screenCoords = rasterCoordinates(width: Int(image.width),
-                                     height: Int(image.height))
+let screenCoords = rasterCoordinates(width: Int(width),
+                                     height: Int(height))
 var origin = Vector3D(0.0, 0.0, 0.0)
 
 print("Camera to world matrix is \(cameraToWorld)")
@@ -121,25 +127,44 @@ print("Origin in world space is \(sampleOrigin)")
 
 print("Rendering...")
 
-for coord in screenCoords {
+var bitmap = Bitmap()
+
+for j in 0...height-1 {
     
-    var direction = rasterToWorld * coord
-    direction = norm(direction)
+    var row: [Pixel] = [Pixel]()
     
-    let ray = Ray(origin: origin,
-                  direction: direction)
+    for i in 0...width-1 {
+        
+        let x = Number(i)
+        let y = Number(j)
+        
+        var direction = rasterToWorld * Vector3D(x, y, 1)
+        direction = norm(direction)
+        
+        let ray = Ray(origin: origin,
+                      direction: direction)
+        
+        let color = castRay(ray: ray,
+                            bounceDepth: 0,
+                            objects: objects)
+        
+        row.append( Pixel.srgb(Float(color.x), Float(color.y), Float(color.z)))
+        
+    }
     
-    let color = castRay(ray: ray,
-                        bounceDepth: 0,
-                        objects: objects)
+    bitmap.append(row)
     
-    image.colors.append(color)
 }
 
-let exporter = PPMFileExporter()
+var image = Image( width: width,
+                   height: height,
+                   colorType: ColorType.rgb,
+                   bitDepth: 8,
+                   bitmap: bitmap
+)
 
 do {
-    try exporter.export(image: image, fileName: "image.ppm")
+    try image.write(to: URL(fileURLWithPath: "image.png"))
 } catch {
    print("Could not export the image")
 }

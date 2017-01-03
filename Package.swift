@@ -8,5 +8,8 @@ let package = Package(
             dependencies: [.Target(name: "PathTracer")]),
         Target(
             name: "PathTracer")
+    ],
+    dependencies: [
+        .Package(url: "https://github.com/rfdickerson/SimplePNG", majorVersion: 0)
     ]
 )
