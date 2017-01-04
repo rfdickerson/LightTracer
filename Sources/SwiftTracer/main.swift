@@ -13,9 +13,9 @@ print("Swift Monte-Carlo Path Tracing renderer")
 
 var objects = [Intersectable]()
 
-let lightMaterial = Material(emission: Color(0.0, 0.0, 0.0),
-                             diffuseColor: Color(0.0, 0.0, 0.0),
-                             ks: 0, kd: 0, n: 0)
+let lightMaterial = Material(emission: Color(0.5, 0.5, 0.5),
+                             diffuseColor: Color(1.0, 1.0, 1.0),
+                             ks: 0, kd: 1.0, n: 0)
 
 let redMaterial = Material(emission: Color(0.0 , 0.0, 0.0),
                            diffuseColor: Color(1.0, 0.0, 0.0),
@@ -29,39 +29,147 @@ let yellowMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                               diffuseColor: Color(1.0, 1.0, 0.0),
                               ks: 0.0, kd: 0.3, n: 0)
 
+let blueMaterial = Material(emission: Color(0.0, 0.0, 0.0),
+                            diffuseColor: Color(0.0, 0.0, 1.0),
+                            ks: 0.0, kd: 0.3, n: 0)
+
 let whiteMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                              diffuseColor: Color(1.0, 1.0, 1.0),
-                             ks: 0.0, kd: 0.9, n: 0)
+                             ks: 0.0, kd: 0.3, n: 0)
 
 
-for j in 0...6 {
-    for i in 0...6 {
-        
-        let mat = Material(emission: Color(0.0 , 0.0, 0.0),
-                           diffuseColor: Color(Number(i)/6, Number(j)/6, 0.8),
-                           ks: 0.0,
-                           kd: 0.8,
-                           n: 0)
-        
-        let objectToWorld = Transform.translate(delta: Vector3D(-0.5 + Number(j)/6,
-                                                                -0.5 + Number(i)/6,
-                                                                5))
-        
-        objects.append(Sphere(objectToWorld: objectToWorld,
-                              radius: 0.050,
-                              material: mat))
-    }
-}
+let sphere = Sphere(objectToWorld: Transform.translate(delta: Vector3D(0,0,5)),
+                    radius: 0.3,
+                    material: whiteMaterial)
+
+objects.append(sphere)
+
+//for j in 0...6 {
+//    for i in 0...6 {
+//
+//        let mat = Material(emission: Color(0.1 , 0.1, 0.0),
+//                           diffuseColor: Color(Number(i)/6, Number(j)/6, 0.8),
+//                           ks: 0.0,
+//                           kd: 0.8,
+//                           n: 0)
+//
+//        let objectToWorld = Transform.translate(delta: Vector3D(-0.5 + Number(j)/6,
+//                                                                -0.5 + Number(i)/6,
+//                                                                9))
+//
+//        objects.append(Sphere(objectToWorld: objectToWorld,
+//                              radius: 0.050,
+//                              material: mat))
+//    }
+//}
 
 let triangle = Triangle(
     v1: Vector3D(-1, -1, 0),
     v2: Vector3D(1,  -1, 0),
     v3: Vector3D(-1,  1, 0),
-    material: redMaterial,
-    objectToWorld: Transform.translate(delta: Vector3D(0,0,10)) * Transform.rotate(withAngle: 0.54)
+    material: whiteMaterial,
+    objectToWorld: Transform.translate(delta: Vector3D(0,0,10))
 )
 
+let triangle2 = Triangle(
+    v1: Vector3D(1, -1, 0),
+    v2: Vector3D(1,  1, 0),
+    v3: Vector3D(-1, 1, 0),
+    material: whiteMaterial,
+    objectToWorld: Transform.translate(delta: Vector3D(0,0,10))
+)
+
+let triangle3 = Triangle(
+    v1: Vector3D(-1, -1, -5),
+    v2: Vector3D(-1, -1,  1),
+    v3: Vector3D(-1,  1, -5),
+    material: greenMaterial,
+    objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
+)
+
+let triangle4 = Triangle(
+    v1: Vector3D(-1, -1, 1),
+    v2: Vector3D(-1,  1, 1),
+    v3: Vector3D(-1,  1, -5),
+    material: greenMaterial,
+    objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
+)
+
+let triangle5 = Triangle(
+    v1: Vector3D(1, -1, -5),
+    v2: Vector3D(1,  1, -5),
+    v3: Vector3D(1,  -1, 1),
+    material: redMaterial,
+    objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
+)
+
+let triangle6 = Triangle(
+    v1: Vector3D(1, -1,  1),
+    v2: Vector3D(1,  1, -5),
+    v3: Vector3D(1,  1,  0),
+    material: redMaterial,
+    objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
+)
+
+let triangle7 = Triangle(
+    v1: Vector3D( 1, 1, -5),
+    v2: Vector3D(-1, 1,  1),
+    v3: Vector3D( 1, 1,  1),
+    
+    
+    material: yellowMaterial,
+    objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
+)
+
+let triangle8 = Triangle(
+    v1: Vector3D( -1, 1, -5),
+    v2: Vector3D(-1, 1,  1),
+    v3: Vector3D( 1, 1,  -5),
+    
+    
+    
+    material: yellowMaterial,
+    objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
+)
+
+let triangle9 = Triangle(
+    v1: Vector3D( -1, -1, -5),
+    v2: Vector3D( 1, -1,  -5),
+    v3: Vector3D(-1, -1,  1),
+    
+    material: blueMaterial,
+    objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
+)
+
+let triangle10 = Triangle(
+    v1: Vector3D(1, -1,  -5),
+    v2: Vector3D( 1, -1, 1),
+    v3: Vector3D( -1, -1,  1),
+    material: blueMaterial,
+    objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
+)
+
+let triangleLight = Triangle(
+    v1: Vector3D( -0.2, 0.8,  -5),
+    v2: Vector3D(  0.2, 0.8, -5.2),
+    v3: Vector3D( -0.2, 0.8, -5),
+    material: lightMaterial,
+    objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
+)
+
+
 objects.append(triangle)
+objects.append(triangle2)
+objects.append(triangle3)
+objects.append(triangle4)
+objects.append(triangle5)
+objects.append(triangle6)
+objects.append(triangle7)
+objects.append(triangle8)
+objects.append(triangle9)
+objects.append(triangle10)
+
+objects.append(triangleLight)
 
 //let triangle2 = Triangle(
 //    a: Vector3D(552.8, -200, 20),
@@ -87,15 +195,15 @@ objects.append(triangle)
 
 
 let lookAt = Transform.lookAtMatrix(
-                            pos:  Vector3D(0.0,   1.0,    -3.0),
-                            look: Vector3D(0.0,   0.02,    1.0),
-                            up:   Vector3D(0.0,   -1.0,    0.0))
+    pos:  Vector3D(0.0,   1.0,    -3.0),
+    look: Vector3D(0.0,   0.02,    1.0),
+    up:   Vector3D(0.0,   -1.0,    0.0))
 
 let perspective = Transform.perspectiveMatrix(
-                            near: 0.01,
-                            far:  100.0,
-                            fov:  55,
-                            aspect: aspectRatio)
+    near: 0.01,
+    far:  100.0,
+    fov:  55,
+    aspect: aspectRatio)
 
 // converts -1:1 coordinates to 0:300
 let screenToRaster = Transform.scale(withVector: Vector3D(
@@ -163,6 +271,6 @@ do {
     try image.write(to: URL(fileURLWithPath: "image.png"))
     print("Wrote image to image.png")
 } catch {
-   print("Could not export the image")
+    print("Could not export the image")
 }
 

@@ -84,6 +84,14 @@ public func clamp(low: Number, high: Number, value: Number) -> Number {
     return max(low, min(high, value))
 }
 
+public func clamp(low: Number, high: Number, value: Vector3D) -> Vector3D {
+ 
+    return Vector3D(clamp(low: low, high: high, value: value.x),
+                    clamp(low: low, high: high, value: value.y),
+                    clamp(low: low, high: high, value: value.z))
+    
+}
+
 public func solveQuadratic(a: Number, b: Number, c: Number) -> (Number, Number)? {
     
     let discriminant = b*b - 4 * a * c

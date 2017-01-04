@@ -114,9 +114,9 @@ extension Transform {
                         x20: 0, x21: 0, x22: amount, x23: 0,
                         x30: 0, x31: 0, x32: 0, x33: 1)
         
-        let minv = Matrix44(x00: 1/amount, x01: 0, x02: 0, x03: 0,
-                         x10: 0, x11: 1/amount, x12: 0, x13: 0,
-                         x20: 0, x21: 0, x22: 1/amount, x23: 0,
+        let minv = Matrix44(x00: 1.0/amount, x01: 0, x02: 0, x03: 0,
+                         x10: 0, x11: 1.0/amount, x12: 0, x13: 0,
+                         x20: 0, x21: 0, x22: 1.0/amount, x23: 0,
                          x30: 0, x31: 0, x32: 0, x33: 1)
         
         return Transform(matrix: m, inverseMatrix: minv)
