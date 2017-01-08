@@ -7,8 +7,8 @@ import PathTracer
 
 var currentID = 0
 
-let width = 300
-let height = 200
+let width = 800
+let height = 600
 let aspectRatio = Double(width)/Double(height)
 
 print("Swift Monte-Carlo Path Tracing renderer")
@@ -254,6 +254,40 @@ var origin = Vector3D(0.0, 0.0, 0.0)
 
 let sampleOrigin = cameraToWorld * origin
 
+
+func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
+    
+    var colorAverage = Color(0,0,0)
+    
+    var testVertices = [Vector3D]()
+    testVertices.append( Vector3D(x-0.5*Number(depth), y-0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x+0.5*Number(depth), y-0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x-0.5*Number(depth), y+0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x, y, 1) )
+    
+    for v in testVertices {
+        
+        var direction = rasterToWorld * v
+        direction = norm(direction)
+        
+        let ray = Ray(origin: origin,
+                  direction: direction)
+    
+        let color = castRay(ray: ray,
+                        bounceDepth: 0,
+                        objects: objects)
+    
+        colorAverage = colorAverage + color
+        
+    }
+    
+    colorAverage = 1/Number(5) * colorAverage
+
+    return colorAverage
+    
+}
+
 print("Rendering...")
 
 var bitmap = Bitmap()
@@ -267,15 +301,7 @@ for j in 0...height-1 {
         let x = Number(i)
         let y = Number(j)
         
-        var direction = rasterToWorld * Vector3D(x, y, 1)
-        direction = norm(direction)
-        
-        let ray = Ray(origin: origin,
-                      direction: direction)
-        
-        let color = castRay(ray: ray,
-                            bounceDepth: 0,
-                            objects: objects)
+        let color = adaptiveSample(x: x, y: y, depth: 1)
         
         row.append( Pixel.srgb(Float(color.x), Float(color.y), Float(color.z)))
         
