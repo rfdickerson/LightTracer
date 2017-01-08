@@ -4,7 +4,9 @@ import Dispatch
 
 public typealias Color = Vector3D
 
-public let backgroundColor = Vector3D(1.00, 1.00, 1.00)
+let numberOfSamples = 10
+let sampleLightPosition = Vector3D(0.4, 0.8, 5.0)
+public let backgroundColor = Vector3D(1.00, 0.00, 1.00)
 
 // map values [-1 : 1] to [0 : 1 ]
 func normalColor(_ v: Vector3D ) -> Vector3D {
@@ -16,14 +18,8 @@ public func castRay(ray: Ray,
                     bounceDepth: Int,
                     objects: [Intersectable]) -> Color {
     
-    // var illuminance = Color(x: 0.0, y: 0.0, z: 0.0)
-    let numberOfSamples = 10
-    let sampleLight = Vector3D(0.0, 0.0, 0.0)
-    
     if bounceDepth > 1 { return backgroundColor }
-    
-    // find the closest object
-    
+
     var shortestDepth = Double.greatestFiniteMagnitude
     var closestObject: Intersectable? = nil
     var closestCollision: Collision? = nil
@@ -31,7 +27,7 @@ public func castRay(ray: Ray,
     for object in objects {
         
         if let collision = object.intersect(ray: ray) {
-
+            
             if collision.depth < shortestDepth {
                 shortestDepth = collision.depth
                 closestCollision = collision
@@ -44,49 +40,91 @@ public func castRay(ray: Ray,
     // Compute lighting
     
     if let closestObject = closestObject, let closestCollision = closestCollision {
-     
-        let lightDirection = norm(closestCollision.intersection - sampleLight)
         
-        let lightAngle = clamp(low: 0, high: 1, value: dot( lightDirection, closestCollision.normal ) )
+        var directLight: Vector3D = Vector3D(0.0,0.0,0)
         
         let material = closestObject.material
+        let lightDirection = norm(closestCollision.intersection - sampleLightPosition)
         
-        let diffuseIlluminance = lightAngle * material.diffuseColor
-        let emissionIlluminance = material.emission
+        let shadowDirection = norm(sampleLightPosition - closestCollision.intersection)
         
-        if diffuseIlluminance.x < 0 || diffuseIlluminance.x > 1 {
-            print("Can't be less than zero!!!")
+        let shadowRay = Ray(origin: closestCollision.intersection, direction: shadowDirection, minT: 0, maxT: 1)
+        
+        var inShadow = false
+        
+        // do collision test with other objects
+        for object in objects {
+            
+            if (object.intersect(ray: shadowRay) != nil) {
+                inShadow = true
+            }
+            
         }
         
-        let directLight = (material.kd * diffuseIlluminance) + emissionIlluminance
+        if !inShadow {
+            
+            let lightAngle = clamp(low: 0, high: 1, value: max(0, dot( lightDirection, closestCollision.normal)  ) )
+        
+            let diffuseIlluminance = lightAngle * material.diffuseColor
+            let emissionIlluminance = material.emission
+            
+            if diffuseIlluminance.x < 0 || diffuseIlluminance.x > 1 {
+                print("Can't be less than zero!!!")
+            }
+            
+            directLight = (material.kd * diffuseIlluminance) + emissionIlluminance
+        }
+        
+        
         
         // get a random hemisphere
         
-        var indirectLight: Vector3D = Vector3D(0,0,0)
+        // var indirectLight: Vector3D = Vector3D(0,0,0)
         
-        let globalIllumination = true
+//        let globalIllumination = false
+//        
+//        if globalIllumination {
+//            for _ in 0...numberOfSamples {
+//                let newDirection = cosWeightedRandomHemisphere(n: closestCollision.normal)
+//                let newRay = Ray(origin: closestCollision.intersection, direction: newDirection, minT: 0, maxT: 1)
+//                
+//                let indirectLightAngle = clamp(low: 0, high: 1, value: dot( newDirection, closestCollision.normal ) )
+//                
+//                indirectLight = indirectLight + indirectLightAngle * castRay(ray: newRay, bounceDepth: bounceDepth+1, objects: objects)
+//            }
+//        }
         
-        if globalIllumination {
-            for _ in 0...numberOfSamples {
-                let newDirection = cosWeightedRandomHemisphere(n: closestCollision.normal)
-                let newRay = Ray(origin: closestCollision.intersection, direction: newDirection, minT: 0, maxT: 1)
-                
-                let indirectLightAngle = clamp(low: 0, high: 1, value: dot( newDirection, closestCollision.normal ) )
-                
-                indirectLight = indirectLight + indirectLightAngle * castRay(ray: newRay, bounceDepth: bounceDepth+1, objects: objects)
-            }
-        }
+//        indirectLight = (1/Number(numberOfSamples)) * indirectLight
         
-        indirectLight = (1/Number(numberOfSamples)) * indirectLight
+        return clamp(low:0, high: 1, value:directLight)
         
-        return clamp(low:0, high: 1, value: 1/(M_PI) * material.diffuseColor * (indirectLight + 2*directLight) )
-
+        // return clamp(low:0, high: 1, value: 1/(M_PI) * material.diffuseColor * (indirectLight + 2*directLight) )
+        
         
     }
     
     return backgroundColor
     
 }
+
+
+public func hemisphere(n: Vector3D) -> Vector3D {
+    
+    let u1 = drand48()
+    let u2 = drand48()
+    let r = sqrt(u1)
+    let theta = 2 * M_PI * u2
+    
+    let x = r * cos(theta)
+    let y = r * sin(theta)
+    
+    //    let sx = cosTheta * n.y + sinTheta * (-n.x)
+    //    let sy = cosTheta * n.x + sinTheta * n.y
+    
+    return Vector3D(x, y, sqrt(max(0, 1 - u1)))
+    
+}
+
 
 public func cosWeightedRandomHemisphere( n: Vector3D) -> Vector3D {
     
@@ -95,7 +133,7 @@ public func cosWeightedRandomHemisphere( n: Vector3D) -> Vector3D {
     
     let Xi1 = drand48()
     let Xi2 = drand48()
-
+    
     let theta = acos(sqrt(1.0-Xi1))
     let phi = 2.0 * Number(M_PI) * Xi2
     

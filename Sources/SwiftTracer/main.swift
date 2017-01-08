@@ -19,11 +19,11 @@ let lightMaterial = Material(emission: Color(0.5, 0.5, 0.5),
 
 let redMaterial = Material(emission: Color(0.0 , 0.0, 0.0),
                            diffuseColor: Color(1.0, 0.0, 0.0),
-                           ks: 0.0, kd: 0.3, n: 0)
+                           ks: 0.0, kd: 0.7, n: 0)
 
 let greenMaterial = Material(emission: Color(0.0 , 0.0, 0.0),
                              diffuseColor: Color(0.0, 0.5, 0.0),
-                             ks: 0.0, kd: 0.3, n: 0)
+                             ks: 0.0, kd: 0.7, n: 0)
 
 let yellowMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                               diffuseColor: Color(1.0, 1.0, 0.0),
@@ -31,14 +31,14 @@ let yellowMaterial = Material(emission: Color(0.0, 0.0, 0.0),
 
 let blueMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                             diffuseColor: Color(0.0, 0.0, 1.0),
-                            ks: 0.0, kd: 0.3, n: 0)
+                            ks: 0.0, kd: 0.4, n: 0)
 
 let whiteMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                              diffuseColor: Color(1.0, 1.0, 1.0),
-                             ks: 0.0, kd: 0.3, n: 0)
+                             ks: 0.0, kd: 0.7, n: 0)
 
 
-let sphere = Sphere(objectToWorld: Transform.translate(delta: Vector3D(0,0,5)),
+let sphere = Sphere(objectToWorld: Transform.translate(delta: Vector3D(0,0,7)),
                     radius: 0.3,
                     material: whiteMaterial)
 
@@ -169,7 +169,7 @@ objects.append(triangle8)
 objects.append(triangle9)
 objects.append(triangle10)
 
-objects.append(triangleLight)
+// objects.append(triangleLight)
 
 //let triangle2 = Triangle(
 //    a: Vector3D(552.8, -200, 20),

@@ -51,7 +51,7 @@ extension Sphere : Intersectable {
         
         let normal = norm(center - intersection)
         
-        return Collision(intersection: intersection, normal: normal, depth: t0)
+        return Collision(intersection: intersection, normal: normal, tangent: nil, bitangent: nil, depth: t0)
         
     }
     

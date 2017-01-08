@@ -71,9 +71,22 @@ extension Triangle: Intersectable {
         // ray intersects!
         if t2 > rayEpsilon {
             let intersection = ray.origin + t2 * ray.direction
-            let normal = cross(e1, e2)
+            let normal = norm(cross(e1, e2))
             
-            return Collision(intersection: intersection, normal: normal, depth: t2)
+            let c1 = cross(normal, Vector3D(0,0,1))
+            let c2 = cross(normal, Vector3D(0,1,0))
+            
+            let tangent: Vector3D
+            
+            if magnitude(c1) > magnitude(c2) {
+                tangent = c1
+            } else {
+                tangent = c2
+            }
+            
+            let bitangent = cross(tangent, normal)
+            
+            return Collision(intersection: intersection, normal: normal, tangent: tangent, bitangent: bitangent, depth: t2)
         }
         
         return nil
