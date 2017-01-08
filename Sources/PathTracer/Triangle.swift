@@ -1,6 +1,7 @@
 
 public struct Triangle {
 
+    public var id: Int
     public let v1: Vector3D
     public let v2: Vector3D
     public let v3: Vector3D
@@ -8,10 +9,14 @@ public struct Triangle {
     public var material: Material
     public var objectToWorld: Transform
 
-    public init(v1: Vector3D, v2: Vector3D, v3: Vector3D,
+    public init(id: Int,
+                v1: Vector3D,
+                v2: Vector3D,
+                v3: Vector3D,
                 material: Material,
                 objectToWorld: Transform) {
      
+        self.id = id
         self.v1 = v1
         self.v2 = v2
         self.v3 = v3

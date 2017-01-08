@@ -55,6 +55,10 @@ public func castRay(ray: Ray,
         // do collision test with other objects
         for object in objects {
             
+            if closestObject.id == object.id {
+                continue
+            }
+            
             if (object.intersect(ray: shadowRay) != nil) {
                 inShadow = true
             }
@@ -63,7 +67,7 @@ public func castRay(ray: Ray,
         
         if !inShadow {
             
-            let lightAngle = clamp(low: 0, high: 1, value: max(0, dot( lightDirection, closestCollision.normal)  ) )
+            let lightAngle = max(0, dot( lightDirection, closestCollision.normal)  )
         
             let diffuseIlluminance = lightAngle * material.diffuseColor
             let emissionIlluminance = material.emission

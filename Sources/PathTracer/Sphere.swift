@@ -3,16 +3,19 @@ import Foundation
 public struct Sphere {
     
     // Intersectable properties
+    public var id: Int
     public var objectToWorld: Transform
     public var material: Material
     
     public let radius: Number
     public let radiusSquared: Number
     
-    public init(objectToWorld: Transform,
+    public init(id: Int,
+                objectToWorld: Transform,
                 radius: Number,
                 material: Material) {
         
+        self.id = id
         self.objectToWorld = objectToWorld
         self.radiusSquared = radius * radius
         self.radius = radius

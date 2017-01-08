@@ -5,6 +5,8 @@ import SimplePNG
 
 import PathTracer
 
+var currentID = 0
+
 let width = 300
 let height = 200
 let aspectRatio = Double(width)/Double(height)
@@ -38,11 +40,12 @@ let whiteMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                              ks: 0.0, kd: 0.7, n: 0)
 
 
-let sphere = Sphere(objectToWorld: Transform.translate(delta: Vector3D(0,0,7)),
+let sphere = Sphere(id: currentID, objectToWorld: Transform.translate(delta: Vector3D(0,0,7)),
                     radius: 0.3,
                     material: whiteMaterial)
 
 objects.append(sphere)
+currentID += 1
 
 //for j in 0...6 {
 //    for i in 0...6 {
@@ -64,54 +67,67 @@ objects.append(sphere)
 //}
 
 let triangle = Triangle(
+    id: currentID,
     v1: Vector3D(-1, -1, 0),
     v2: Vector3D(1,  -1, 0),
     v3: Vector3D(-1,  1, 0),
     material: whiteMaterial,
     objectToWorld: Transform.translate(delta: Vector3D(0,0,10))
 )
+currentID += 1
 
 let triangle2 = Triangle(
+    id: currentID,
     v1: Vector3D(1, -1, 0),
     v2: Vector3D(1,  1, 0),
     v3: Vector3D(-1, 1, 0),
     material: whiteMaterial,
     objectToWorld: Transform.translate(delta: Vector3D(0,0,10))
 )
+currentID += 1
 
 let triangle3 = Triangle(
+    id: currentID,
     v1: Vector3D(-1, -1, -5),
     v2: Vector3D(-1, -1,  1),
     v3: Vector3D(-1,  1, -5),
     material: greenMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
 )
+currentID += 1
 
 let triangle4 = Triangle(
+    id: currentID,
     v1: Vector3D(-1, -1, 1),
     v2: Vector3D(-1,  1, 1),
     v3: Vector3D(-1,  1, -5),
     material: greenMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
 )
+currentID += 1
 
 let triangle5 = Triangle(
+    id: currentID,
     v1: Vector3D(1, -1, -5),
     v2: Vector3D(1,  1, -5),
     v3: Vector3D(1,  -1, 1),
     material: redMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
 )
+currentID += 1
 
 let triangle6 = Triangle(
+    id: currentID,
     v1: Vector3D(1, -1,  1),
     v2: Vector3D(1,  1, -5),
     v3: Vector3D(1,  1,  0),
     material: redMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
 )
+currentID += 1
 
 let triangle7 = Triangle(
+    id: currentID,
     v1: Vector3D( 1, 1, -5),
     v2: Vector3D(-1, 1,  1),
     v3: Vector3D( 1, 1,  1),
@@ -120,8 +136,11 @@ let triangle7 = Triangle(
     material: yellowMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
 )
+currentID += 1
+
 
 let triangle8 = Triangle(
+    id: currentID,
     v1: Vector3D( -1, 1, -5),
     v2: Vector3D(-1, 1,  1),
     v3: Vector3D( 1, 1,  -5),
@@ -131,8 +150,10 @@ let triangle8 = Triangle(
     material: yellowMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
 )
+currentID += 1
 
 let triangle9 = Triangle(
+    id: currentID,
     v1: Vector3D( -1, -1, -5),
     v2: Vector3D( 1, -1,  -5),
     v3: Vector3D(-1, -1,  1),
@@ -140,23 +161,27 @@ let triangle9 = Triangle(
     material: blueMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
 )
+currentID += 1
 
 let triangle10 = Triangle(
+    id: currentID,
     v1: Vector3D(1, -1,  -5),
     v2: Vector3D( 1, -1, 1),
     v3: Vector3D( -1, -1,  1),
     material: blueMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
 )
+currentID += 1
 
 let triangleLight = Triangle(
+    id: currentID,
     v1: Vector3D( -0.2, 0.8,  -5),
     v2: Vector3D(  0.2, 0.8, -5.2),
     v3: Vector3D( -0.2, 0.8, -5),
     material: lightMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,10))
 )
-
+currentID += 1
 
 objects.append(triangle)
 objects.append(triangle2)
