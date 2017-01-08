@@ -57,22 +57,29 @@ extension Transform {
         
     }
     
-    public static func lookAtMatrix(pos: Vector3D,
-                                    look: Vector3D,
+    public static func lookAtMatrix(eye: Vector3D,
+                                    target: Vector3D,
                                     up: Vector3D) -> Transform {
         
-        let dir = norm(look)
-        let right = cross( dir, norm(up))
-        let newUp = cross(right, dir)
+        let zaxis = norm(eye - target)
+        let xaxis = norm(cross(up, zaxis))
+        let yaxis = cross(zaxis, xaxis)
         
-        let translationMatrix = Transform.translate(delta: Vector3D(-pos.x, -pos.y, pos.z))
+//        let dir = norm(look)
+//        let right = cross( dir, norm(up))
+//        let newUp = cross(right, dir)
         
-        let viewMatrix = Matrix44(x00: right.x, x01: newUp.x, x02: dir.x, x03: 0.0,
-                                  x10: right.y, x11: newUp.y, x12: dir.y, x13: 0.0,
-                                  x20: right.z, x21: newUp.z, x22: dir.z, x23: 0.0,
-                                  x30: 0,       x31: 0,       x32: 0,     x33: 1)
+        let translation = Matrix44(x00: 1, x01: 0, x02: 0, x03: 0.0,
+                                   x10: 0, x11: 1, x12: 0, x13: 0.0,
+                                   x20: 0, x21: 0, x22: 1, x23: 0.0,
+                                   x30: -eye.x, x31: -eye.y, x32: -eye.z, x33: 1)
         
-        let view = translationMatrix.matrix * viewMatrix
+        let orientation = Matrix44(x00: xaxis.x, x01: yaxis.x, x02: zaxis.x, x03: 0.0,
+                                   x10: xaxis.y, x11: yaxis.y, x12: zaxis.y, x13: 0.0,
+                                   x20: xaxis.z, x21: yaxis.z, x22: zaxis.z, x23: 0.0,
+                                   x30: 0,       x31: 0,       x32: 0,       x33: 1)
+        
+        let view = transpose(orientation * translation)
         
         let inverse = invert(view)
         
