@@ -294,7 +294,7 @@ var bitmap = Bitmap(repeating: [Pixel](), count: height)
 
 for j in 0...height-1 {
     
-    dispatchQueue.async {
+    dispatchQueue.async(group: dispatchGroup) {
         
         var row: [Pixel] = [Pixel]()
         
@@ -318,7 +318,9 @@ for j in 0...height-1 {
     
 }
 
-sleep(1)
+// sleep(1)
+
+dispatchGroup.wait()
 
 var image = Image( width: width,
                    height: height,
