@@ -1,7 +1,6 @@
 import Foundation
 import Dispatch
 
-
 public typealias Color = Vector3D
 
 // Number of stochastic samples for global illumination
@@ -25,7 +24,7 @@ public func castRay(ray: Ray,
     
     if bounceDepth > 1 { return backgroundColor }
 
-    var shortestDepth = Double.greatestFiniteMagnitude
+    var shortestDepth = Number(5000)
     
     var closestObject: Intersectable? = nil
     
@@ -48,7 +47,8 @@ public func castRay(ray: Ray,
     
     if let closestObject = closestObject, let closestCollision = closestCollision {
         
-        var directLight: Vector3D = Vector3D(0.0,0.0,0)
+        // used for aggregating the direct light
+        var directLight: Vector3D = Vector3D(0.0, 0.0, 0.0)
         
         let material = closestObject.material
         let lightDirection = norm(closestCollision.intersection - sampleLightPosition)

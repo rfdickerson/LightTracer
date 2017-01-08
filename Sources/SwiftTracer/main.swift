@@ -7,8 +7,8 @@ import PathTracer
 
 var currentID = 0
 
-let width = 300
-let height = 200
+let width = 500
+let height = 400
 let aspectRatio = Double(width)/Double(height)
 
 print("Swift Monte-Carlo Path Tracing renderer")
@@ -37,7 +37,7 @@ let blueMaterial = Material(emission: Color(0.0, 0.0, 0.0),
 
 let whiteMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                              diffuseColor: Color(1.0, 1.0, 1.0),
-                             ks: 0.0, kd: 0.7, n: 0)
+                             ks: 0.0, kd: 0.9, n: 0)
 
 
 let sphere = Sphere(id: currentID, objectToWorld: Transform.translate(delta: Vector3D(0,0.2,0.2)),
@@ -266,46 +266,59 @@ func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
     for v in testVertices {
         
         let direction = norm(rasterToWorld * v)
- 
+        
         let ray = Ray(origin: sampleOrigin,
-                  direction: direction)
-    
+                      direction: direction)
+        
         let color = castRay(ray: ray,
-                        bounceDepth: 0,
-                        objects: objects)
-    
+                            bounceDepth: 0,
+                            objects: objects)
+        
         colorAverage = colorAverage + color
         
     }
     
     colorAverage = 1/Number(5) * colorAverage
-
+    
     return colorAverage
     
 }
 
 print("Rendering...")
 
-var bitmap = Bitmap()
+let dispatchQueue = DispatchQueue(label: "renderqueue", attributes: .concurrent)
+let dispatchGroup = DispatchGroup()
+let semaphore = DispatchSemaphore(value: 1)
+
+var bitmap = Bitmap(repeating: [Pixel](), count: height)
 
 for j in 0...height-1 {
     
-    var row: [Pixel] = [Pixel]()
-    
-    for i in 0...width-1 {
+    dispatchQueue.async {
         
-        let x = Number(i)
-        let y = Number(j)
+        var row: [Pixel] = [Pixel]()
         
-        let color = adaptiveSample(x: x, y: y, depth: 1)
+        for i in 0...width-1 {
+            
+            let x = Number(i)
+            let y = Number(j)
+            
+            let color = adaptiveSample(x: x, y: y, depth: 1)
+            
+            row.append( Pixel.srgb(Float(color.x), Float(color.y), Float(color.z)))
+            
+        }
         
-        row.append( Pixel.srgb(Float(color.x), Float(color.y), Float(color.z)))
+        semaphore.wait()
+        //bitmap.append(row)
+        bitmap[j] = row
+        semaphore.signal()
         
     }
     
-    bitmap.append(row)
-    
 }
+
+sleep(1)
 
 var image = Image( width: width,
                    height: height,
@@ -320,4 +333,6 @@ do {
 } catch {
     print("Could not export the image")
 }
+
+
 
