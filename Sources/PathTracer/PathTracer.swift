@@ -3,14 +3,30 @@ import Dispatch
 
 public typealias Color = Vector3D
 
-// Number of stochastic samples for global illumination
-let numberOfSamples = 10
 
-// Position of the single point-light source
-let sampleLightPosition = Vector3D(0.0, 0.9, -1.0)
+struct PathTracer {
+    
+    // Number of stochastic samples for global illumination
+    let numberOfGISamples = 10
+    
+    // Position of the single point-light source
+    let sampleLightPosition = Vector3D(0.0, 0.9, -1.0)
+    
+    // Background color
+    public let backgroundColor = Vector3D(1.00, 1.00, 1.00)
+    
+    // Current camera
+    public let camera: Camera
+    
+    // Current scene
+    public let scene: Scene
+    
+}
 
-// Background color
-public let backgroundColor = Vector3D(1.00, 1.00, 1.00)
+
+
+
+
 
 
 func normalColor(_ v: Vector3D ) -> Vector3D {
@@ -18,12 +34,48 @@ func normalColor(_ v: Vector3D ) -> Vector3D {
 }
 
 
+extension PathTracer {
+    
+    func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
+        
+        var colorAverage = Color(0,0,0)
+        
+        var testVertices = [Vector3D]()
+        testVertices.append( Vector3D(x-0.5*Number(depth), y-0.5*Number(depth), 1) )
+        testVertices.append( Vector3D(x+0.5*Number(depth), y-0.5*Number(depth), 1) )
+        testVertices.append( Vector3D(x-0.5*Number(depth), y+0.5*Number(depth), 1) )
+        testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1) )
+        testVertices.append( Vector3D(x, y, 1) )
+        
+        for v in testVertices {
+            
+            let direction = norm(rasterToWorld * v)
+            
+            let ray = Ray(origin: sampleOrigin,
+                          direction: direction)
+            
+            let color = castRay(ray: ray,
+                                bounceDepth: 0,
+                                objects: objects)
+            
+            colorAverage = colorAverage + color
+            
+        }
+        
+        colorAverage = 1/Number(5) * colorAverage
+        
+        return colorAverage
+        
+    }
+    
+}
+
 public func castRay(ray: Ray,
                     bounceDepth: Int,
                     objects: [Intersectable]) -> Color {
     
     if bounceDepth > 1 { return backgroundColor }
-
+    
     var shortestDepth = Number(5000)
     
     var closestObject: Intersectable? = nil
@@ -67,7 +119,7 @@ public func castRay(ray: Ray,
             }
             
             if (object.intersect(ray: shadowRay) != nil) {
-                inShadow = true
+                inShadow = false
             }
             
         }
@@ -75,7 +127,7 @@ public func castRay(ray: Ray,
         if !inShadow {
             
             let lightAngle = max(0, dot( lightDirection, closestCollision.normal)  )
-        
+            
             let diffuseIlluminance = lightAngle * material.diffuseColor
             let emissionIlluminance = material.emission
             
@@ -92,7 +144,7 @@ public func castRay(ray: Ray,
         
         // get a random hemisphere
         
-         var indirectLight: Vector3D = Vector3D(0,0,0)
+        var indirectLight: Vector3D = Vector3D(0,0,0)
         
         let globalIllumination = false
         

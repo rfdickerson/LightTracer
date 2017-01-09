@@ -65,25 +65,14 @@ extension Transform {
         let xaxis = norm(cross(up, zaxis))
         let yaxis = cross(zaxis, xaxis)
         
-//        let dir = norm(look)
-//        let right = cross( dir, norm(up))
-//        let newUp = cross(right, dir)
-        
-        let translation = Matrix44(x00: 1, x01: 0, x02: 0, x03: 0.0,
-                                   x10: 0, x11: 1, x12: 0, x13: 0.0,
-                                   x20: 0, x21: 0, x22: 1, x23: 0.0,
-                                   x30: -eye.x, x31: -eye.y, x32: -eye.z, x33: 1)
-        
-        let orientation = Matrix44(x00: xaxis.x, x01: yaxis.x, x02: zaxis.x, x03: 0.0,
+        let viewMatrix = Matrix44(x00: xaxis.x, x01: yaxis.x, x02: zaxis.x, x03: 0.0,
                                    x10: xaxis.y, x11: yaxis.y, x12: zaxis.y, x13: 0.0,
                                    x20: xaxis.z, x21: yaxis.z, x22: zaxis.z, x23: 0.0,
-                                   x30: 0,       x31: 0,       x32: 0,       x33: 1)
+                                   x30: -dot(xaxis, eye), x31: -dot(yaxis, eye), x32: -dot(zaxis, eye), x33: 1)
         
-        let view = transpose(orientation * translation)
+        let inverse = invert(viewMatrix)
         
-        let inverse = invert(view)
-        
-        return Transform(matrix: view, inverseMatrix: inverse!)
+        return Transform(matrix: viewMatrix, inverseMatrix: inverse!)
         
     }
     

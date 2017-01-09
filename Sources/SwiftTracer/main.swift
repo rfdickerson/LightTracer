@@ -7,8 +7,8 @@ import PathTracer
 
 var currentID = 0
 
-let width = 500
-let height = 400
+let width = 400
+let height = 300
 let aspectRatio = Double(width)/Double(height)
 
 print("Swift Monte-Carlo Path Tracing renderer")
@@ -40,31 +40,27 @@ let whiteMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                              ks: 0.0, kd: 0.9, n: 0)
 
 
-let sphere = Sphere(id: currentID, objectToWorld: Transform.translate(delta: Vector3D(0,0.2,0.2)),
+let sphere = Sphere(id: currentID, objectToWorld: Transform.translate(delta: Vector3D(0,-0.3,-0.7)),
                     radius: 0.3,
                     material: whiteMaterial)
 
 objects.append(sphere)
 currentID += 1
 
-//for j in 0...6 {
-//    for i in 0...6 {
-//
-//        let mat = Material(emission: Color(0.1 , 0.1, 0.0),
-//                           diffuseColor: Color(Number(i)/6, Number(j)/6, 0.8),
-//                           ks: 0.0,
-//                           kd: 0.8,
-//                           n: 0)
-//
-//        let objectToWorld = Transform.translate(delta: Vector3D(-0.5 + Number(j)/6,
-//                                                                -0.5 + Number(i)/6,
-//                                                                9))
-//
-//        objects.append(Sphere(objectToWorld: objectToWorld,
-//                              radius: 0.050,
-//                              material: mat))
-//    }
-//}
+let sphere2 = Sphere(id: currentID, objectToWorld: Transform.translate(delta: Vector3D(-0.4,0.3,-0.7)),
+                    radius: 0.3,
+                    material: whiteMaterial)
+
+objects.append(sphere2)
+currentID += 1
+
+let sphere3 = Sphere(id: currentID, objectToWorld: Transform.translate(delta: Vector3D(0.4,0.3,-0.7)),
+                     radius: 0.3,
+                     material: whiteMaterial)
+
+objects.append(sphere3)
+currentID += 1
+
 
 let triangle = Triangle(
     id: currentID,
@@ -180,46 +176,21 @@ let triangleLight = Triangle(
 )
 currentID += 1
 
-objects.append(triangle)
-objects.append(triangle2)
-objects.append(triangle3)
-objects.append(triangle4)
-objects.append(triangle5)
-objects.append(triangle6)
-objects.append(triangle7)
-objects.append(triangle8)
-objects.append(triangle9)
-objects.append(triangle10)
-
-// objects.append(triangleLight)
-
-//let triangle2 = Triangle(
-//    a: Vector3D(552.8, -200, 20),
-//    b: Vector3D(200,     -20, 20),
-//    c: Vector3D(0,     -20, 559.2),
-//    material: redMaterial,
-//    objectToWorld: Transform()
-//)
-//
+//objects.append(triangle)
 //objects.append(triangle2)
-
-//let floorMatrix = Transform.translate(delta: Vector3D(0.0, -5000.0, 0.0))
-//objects.append(Sphere(  objectToWorld: floorMatrix,
-//                        radius: 5000,
-//                        material: whiteMaterial))
-
-//let leftMatrix = Transform.translate(delta: Vector3D(-2700.0, 0.0, 0.0))
-//objects.append(Sphere(  objectToWorld: leftMatrix,
-//                        radius: 5000,
-//                        material: yellowMaterial))
-
-
-
+//objects.append(triangle3)
+//objects.append(triangle4)
+//objects.append(triangle5)
+//objects.append(triangle6)
+//objects.append(triangle7)
+//objects.append(triangle8)
+//objects.append(triangle9)
+//objects.append(triangle10)
 
 let lookAt = Transform.lookAtMatrix(
-    eye:  Vector3D(0.0,   0.2,    10.0),
-    target: Vector3D(0.0,   0.00,    0.0),
-    up:   Vector3D(0.0,   1.0,    0.0))
+    eye:  Vector3D(0.05,   -6.50,    0.34),
+    target: Vector3D(0.0,   -0.30,    -0.7),
+    up:   Vector3D(0.0,   0.0,    1.0))
 
 let perspective = Transform.perspectiveMatrix(
     near: 0.01,
@@ -227,7 +198,6 @@ let perspective = Transform.perspectiveMatrix(
     fov:  55,
     aspect: aspectRatio)
 
-// converts -1:1 coordinates to 0:300
 let screenToRaster = Transform.scale(withVector: Vector3D(
     Number(width), Number(height), 1.0))
     * Transform.scale(withVector: Vector3D(1, 1/aspectRatio, 1))
@@ -238,7 +208,7 @@ let rasterToScreen = screenToRaster.inverse
 let cameraToScreen = perspective
 let screenToCamera = cameraToScreen.inverse
 
-let cameraToWorld = lookAt
+let cameraToWorld = lookAt.inverse
 let worldToCamera = cameraToWorld.inverse
 
 let worldToScreen = cameraToScreen * cameraToWorld
@@ -252,37 +222,14 @@ var origin = Vector3D(0.0, 0.0, 0.0)
 let sampleOrigin = cameraToWorld * origin
 
 
-func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
-    
-    var colorAverage = Color(0,0,0)
-    
-    var testVertices = [Vector3D]()
-    testVertices.append( Vector3D(x-0.5*Number(depth), y-0.5*Number(depth), 1) )
-    testVertices.append( Vector3D(x+0.5*Number(depth), y-0.5*Number(depth), 1) )
-    testVertices.append( Vector3D(x-0.5*Number(depth), y+0.5*Number(depth), 1) )
-    testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1) )
-    testVertices.append( Vector3D(x, y, 1) )
-    
-    for v in testVertices {
-        
-        let direction = norm(rasterToWorld * v)
-        
-        let ray = Ray(origin: sampleOrigin,
-                      direction: direction)
-        
-        let color = castRay(ray: ray,
-                            bounceDepth: 0,
-                            objects: objects)
-        
-        colorAverage = colorAverage + color
-        
-    }
-    
-    colorAverage = 1/Number(5) * colorAverage
-    
-    return colorAverage
-    
-}
+let pathtracer = PathTracer()
+
+let scene = Scene()
+
+let pointLight = Light(0,0,0)
+
+scene.append( triangle )
+scene.addLight( pointLight )
 
 print("Rendering...")
 
