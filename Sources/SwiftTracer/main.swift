@@ -9,7 +9,7 @@ var currentID = 0
 
 let width = 500
 let height = 400
-let aspectRatio = Double(width)/Double(height)
+let aspectRatio = Number(width)/Number(height)
 
 print("Swift Monte-Carlo Path Tracing renderer")
 
@@ -241,7 +241,7 @@ let screenToCamera = cameraToScreen.inverse
 let cameraToWorld = lookAt
 let worldToCamera = cameraToWorld.inverse
 
-let worldToScreen = cameraToScreen * cameraToWorld
+let worldToScreen = cameraToWorld
 
 let rasterToWorld =  cameraToWorld * screenToCamera * rasterToScreen
 
@@ -257,10 +257,10 @@ func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
     var colorAverage = Color(0,0,0)
     
     var testVertices = [Vector3D]()
-    testVertices.append( Vector3D(x-0.5*Number(depth), y-0.5*Number(depth), 1) )
-    testVertices.append( Vector3D(x+0.5*Number(depth), y-0.5*Number(depth), 1) )
-    testVertices.append( Vector3D(x-0.5*Number(depth), y+0.5*Number(depth), 1) )
-    testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x-0.5*Number(depth), y-0.5*Number(depth), 1, 0) )
+    testVertices.append( Vector3D(x+0.5*Number(depth), y-0.5*Number(depth), 1, 0) )
+    testVertices.append( Vector3D(x-0.5*Number(depth), y+0.5*Number(depth), 1, 0) )
+    testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1, 0) )
     testVertices.append( Vector3D(x, y, 1) )
     
     for v in testVertices {

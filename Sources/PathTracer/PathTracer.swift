@@ -48,7 +48,7 @@ public func castRay(ray: Ray,
     if let closestObject = closestObject, let closestCollision = closestCollision {
         
         // used for aggregating the direct light
-        var directLight: Vector3D = Vector3D(0.0, 0.0, 0.0)
+        var directLight: Vector3D = Vector3D(0.0, 0.0, 0.0, 0.0)
         
         let material = closestObject.material
         let lightDirection = norm(closestCollision.intersection - sampleLightPosition)
@@ -111,7 +111,7 @@ public func castRay(ray: Ray,
         
         // return clamp(low:0, high: 1, value:directLight)
         
-        return clamp(low:0, high: 1, value: 1/(M_PI) * material.diffuseColor * (indirectLight + 2*directLight) )
+        return clamp(low:0, high: 1, value: Number(1/(M_PI)) * material.diffuseColor * (indirectLight + 2*directLight) )
         
         
     }
@@ -134,7 +134,7 @@ public func hemisphere(n: Vector3D) -> Vector3D {
     //    let sx = cosTheta * n.y + sinTheta * (-n.x)
     //    let sy = cosTheta * n.x + sinTheta * n.y
     
-    return Vector3D(x, y, sqrt(max(0, 1 - u1)))
+    return Vector3D(Number(x), Number(y), Number(sqrt(max(0, 1 - u1))))
     
 }
 
@@ -144,8 +144,8 @@ public func cosWeightedRandomHemisphere( n: Vector3D) -> Vector3D {
     //let Xi1 = Number(arc4random())/Number(UINT32_MAX)
     //let Xi2 = Number(arc4random())/Number(UINT32_MAX)
     
-    let Xi1 = drand48()
-    let Xi2 = drand48()
+    let Xi1 = Number(drand48())
+    let Xi2 = Number(drand48())
     
     let theta = acos(sqrt(1.0-Xi1))
     let phi = 2.0 * Number(M_PI) * Xi2
