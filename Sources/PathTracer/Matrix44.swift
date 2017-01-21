@@ -84,6 +84,15 @@ public func * (left: Matrix44, right: Vector3D) -> Vector3D {
     return Vector3D(x/w, y/w, z/w)
 }
 
+public func transpose(_ m: Matrix44) -> Matrix44 {
+    
+    return Matrix44(x00: m.x00, x01: m.x10, x02: m.x20, x03: m.x30,
+                    x10: m.x01, x11: m.x11, x12: m.x21, x13: m.x31,
+                    x20: m.x02, x21: m.x12, x22: m.x22, x23: m.x32,
+                    x30: m.x03, x31: m.x13, x32: m.x23, x33: m.x33)
+    
+}
+
 /**
  Multiply two matrices together
  */
@@ -112,59 +121,52 @@ public func * (left: Matrix44, right: Matrix44) -> Matrix44 {
     
 }
 
-public func determinant(_ m: Matrix44) -> Number {
-    return    m.x00*m.x11*m.x22*m.x33 + m.x00*m.x12*m.x23*m.x31 + m.x00*m.x13*m.x21*m.x32
-        + m.x01*m.x10*m.x23*m.x32 + m.x01*m.x12*m.x20*m.x33 + m.x01*m.x13*m.x22*m.x30
-        + m.x02*m.x10*m.x21*m.x33 + m.x02*m.x11*m.x23*m.x30 + m.x02*m.x13*m.x20*m.x31
-        + m.x03*m.x10*m.x22*m.x31 + m.x03*m.x11*m.x20*m.x32 + m.x03*m.x12*m.x21*m.x30
-        - m.x00*m.x11*m.x23*m.x32 - m.x00*m.x12*m.x21*m.x33 - m.x00*m.x13*m.x22*m.x31
-        - m.x00*m.x10*m.x22*m.x33 - m.x01*m.x12*m.x23*m.x30 - m.x01*m.x13*m.x20*m.x32
-        - m.x02*m.x10*m.x23*m.x31 - m.x02*m.x11*m.x20*m.x33 - m.x02*m.x13*m.x21*m.x30
-        - m.x03*m.x10*m.x21*m.x32 - m.x03*m.x11*m.x22*m.x30 - m.x03*m.x12*m.x20*m.x31
-}
+//public func determinant(_ m: Matrix44) -> Number {
+//    return    m.x00*m.x11*m.x22*m.x33 + m.x00*m.x12*m.x23*m.x31 + m.x00*m.x13*m.x21*m.x32
+//        + m.x01*m.x10*m.x23*m.x32 + m.x01*m.x12*m.x20*m.x33 + m.x01*m.x13*m.x22*m.x30
+//        + m.x02*m.x10*m.x21*m.x33 + m.x02*m.x11*m.x23*m.x30 + m.x02*m.x13*m.x20*m.x31
+//        + m.x03*m.x10*m.x22*m.x31 + m.x03*m.x11*m.x20*m.x32 + m.x03*m.x12*m.x21*m.x30
+//        - m.x00*m.x11*m.x23*m.x32 - m.x00*m.x12*m.x21*m.x33 - m.x00*m.x13*m.x22*m.x31
+//        - m.x00*m.x10*m.x22*m.x33 - m.x01*m.x12*m.x23*m.x30 - m.x01*m.x13*m.x20*m.x32
+//        - m.x02*m.x10*m.x23*m.x31 - m.x02*m.x11*m.x20*m.x33 - m.x02*m.x13*m.x21*m.x30
+//        - m.x03*m.x10*m.x21*m.x32 - m.x03*m.x11*m.x22*m.x30 - m.x03*m.x12*m.x20*m.x31
+//}
 
 
 /**
  Invert the matrix with the adjoint method
  */
-public func invert(_ a: Matrix44) -> Matrix44? {
-    
-    let b00 = a.x11*a.x22*a.x33 + a.x12*a.x23*a.x31 + a.x13*a.x21*a.x32 - a.x11*a.x23*a.x32 - a.x12*a.x21*a.x33 - a.x13*a.x22*a.x31
-    let b01 = a.x01*a.x23*a.x32 + a.x02*a.x21*a.x33 + a.x03*a.x22*a.x31 - a.x01*a.x22*a.x33 - a.x02*a.x23*a.x31 - a.x03*a.x21*a.x32
-    let b02 = a.x01*a.x12*a.x33 + a.x02*a.x13*a.x31 + a.x03*a.x11*a.x32 - a.x01*a.x13*a.x32 - a.x02*a.x11*a.x33 - a.x03*a.x12*a.x31
-    let b03 = a.x01*a.x13*a.x22 + a.x02*a.x11*a.x23 + a.x03*a.x12*a.x21 - a.x01*a.x12*a.x23 - a.x02*a.x13*a.x21 - a.x03*a.x11*a.x22
-    let b10 = a.x10*a.x23*a.x32 + a.x12*a.x20*a.x33 + a.x13*a.x22*a.x30 - a.x10*a.x22*a.x33 - a.x12*a.x23*a.x30 - a.x13*a.x20*a.x32
-    let b11 = a.x00*a.x22*a.x33 + a.x02*a.x23*a.x30 + a.x03*a.x20*a.x32 - a.x00*a.x23*a.x32 - a.x02*a.x20*a.x33 - a.x03*a.x22*a.x30
-    let b12 = a.x00*a.x13*a.x32 + a.x02*a.x10*a.x33 + a.x03*a.x12*a.x30 - a.x00*a.x12*a.x33 - a.x02*a.x13*a.x30 - a.x03*a.x10*a.x32
-    let b13 = a.x00*a.x12*a.x23 + a.x02*a.x13*a.x20 + a.x03*a.x10*a.x22 - a.x00*a.x13*a.x22 - a.x02*a.x10*a.x23 - a.x03*a.x12*a.x20
-    let b20 = a.x10*a.x21*a.x33 + a.x11*a.x23*a.x30 + a.x13*a.x20*a.x31 - a.x10*a.x23*a.x31 - a.x11*a.x20*a.x33 - a.x13*a.x21*a.x30
-    let b21 = a.x00*a.x23*a.x31 + a.x02*a.x20*a.x33 + a.x03*a.x21*a.x30 - a.x00*a.x21*a.x33 - a.x01*a.x23*a.x30 - a.x03*a.x20*a.x31
-    let b22 = a.x00*a.x11*a.x33 + a.x01*a.x13*a.x30 + a.x03*a.x10*a.x31 - a.x00*a.x13*a.x31 - a.x01*a.x10*a.x33 - a.x03*a.x11*a.x30
-    let b23 = a.x00*a.x13*a.x21 + a.x01*a.x10*a.x23 + a.x03*a.x11*a.x20 - a.x00*a.x11*a.x23 - a.x01*a.x13*a.x20 - a.x03*a.x10*a.x21
-    let b30 = a.x10*a.x22*a.x31 + a.x11*a.x20*a.x32 + a.x12*a.x21*a.x30 - a.x10*a.x21*a.x32 - a.x11*a.x22*a.x30 - a.x12*a.x20*a.x31
-    let b31 = a.x00*a.x21*a.x32 + a.x01*a.x22*a.x30 + a.x02*a.x20*a.x31 - a.x00*a.x22*a.x31 - a.x01*a.x20*a.x32 - a.x02*a.x21*a.x30
-    let b32 = a.x00*a.x12*a.x31 + a.x01*a.x10*a.x32 + a.x02*a.x11*a.x30 - a.x00*a.x11*a.x32 - a.x01*a.x12*a.x30 - a.x02*a.x10*a.x31
-    let b33 = a.x00*a.x11*a.x22 + a.x01*a.x12*a.x20 + a.x02*a.x10*a.x21 - a.x00*a.x12*a.x21 - a.x01*a.x10*a.x22 - a.x02*a.x11*a.x20
-    
-    let cofactor = Matrix44(x00: b00, x01: b01, x02: b02, x03: b03,
-                            x10: b10, x11: b11, x12: b12, x13: b13,
-                            x20: b20, x21: b21, x22: b22, x23: b23,
-                            x30: b30, x31: b31, x32: b32, x33: b33)
-    
-    let det = determinant(a)
-    if det == 0 {
-        return nil
-    }
+//public func invert(_ a: Matrix44) -> Matrix44? {
+//    
+//    let b00 = a.x11*a.x22*a.x33 + a.x12*a.x23*a.x31 + a.x13*a.x21*a.x32 - a.x11*a.x23*a.x32 - a.x12*a.x21*a.x33 - a.x13*a.x22*a.x31
+//    let b01 = a.x01*a.x23*a.x32 + a.x02*a.x21*a.x33 + a.x03*a.x22*a.x31 - a.x01*a.x22*a.x33 - a.x02*a.x23*a.x31 - a.x03*a.x21*a.x32
+//    let b02 = a.x01*a.x12*a.x33 + a.x02*a.x13*a.x31 + a.x03*a.x11*a.x32 - a.x01*a.x13*a.x32 - a.x02*a.x11*a.x33 - a.x03*a.x12*a.x31
+//    let b03 = a.x01*a.x13*a.x22 + a.x02*a.x11*a.x23 + a.x03*a.x12*a.x21 - a.x01*a.x12*a.x23 - a.x02*a.x13*a.x21 - a.x03*a.x11*a.x22
+//    let b10 = a.x10*a.x23*a.x32 + a.x12*a.x20*a.x33 + a.x13*a.x22*a.x30 - a.x10*a.x22*a.x33 - a.x12*a.x23*a.x30 - a.x13*a.x20*a.x32
+//    let b11 = a.x00*a.x22*a.x33 + a.x02*a.x23*a.x30 + a.x03*a.x20*a.x32 - a.x00*a.x23*a.x32 - a.x02*a.x20*a.x33 - a.x03*a.x22*a.x30
+//    let b12 = a.x00*a.x13*a.x32 + a.x02*a.x10*a.x33 + a.x03*a.x12*a.x30 - a.x00*a.x12*a.x33 - a.x02*a.x13*a.x30 - a.x03*a.x10*a.x32
+//    let b13 = a.x00*a.x12*a.x23 + a.x02*a.x13*a.x20 + a.x03*a.x10*a.x22 - a.x00*a.x13*a.x22 - a.x02*a.x10*a.x23 - a.x03*a.x12*a.x20
+//    let b20 = a.x10*a.x21*a.x33 + a.x11*a.x23*a.x30 + a.x13*a.x20*a.x31 - a.x10*a.x23*a.x31 - a.x11*a.x20*a.x33 - a.x13*a.x21*a.x30
+//    let b21 = a.x00*a.x23*a.x31 + a.x02*a.x20*a.x33 + a.x03*a.x21*a.x30 - a.x00*a.x21*a.x33 - a.x01*a.x23*a.x30 - a.x03*a.x20*a.x31
+//    let b22 = a.x00*a.x11*a.x33 + a.x01*a.x13*a.x30 + a.x03*a.x10*a.x31 - a.x00*a.x13*a.x31 - a.x01*a.x10*a.x33 - a.x03*a.x11*a.x30
+//    let b23 = a.x00*a.x13*a.x21 + a.x01*a.x10*a.x23 + a.x03*a.x11*a.x20 - a.x00*a.x11*a.x23 - a.x01*a.x13*a.x20 - a.x03*a.x10*a.x21
+//    let b30 = a.x10*a.x22*a.x31 + a.x11*a.x20*a.x32 + a.x12*a.x21*a.x30 - a.x10*a.x21*a.x32 - a.x11*a.x22*a.x30 - a.x12*a.x20*a.x31
+//    let b31 = a.x00*a.x21*a.x32 + a.x01*a.x22*a.x30 + a.x02*a.x20*a.x31 - a.x00*a.x22*a.x31 - a.x01*a.x20*a.x32 - a.x02*a.x21*a.x30
+//    let b32 = a.x00*a.x12*a.x31 + a.x01*a.x10*a.x32 + a.x02*a.x11*a.x30 - a.x00*a.x11*a.x32 - a.x01*a.x12*a.x30 - a.x02*a.x10*a.x31
+//    let b33 = a.x00*a.x11*a.x22 + a.x01*a.x12*a.x20 + a.x02*a.x10*a.x21 - a.x00*a.x12*a.x21 - a.x01*a.x10*a.x22 - a.x02*a.x11*a.x20
+//    
+//    let cofactor = Matrix44(x00: b00, x01: b01, x02: b02, x03: b03,
+//                            x10: b10, x11: b11, x12: b12, x13: b13,
+//                            x20: b20, x21: b21, x22: b22, x23: b23,
+//                            x30: b30, x31: b31, x32: b32, x33: b33)
+//    
+//    let det = determinant(a)
+//    if det == 0 {
+//        return nil
+//    }
+//
+//    return (1.0/det) * cofactor
+//    
+//}
 
-    return (1.0/det) * cofactor
-    
-}
 
-public func transpose(_ m: Matrix44) -> Matrix44 {
-    
-    return Matrix44(x00: m.x00, x01: m.x10, x02: m.x20, x03: m.x30,
-                    x10: m.x01, x11: m.x11, x12: m.x21, x13: m.x31,
-                    x20: m.x02, x21: m.x12, x22: m.x22, x23: m.x32,
-                    x30: m.x03, x31: m.x13, x32: m.x23, x33: m.x33)
-    
-}

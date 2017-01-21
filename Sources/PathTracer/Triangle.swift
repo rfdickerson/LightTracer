@@ -2,8 +2,11 @@
 public struct Triangle {
 
     public var id: Int
+    
     public let v1: Vector3D
+    
     public let v2: Vector3D
+    
     public let v3: Vector3D
     
     public var material: Material
@@ -75,7 +78,7 @@ extension Triangle: Intersectable {
         
         // ray intersects!
         if t2 > rayEpsilon {
-            let intersection = ray.origin + t2 * ray.direction
+            let intersection = ray.origin + (t2 * ray.direction)
             let normal = norm(cross(e1, e2))
             
             let c1 = cross(normal, Vector3D(0,0,1))
@@ -91,7 +94,11 @@ extension Triangle: Intersectable {
             
             let bitangent = cross(tangent, normal)
             
-            return Collision(intersection: intersection, normal: normal, tangent: tangent, bitangent: bitangent, depth: t2)
+            return Collision(intersection: intersection,
+                             normal: normal,
+                             tangent: tangent,
+                             bitangent: bitangent,
+                             depth: t2)
         }
         
         return nil

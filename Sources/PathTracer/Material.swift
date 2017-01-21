@@ -5,6 +5,7 @@ public struct Material {
     /// emission color, typically if a light
     let emission: Color
     
+    // diffuse lighting color
     let diffuseColor: Color
     
     /// specular weight

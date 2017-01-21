@@ -22,6 +22,16 @@ public struct Transform {
     
 }
 
+public func inverse(_ transform: Transform) -> Transform {
+    return Transform(matrix: transform.inverseMatrix,
+                     inverseMatrix: transform.matrix)
+}
+
+public func transpose(_ transform: Transform) -> Transform {
+    return Transform(matrix: transpose(transform.matrix),
+                     inverseMatrix: transpose(transform.inverseMatrix))
+}
+
 public func * (left: Transform, right: Transform) -> Transform {
  
     let m = left.matrix * right.matrix
@@ -50,9 +60,8 @@ extension Transform {
                              x20: 0, x21: 0, x22: far*invDenom, x23: -near*far*invDenom ,
                              x30: 0, x31: 0, x32: 1, x33: 0)
         
-        let inverse = invert(persp)
         
-        return Transform(matrix: persp, inverseMatrix: inverse!)
+        return Transform(matrix: persp, inverseMatrix: Matrix44.identity())
         
         
     }
@@ -65,9 +74,6 @@ extension Transform {
         let xaxis = norm(cross(up, zaxis))
         let yaxis = cross(zaxis, xaxis)
         
-//        let dir = norm(look)
-//        let right = cross( dir, norm(up))
-//        let newUp = cross(right, dir)
         
         let translation = Matrix44(x00: 1, x01: 0, x02: 0, x03: 0.0,
                                    x10: 0, x11: 1, x12: 0, x13: 0.0,
@@ -81,9 +87,9 @@ extension Transform {
         
         let view = transpose(orientation * translation)
         
-        let inverse = invert(view)
+        let inverse = Matrix44.identity()
         
-        return Transform(matrix: view, inverseMatrix: inverse!)
+        return Transform(matrix: view, inverseMatrix: inverse)
         
     }
     
@@ -95,9 +101,9 @@ extension Transform {
                         x30: 0, x31: 0, x32: 0, x33: 1)
         
         let minv = Matrix44(x00: 1, x01: 0, x02: 0, x03: -vector.x,
-                         x10: 0, x11: 1, x12: 0, x13: -vector.y,
-                         x20: 0, x21: 0, x22: 1, x23: -vector.z,
-                         x30: 0, x31: 0, x32: 0, x33: 1)
+                            x10: 0, x11: 1, x12: 0, x13: -vector.y,
+                            x20: 0, x21: 0, x22: 1, x23: -vector.z,
+                            x30: 0, x31: 0, x32: 0, x33: 1)
         
         return Transform(matrix: m, inverseMatrix: minv)
         

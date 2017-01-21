@@ -11,7 +11,7 @@ public struct Ray {
     
     public init(origin: Vector3D = Vector3D(0,0,0),
          direction: Vector3D = Vector3D(0,0,1),
-         minT: Number = 0.1,
+         minT: Number = 0.0001,
          maxT: Number = 1000.0
         ) {
         

@@ -6,7 +6,9 @@ public struct Camera {
     public let worldToCamera: Transform
    
     public let clipHither: Float
+    
     public let clipYon: Float
+    
     public let fieldOfView: Float
 
     public init(worldToCamera: Transform,

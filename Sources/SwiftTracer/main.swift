@@ -33,14 +33,15 @@ let yellowMaterial = Material(emission: Color(0.0, 0.0, 0.0),
 
 let blueMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                             diffuseColor: Color(0.0, 0.0, 1.0),
-                            ks: 0.0, kd: 0.4, n: 0)
+                            ks: 0.0, kd: 0.8, n: 0)
 
 let whiteMaterial = Material(emission: Color(0.0, 0.0, 0.0),
                              diffuseColor: Color(1.0, 1.0, 1.0),
                              ks: 0.0, kd: 0.9, n: 0)
 
 
-let sphere = Sphere(id: currentID, objectToWorld: Transform.translate(delta: Vector3D(0,0.2,0.2)),
+let sphere = Sphere(id: currentID,
+                    objectToWorld: Transform.translate(delta: Vector3D(0,0.2,0.2)),
                     radius: 0.3,
                     material: whiteMaterial)
 
@@ -91,7 +92,7 @@ let triangle3 = Triangle(
     v1: Vector3D(-1, -1, -1),
     v2: Vector3D(-1, -1,  1),
     v3: Vector3D(-1,  1, -1),
-    material: greenMaterial,
+    material: blueMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
 )
 currentID += 1
@@ -101,7 +102,7 @@ let triangle4 = Triangle(
     v1: Vector3D(-1, -1, 1),
     v2: Vector3D(-1,  1, 1),
     v3: Vector3D(-1,  1, -1),
-    material: greenMaterial,
+    material: blueMaterial,
     objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
 )
 currentID += 1
@@ -191,35 +192,10 @@ objects.append(triangle8)
 objects.append(triangle9)
 objects.append(triangle10)
 
-// objects.append(triangleLight)
-
-//let triangle2 = Triangle(
-//    a: Vector3D(552.8, -200, 20),
-//    b: Vector3D(200,     -20, 20),
-//    c: Vector3D(0,     -20, 559.2),
-//    material: redMaterial,
-//    objectToWorld: Transform()
-//)
-//
-//objects.append(triangle2)
-
-//let floorMatrix = Transform.translate(delta: Vector3D(0.0, -5000.0, 0.0))
-//objects.append(Sphere(  objectToWorld: floorMatrix,
-//                        radius: 5000,
-//                        material: whiteMaterial))
-
-//let leftMatrix = Transform.translate(delta: Vector3D(-2700.0, 0.0, 0.0))
-//objects.append(Sphere(  objectToWorld: leftMatrix,
-//                        radius: 5000,
-//                        material: yellowMaterial))
-
-
-
-
 let lookAt = Transform.lookAtMatrix(
-    eye:  Vector3D(0.0,   0.2,    10.0),
-    target: Vector3D(0.0,   0.00,    0.0),
-    up:   Vector3D(0.0,   1.0,    0.0))
+    eye:    Vector3D(0.0,   0.0,    7.0),
+    target: Vector3D(0.0,   0.0,    0.0),
+    up:     Vector3D(0.0,   1.0,    0.0))
 
 let perspective = Transform.perspectiveMatrix(
     near: 0.01,
@@ -227,23 +203,33 @@ let perspective = Transform.perspectiveMatrix(
     fov:  55,
     aspect: aspectRatio)
 
-// converts -1:1 coordinates to 0:300
-let screenToRaster = Transform.scale(withVector: Vector3D(
-    Number(width), Number(height), 1.0))
+let screenToRaster = Transform.scale(withVector:
+    Vector3D(Number(width), Number(height), 1.0))
     * Transform.scale(withVector: Vector3D(1, 1/aspectRatio, 1))
     * Transform.translate(delta: Vector3D(-Number(width)/2, -Number(height)/2, 0.0))
 
-let rasterToScreen = screenToRaster.inverse
 
-let cameraToScreen = perspective
-let screenToCamera = cameraToScreen.inverse
+let rasterToScreen = inverse(screenToRaster)
 
 let cameraToWorld = lookAt
-let worldToCamera = cameraToWorld.inverse
 
-let worldToScreen = cameraToWorld
+let cameraToScreen = perspective
 
-let rasterToWorld =  cameraToWorld * screenToCamera * rasterToScreen
+let worldToRaster = screenToRaster * cameraToScreen * cameraToWorld
+
+let rasterToWorld = inverse( cameraToWorld * cameraToScreen * screenToRaster )
+
+//let rasterToScreen = screenToRaster.inverse
+//
+//let cameraToScreen = perspective
+//let screenToCamera = cameraToScreen.inverse
+//
+//let cameraToWorld = lookAt
+//let worldToCamera = cameraToWorld.inverse
+//
+//let worldToScreen =  cameraToWorld
+//
+//let rasterToWorld =  cameraToWorld * screenToCamera * rasterToScreen
 
 let screenCoords = rasterCoordinates(width: Int(width),
                                      height: Int(height))
@@ -257,15 +243,15 @@ func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
     var colorAverage = Color(0,0,0)
     
     var testVertices = [Vector3D]()
-    testVertices.append( Vector3D(x-0.5*Number(depth), y-0.5*Number(depth), 1, 0) )
-    testVertices.append( Vector3D(x+0.5*Number(depth), y-0.5*Number(depth), 1, 0) )
-    testVertices.append( Vector3D(x-0.5*Number(depth), y+0.5*Number(depth), 1, 0) )
-    testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1, 0) )
+    testVertices.append( Vector3D(x-0.5*Number(depth), y-0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x+0.5*Number(depth), y-0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x-0.5*Number(depth), y+0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1) )
     testVertices.append( Vector3D(x, y, 1) )
     
     for v in testVertices {
         
-        let direction = norm(rasterToWorld * v)
+        let direction = norm( rasterToWorld * v)
         
         let ray = Ray(origin: sampleOrigin,
                       direction: direction)
@@ -278,7 +264,7 @@ func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
         
     }
     
-    colorAverage = 1/Number(5) * colorAverage
+    colorAverage = (1 / Number(5)) * colorAverage
     
     return colorAverage
     
