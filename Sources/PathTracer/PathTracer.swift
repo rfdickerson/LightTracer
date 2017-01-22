@@ -3,35 +3,24 @@ import Dispatch
 
 public typealias Color = Vector3D
 
-// Number of stochastic samples for global illumination
-let numberOfSamples = 10
+let maxDepth = Number(5000)
 
-// Position of the single point-light source
-let sampleLightPosition = Vector3D(0.8, 0.8, -0.9)
 
-// Background color
-public let backgroundColor = Vector3D(1.00, 1.00, 1.00)
-
-let useGlobalIllumination = false
-
-func normalColor(_ v: Vector3D ) -> Vector3D {
-    return Vector3D((v.x+1)/2, (v.y+1)/2, (v.z+1)/2)
+class PathTracer {
+    
+    
 }
 
 
-public func castRay(ray: Ray,
-                    bounceDepth: Int,
-                    objects: [Intersectable]) -> Color {
+func findClosestCollision(_ ray: Ray) -> Collision? {
     
-    if bounceDepth > 1 { return backgroundColor }
-
-    var shortestDepth = Number(5000)
+    var shortestDepth = maxDepth
     
-    var closestObject: Intersectable? = nil
+    var closestObject: Object? = nil
     
     var closestCollision: Collision? = nil
     
-    for object in objects {
+    for object in Scene.sharedInstance.objects {
         
         if let collision = object.intersect(ray: ray) {
             
@@ -44,85 +33,77 @@ public func castRay(ray: Ray,
         }
     }
     
-    // Compute lighting
-    
-    if let closestObject = closestObject, let closestCollision = closestCollision {
-        
-        // used for aggregating the direct light
-        var directLightColor: Vector3D = Vector3D(0.0, 0.0, 0.0)
-        
-        let material = closestObject.material
-        let lightDirection = norm(closestCollision.intersection - sampleLightPosition)
-        
-        let shadowDirection = norm(sampleLightPosition - closestCollision.intersection)
-        
-        let shadowRay = Ray(origin: closestCollision.intersection,
-                            direction: shadowDirection,
-                            minT: 0,
-                            maxT: 1)
-        
-        var inShadow = false
-        
-        // do collision test with other objects
-        for object in objects {
-            
-            if closestObject.id == object.id {
-                continue
-            }
-            
-            if (object.intersect(ray: shadowRay) != nil) {
-                inShadow = true
-            }
-            
-        }
-        
-        if !inShadow {
-            
-            let lightAngle = max(0, dot( lightDirection, closestCollision.normal)  )
-        
-            let diffuseIlluminance = lightAngle * material.diffuseColor
-            let emissionIlluminance = material.emission
-            
-            if diffuseIlluminance.x < 0 || diffuseIlluminance.x > 1 {
-                print("Can't be less than zero!!!")
-            }
-            
-            directLightColor = (material.kd * diffuseIlluminance) + emissionIlluminance
-        } else {
-            directLightColor = 0.1 * material.diffuseColor
-        }
-        
-        
-        
-        // get a random hemisphere
-        
-        var indirectLightColor: Vector3D = Vector3D(0,0,0)
-        
-        if useGlobalIllumination {
-            for _ in 0...numberOfSamples {
-                let newDirection = cosWeightedRandomHemisphere(n: closestCollision.normal)
-                let newRay = Ray(origin: closestCollision.intersection, direction: newDirection, minT: 0.0001, maxT: 100.0)
-                
-                let indirectLightAngle = clamp(low: 0, high: 1, value: dot( newDirection, closestCollision.normal ) )
-                
-                indirectLightColor = indirectLightColor + indirectLightAngle * castRay(ray: newRay, bounceDepth: bounceDepth+1, objects: objects)
-            }
-        }
-        
-        indirectLightColor = (1/Number(numberOfSamples)) * indirectLightColor
-        
-        // return clamp(low:0, high: 1, value:directLight)
-        
-        return clamp(low:0, high: 1,
-                     value: Number(1/(M_PI)) * material.diffuseColor * (indirectLightColor + 2*directLightColor) )
-        
-        
-    }
-    
-    return backgroundColor
+    return closestCollision
     
 }
 
+
+func computeDirectLighting( ray: Ray,
+                            closestCollision: Collision,
+                            light: Light ) -> Color {
+    
+    var inShadow = false
+    
+    let lightDirection = norm(closestCollision.intersection - light.position)
+    
+    let shadowRay = Ray(origin: closestCollision.intersection,
+                        direction: lightDirection,
+                        minT: 0,
+                        maxT: 1)
+    
+    for object in Scene.sharedInstance.objects {
+        if let intersect = object.intersect(ray: shadowRay) {
+            inShadow = true
+        }
+    }
+    
+    guard let material = Scene.sharedInstance.materials[closestCollision.object.materialName] else {
+        fatalError("Could not find material")
+    }
+    
+    // compute direct lighting
+    if !inShadow {
+        
+        let lightDirection = norm(closestCollision.intersection - light.position)
+        
+        let normal = closestCollision.object.normal(at: closestCollision.intersection)
+        
+        let lightAngle = max(0, dot( lightDirection, normal)  )
+        
+        let diffuseIlluminance = lightAngle * material.diffuseColor
+        
+        let emissionIlluminance = material.emission
+        
+        return (material.kd * diffuseIlluminance) + emissionIlluminance
+    }
+    
+    return Vector3D(0,0,0)
+    
+}
+
+public func castRay( ray: Ray,
+                     bounceDepth: Int ) -> Color {
+    
+    if bounceDepth > RenderSettings.sharedInstance.maxBounceDepth {
+        return RenderSettings.sharedInstance.backgroundColor
+    }
+    
+    // find closest object
+    guard let closestCollision = findClosestCollision(ray) else {
+        return RenderSettings.sharedInstance.backgroundColor
+    }
+    
+    var directLighting = Vector3D(0,0,0)
+    
+    for light in Scene.sharedInstance.lights {
+        directLighting = directLighting + computeDirectLighting(ray: ray,
+                                                                   closestCollision: closestCollision,
+                                                                   light: light)
+    }
+    
+    return directLighting
+    
+}
 
 public func hemisphere(n: Vector3D) -> Vector3D {
     

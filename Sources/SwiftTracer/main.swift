@@ -5,192 +5,11 @@ import SimplePNG
 
 import PathTracer
 
-var currentID = 0
-
-let width = 500
-let height = 400
-let aspectRatio = Number(width)/Number(height)
-
 print("Swift Monte-Carlo Path Tracing renderer")
 
-var objects = [Intersectable]()
-
-let lightMaterial = Material(emission: Color(0.5, 0.5, 0.5),
-                             diffuseColor: Color(1.0, 1.0, 1.0),
-                             ks: 0, kd: 1.0, n: 0)
-
-let redMaterial = Material(emission: Color(0.0 , 0.0, 0.0),
-                           diffuseColor: Color(1.0, 0.0, 0.0),
-                           ks: 0.0, kd: 0.7, n: 0)
-
-let greenMaterial = Material(emission: Color(0.0 , 0.0, 0.0),
-                             diffuseColor: Color(0.0, 0.5, 0.0),
-                             ks: 0.0, kd: 0.7, n: 0)
-
-let yellowMaterial = Material(emission: Color(0.0, 0.0, 0.0),
-                              diffuseColor: Color(1.0, 1.0, 0.0),
-                              ks: 0.0, kd: 0.3, n: 0)
-
-let blueMaterial = Material(emission: Color(0.0, 0.0, 0.0),
-                            diffuseColor: Color(0.0, 0.0, 1.0),
-                            ks: 0.0, kd: 0.8, n: 0)
-
-let whiteMaterial = Material(emission: Color(0.0, 0.0, 0.0),
-                             diffuseColor: Color(1.0, 1.0, 1.0),
-                             ks: 0.0, kd: 0.9, n: 0)
+try Scene.sharedInstance.load(withJSON: "scene.json")
 
 
-let sphere = Sphere(id: currentID,
-                    objectToWorld: Transform.translate(delta: Vector3D(0,0.2,0.2)),
-                    radius: 0.3,
-                    material: whiteMaterial)
-
-objects.append(sphere)
-currentID += 1
-
-//for j in 0...6 {
-//    for i in 0...6 {
-//
-//        let mat = Material(emission: Color(0.1 , 0.1, 0.0),
-//                           diffuseColor: Color(Number(i)/6, Number(j)/6, 0.8),
-//                           ks: 0.0,
-//                           kd: 0.8,
-//                           n: 0)
-//
-//        let objectToWorld = Transform.translate(delta: Vector3D(-0.5 + Number(j)/6,
-//                                                                -0.5 + Number(i)/6,
-//                                                                9))
-//
-//        objects.append(Sphere(objectToWorld: objectToWorld,
-//                              radius: 0.050,
-//                              material: mat))
-//    }
-//}
-
-let triangle = Triangle(
-    id: currentID,
-    v1: Vector3D(-1, -1, 0),
-    v2: Vector3D(1,  -1, 0),
-    v3: Vector3D(-1,  1, 0),
-    material: whiteMaterial,
-    objectToWorld: Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-let triangle2 = Triangle(
-    id: currentID,
-    v1: Vector3D(1, -1, 0),
-    v2: Vector3D(1,  1, 0),
-    v3: Vector3D(-1, 1, 0),
-    material: whiteMaterial,
-    objectToWorld: Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-let triangle3 = Triangle(
-    id: currentID,
-    v1: Vector3D(-1, -1, -1),
-    v2: Vector3D(-1, -1,  1),
-    v3: Vector3D(-1,  1, -1),
-    material: blueMaterial,
-    objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-let triangle4 = Triangle(
-    id: currentID,
-    v1: Vector3D(-1, -1, 1),
-    v2: Vector3D(-1,  1, 1),
-    v3: Vector3D(-1,  1, -1),
-    material: blueMaterial,
-    objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-let triangle5 = Triangle(
-    id: currentID,
-    v1: Vector3D(1, -1, -1),
-    v2: Vector3D(1,  1, -1),
-    v3: Vector3D(1,  -1, 1),
-    material: redMaterial,
-    objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-let triangle6 = Triangle(
-    id: currentID,
-    v1: Vector3D(1, -1,  1),
-    v2: Vector3D(1,  1, -1),
-    v3: Vector3D(1,  1,  1),
-    material: redMaterial,
-    objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-let triangle7 = Triangle(
-    id: currentID,
-    v1: Vector3D( 1, 1, -1),
-    v2: Vector3D(-1, 1,  1),
-    v3: Vector3D( 1, 1,  1),
-    
-    
-    material: whiteMaterial,
-    objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-
-let triangle8 = Triangle(
-    id: currentID,
-    v1: Vector3D( -1, 1, -1),
-    v2: Vector3D(-1, 1,  1),
-    v3: Vector3D( 1, 1,  -1),
-    material: whiteMaterial,
-    objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-let triangle9 = Triangle(
-    id: currentID,
-    v1: Vector3D( -1, -1, -1),
-    v2: Vector3D( 1, -1,  -1),
-    v3: Vector3D(-1, -1,  1),
-    
-    material: whiteMaterial,
-    objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-let triangle10 = Triangle(
-    id: currentID,
-    v1: Vector3D(1, -1,  -1),
-    v2: Vector3D( 1, -1, 1),
-    v3: Vector3D( -1, -1,  1),
-    material: whiteMaterial,
-    objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-let triangleLight = Triangle(
-    id: currentID,
-    v1: Vector3D( -0.2, 0.8,  -1),
-    v2: Vector3D(  0.2, 0.8, -1),
-    v3: Vector3D( -0.2, 0.8, -1),
-    material: lightMaterial,
-    objectToWorld:  Transform.translate(delta: Vector3D(0,0,0))
-)
-currentID += 1
-
-objects.append(triangle)
-objects.append(triangle2)
-objects.append(triangle3)
-objects.append(triangle4)
-objects.append(triangle5)
-objects.append(triangle6)
-objects.append(triangle7)
-objects.append(triangle8)
-objects.append(triangle9)
-objects.append(triangle10)
 
 let lookAt = Transform.lookAtMatrix(
     eye:    Vector3D(0.0,   0.0,    7.0),
@@ -218,18 +37,6 @@ let cameraToScreen = perspective
 let worldToRaster = screenToRaster * cameraToScreen * cameraToWorld
 
 let rasterToWorld = inverse( cameraToWorld * cameraToScreen * screenToRaster )
-
-//let rasterToScreen = screenToRaster.inverse
-//
-//let cameraToScreen = perspective
-//let screenToCamera = cameraToScreen.inverse
-//
-//let cameraToWorld = lookAt
-//let worldToCamera = cameraToWorld.inverse
-//
-//let worldToScreen =  cameraToWorld
-//
-//let rasterToWorld =  cameraToWorld * screenToCamera * rasterToScreen
 
 let screenCoords = rasterCoordinates(width: Int(width),
                                      height: Int(height))
@@ -296,7 +103,6 @@ for j in 0...height-1 {
         }
         
         semaphore.wait()
-        //bitmap.append(row)
         bitmap[j] = row
         semaphore.signal()
         
@@ -304,7 +110,7 @@ for j in 0...height-1 {
     
 }
 
-// sleep(1)
+
 
 dispatchGroup.wait()
 

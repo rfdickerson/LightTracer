@@ -20,9 +20,7 @@ public struct Camera {
         self.clipHither = hither
         self.clipYon = yon
         self.fieldOfView = fieldOfView
-        
-        // TODO: compute projective camera transformations
-        
+    
     }
     
 }

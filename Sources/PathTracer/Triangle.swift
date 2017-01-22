@@ -1,6 +1,6 @@
 
 public struct Triangle {
-
+    
     public var id: Int
     
     public let v1: Vector3D
@@ -9,29 +9,45 @@ public struct Triangle {
     
     public let v3: Vector3D
     
-    public var material: Material
+    public var materialName: String
+    
     public var objectToWorld: Transform
-
+    
     public init(id: Int,
                 v1: Vector3D,
                 v2: Vector3D,
                 v3: Vector3D,
-                material: Material,
+                materialName: String,
                 objectToWorld: Transform) {
-     
+        
         self.id = id
         self.v1 = v1
         self.v2 = v2
         self.v3 = v3
-        self.material = material
+        self.materialName = materialName
         self.objectToWorld = objectToWorld
         
     }
     
 }
 
-extension Triangle: Intersectable {
+extension Triangle: Object {
+    
+    public func normal(at: Vector3D) -> Vector3D {
+        
+        let a = objectToWorld * v1
+        let b = objectToWorld * v2
+        let c = objectToWorld * v3
+        
+        // find vectors for the edges sharing
+        let e1 = b - a
+        let e2 = c - a
+        
+        return norm(cross(e1, e2))
+        
+    }
 
+    
     public func intersect(ray: Ray) -> Collision? {
         
         let a = objectToWorld * v1
@@ -73,32 +89,19 @@ extension Triangle: Intersectable {
         if v < 0.0 || u + v > 1.0 {
             return nil
         }
-    
+        
         let t2 = dot(e2, q) * invDet
         
         // ray intersects!
         if t2 > rayEpsilon {
+            
             let intersection = ray.origin + (t2 * ray.direction)
             let normal = norm(cross(e1, e2))
             
-            let c1 = cross(normal, Vector3D(0,0,1))
-            let c2 = cross(normal, Vector3D(0,1,0))
-            
-            let tangent: Vector3D
-            
-            if magnitude(c1) > magnitude(c2) {
-                tangent = c1
-            } else {
-                tangent = c2
-            }
-            
-            let bitangent = cross(tangent, normal)
-            
             return Collision(intersection: intersection,
-                             normal: normal,
-                             tangent: tangent,
-                             bitangent: bitangent,
-                             depth: t2)
+                             depth: t2,
+                             object: self
+            )
         }
         
         return nil

@@ -4,27 +4,30 @@ public struct Sphere {
     
     // Intersectable properties
     public var id: Int
+    
     public var objectToWorld: Transform
-    public var material: Material
+    
+    public var materialName: String
     
     public let radius: Number
-    public let radiusSquared: Number
+    
+    internal let radiusSquared: Number
     
     public init(id: Int,
                 objectToWorld: Transform,
                 radius: Number,
-                material: Material) {
+                materialName: String) {
         
         self.id = id
         self.objectToWorld = objectToWorld
         self.radiusSquared = radius * radius
         self.radius = radius
-        self.material = material
+        self.materialName = materialName
     }
     
 }
 
-extension Sphere : Intersectable {
+extension Sphere : Object {
     
     public func intersect(ray: Ray) -> Collision? {
         
@@ -52,10 +55,17 @@ extension Sphere : Intersectable {
         
         // let center = objectToWorld * Vector3D(0,0,0)
         
-        let normal = norm(center - intersection)
         
-        return Collision(intersection: intersection, normal: normal, tangent: nil, bitangent: nil, depth: t0)
+        return Collision(intersection: intersection, depth: t0, object: self)
         
+    }
+    
+    public func normal(at intersection: Vector3D) -> Vector3D {
+        
+        let center = objectToWorld * Vector3D(0, 0, 0)
+        
+        return norm(center - intersection)
+
     }
     
 }

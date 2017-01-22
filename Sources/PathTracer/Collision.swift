@@ -1,16 +1,21 @@
 import Foundation
 
-public struct Collision {
+public class Collision {
 
-    // intersection is a point in world space for ray collision
     public let intersection: Vector3D
     
-    public let normal: Vector3D
-    
-    public let tangent: Vector3D?
-    
-    public let bitangent: Vector3D?
-    
     public let depth: Number
+    
+    public let object: Object
+    
+    public init( intersection: Vector3D,
+                 depth: Number,
+                 object: Object ) {
+        
+        self.intersection = intersection
+        self.depth = depth
+        self.object = object
+        
+    }
     
 }
