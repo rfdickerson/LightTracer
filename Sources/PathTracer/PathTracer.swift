@@ -1,3 +1,5 @@
+
+
 import Foundation
 import Dispatch
 
@@ -52,7 +54,7 @@ func computeDirectLighting( ray: Ray,
                         maxT: 1)
     
     for object in Scene.sharedInstance.objects {
-        if let intersect = object.intersect(ray: shadowRay) {
+        if let _ = object.intersect(ray: shadowRay) {
             inShadow = true
         }
     }
@@ -85,12 +87,12 @@ public func castRay( ray: Ray,
                      bounceDepth: Int ) -> Color {
     
     if bounceDepth > RenderSettings.sharedInstance.maxBounceDepth {
-        return RenderSettings.sharedInstance.backgroundColor
+        return Scene.sharedInstance.backgroundColor
     }
     
     // find closest object
     guard let closestCollision = findClosestCollision(ray) else {
-        return RenderSettings.sharedInstance.backgroundColor
+        return Scene.sharedInstance.backgroundColor
     }
     
     var directLighting = Vector3D(0,0,0)
@@ -104,6 +106,38 @@ public func castRay( ray: Ray,
     return directLighting
     
 }
+
+
+//func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
+//    
+//    var colorAverage = Color(0,0,0)
+//    
+//    var testVertices = [Vector3D]()
+//    testVertices.append( Vector3D(x-0.5*Number(depth), y-0.5*Number(depth), 1) )
+//    testVertices.append( Vector3D(x+0.5*Number(depth), y-0.5*Number(depth), 1) )
+//    testVertices.append( Vector3D(x-0.5*Number(depth), y+0.5*Number(depth), 1) )
+//    testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1) )
+//    testVertices.append( Vector3D(x, y, 1) )
+//    
+//    for v in testVertices {
+//        
+//        let direction = norm( rasterToWorld * v)
+//        
+//        let ray = Ray(origin: sampleOrigin,
+//                      direction: direction)
+//        
+//        let color = castRay(ray: ray,
+//                            bounceDepth: 0)
+//        
+//        colorAverage = colorAverage + color
+//        
+//    }
+//    
+//    colorAverage = (1 / Number(5)) * colorAverage
+//    
+//    return colorAverage
+//    
+//}
 
 public func hemisphere(n: Vector3D) -> Vector3D {
     

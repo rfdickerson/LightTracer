@@ -1,48 +1,51 @@
 {
     "objects": [
-        {
-            "type": "sphere", 
-            "radius": 0.3,
-            "position": {"x": 0, "y": 0, "z": 0},
-            "material": "whiteDiffuse"
-        }
-    ],
+                {
+                "type": "sphere",
+                "radius": 0.3,
+                "position": {"x": 0, "y": 0, "z": 0},
+                "material": "whiteDiffuse"
+                }
+                ],
     "lights": [
-        {
-            "type": "point",
-            "position": {"x": 0, "y": 1.0, "z": 0.3},
-            "color": {"r": 0, "g": 0, "b": 1}
-        }
-    ],
-    "camera": 
-        {
-            "type": "perspective",
-            "position": {"x": 0, "y": 1.0, "z": 0.3},
-            "target": {"x": 0, "y": 1.0, "z": 0.3},
-            "up": {"x": 0, "y": 1.0, "z": 0.0},
-            "near": 0.01,
-            "far": 100.0
-        },
+               {
+               "type": "point",
+               "position": {"x": 0, "y": 1.0, "z": 0.3},
+               "color": {"r": 1, "g": 1, "b": 1}
+               }
+               ],
+    "camera":
+    {
+        "type": "perspective",
+        "position": {"x": 0, "y": 1.0, "z": 0.3},
+        "target": {"x": 0, "y": 1.0, "z": 0.3},
+        "up": {"x": 0, "y": 1.0, "z": 0.0},
+        "near": 0.01,
+        "far": 100.0,
+        "fov": 55
+    },
     "settings":
-        { 
-            "xres": 500,
-            "yres": 400,
-            "global_illumination": false
-        },
+    {
+        "xres": 500,
+        "yres": 400,
+        "global_illumination": false
+    },
     "materials":
-        [
-            {
-                "name": "whiteDiffuse",
-                "diffuseColor": {"r": 1.0, "g": 1.0, "b": 1.0},
-                "kd": 0.7,
-                "ks": 0.0
-            },
-            {
-                "name": "redDiffuse",
-                "diffuseColor": {"r": 1.0, "g": 0.0, "b": 0.0},
-                "kd": 0.7,
-                "ks": 0.0
-            }
-        ]
-
+    [
+     {
+     "name": "whiteDiffuse",
+     "emissionColor": {"r": 0.0, "g": 0.0, "b": 0.0},
+     "diffuseColor": {"r": 1.0, "g": 1.0, "b": 1.0},
+     "kd": 0.7,
+     "ks": 0.0
+     },
+     {
+     "name": "redDiffuse",
+     "emissionColor": {"r": 0.0, "g": 0.0, "b": 0.0},
+     "diffuseColor": {"r": 1.0, "g": 0.0, "b": 0.0},
+     "kd": 0.7,
+     "ks": 0.0
+     }
+     ]
+    
 }

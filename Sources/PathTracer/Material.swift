@@ -2,6 +2,9 @@ import Foundation
 
 public struct Material {
     
+    // name
+    let name: String
+    
     /// emission color, typically if a light
     let emission: Color
     
@@ -17,12 +20,15 @@ public struct Material {
     /// specular exponent
     let n: Number
     
-    public init(emission: Color,
-                diffuseColor: Color,
-                ks: Number,
-                kd: Number,
-                n: Number) {
+    public init(
+        name: String,
+        emission: Color,
+        diffuseColor: Color,
+        ks: Number,
+        kd: Number,
+        n: Number) {
         
+        self.name = name
         self.emission = emission
         self.diffuseColor = diffuseColor
         self.ks = ks

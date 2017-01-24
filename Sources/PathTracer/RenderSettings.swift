@@ -11,7 +11,10 @@ class RenderSettings {
     var numRenderSamples: Int = 10
     
     var maxBounceDepth: Int = 1
+ 
+    var height: Int = 300
     
-    var backgroundColor = Vector3D(1.0, 1.0, 1.0)
+    var width: Int = 200
+    
     
 }
