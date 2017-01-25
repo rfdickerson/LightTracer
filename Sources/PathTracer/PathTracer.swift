@@ -3,16 +3,85 @@
 import Foundation
 import Dispatch
 
-public typealias Color = Vector3D
+
 
 let maxDepth = Number(5000)
 
-
-class PathTracer {
+public class PathTracer {
     
+    let dispatchQueue = DispatchQueue(label: "renderqueue", attributes: .concurrent)
+    
+    public init() { }
+    
+    public func render() {
+        
+        print("Rendering...")
+        
+        let height = RenderSettings.sharedInstance.height
+        let width = RenderSettings.sharedInstance.width
+        
+        let dispatchGroup = DispatchGroup()
+        
+        for j in 0...height-1 {
+            
+            dispatchQueue.async(group: dispatchGroup) {
+                
+                for i in 0...width-1 {
+                    
+                    let x = Number(i)
+                    let y = Number(j)
+                    
+                    let color = adaptiveSample(x: x, y: y, depth: 1)
+                    
+                    Scene.sharedInstance.film?.setPixel(x: i, y: j, color: color)
+                    
+                }
+                
+            }
+            
+        }
+        
+        dispatchGroup.wait()
+        
+               
+    }
     
 }
 
+func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
+    
+    var colorAverage = Color(0,0,0)
+    
+    var testVertices = [Vector3D]()
+    testVertices.append( Vector3D(x-0.5*Number(depth), y-0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x+0.5*Number(depth), y-0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x-0.5*Number(depth), y+0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1) )
+    testVertices.append( Vector3D(x, y, 1) )
+    
+    let camera = Scene.sharedInstance.camera!
+    
+    let sampleOrigin = Vector3D(0,0,0)
+    
+    for v in testVertices {
+        
+        let direction = norm(camera.rasterToWorld * v)
+        
+        let ray = Ray(origin: sampleOrigin,
+                      direction: direction)
+        
+        let color = castRay(ray: ray,
+                            bounceDepth: 0)
+        
+        colorAverage = colorAverage + color
+        
+    }
+    
+    colorAverage = 1/Number(5) * colorAverage
+    
+    return colorAverage
+    
+}
 
 func findClosestCollision(_ ray: Ray) -> Collision? {
     
@@ -22,7 +91,7 @@ func findClosestCollision(_ ray: Ray) -> Collision? {
     
     var closestCollision: Collision? = nil
     
-    for object in Scene.sharedInstance.objects {
+    Scene.sharedInstance.objects.forEach { object in
         
         if let collision = object.intersect(ray: ray) {
             
@@ -99,8 +168,8 @@ public func castRay( ray: Ray,
     
     for light in Scene.sharedInstance.lights {
         directLighting = directLighting + computeDirectLighting(ray: ray,
-                                                                   closestCollision: closestCollision,
-                                                                   light: light)
+                                                                closestCollision: closestCollision,
+                                                                light: light)
     }
     
     return directLighting
@@ -109,34 +178,34 @@ public func castRay( ray: Ray,
 
 
 //func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
-//    
+//
 //    var colorAverage = Color(0,0,0)
-//    
+//
 //    var testVertices = [Vector3D]()
 //    testVertices.append( Vector3D(x-0.5*Number(depth), y-0.5*Number(depth), 1) )
 //    testVertices.append( Vector3D(x+0.5*Number(depth), y-0.5*Number(depth), 1) )
 //    testVertices.append( Vector3D(x-0.5*Number(depth), y+0.5*Number(depth), 1) )
 //    testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1) )
 //    testVertices.append( Vector3D(x, y, 1) )
-//    
+//
 //    for v in testVertices {
-//        
+//
 //        let direction = norm( rasterToWorld * v)
-//        
+//
 //        let ray = Ray(origin: sampleOrigin,
 //                      direction: direction)
-//        
+//
 //        let color = castRay(ray: ray,
 //                            bounceDepth: 0)
-//        
+//
 //        colorAverage = colorAverage + color
-//        
+//
 //    }
-//    
+//
 //    colorAverage = (1 / Number(5)) * colorAverage
-//    
+//
 //    return colorAverage
-//    
+//
 //}
 
 public func hemisphere(n: Vector3D) -> Vector3D {

@@ -6,7 +6,9 @@ public typealias Number = Double
 public struct Vector3D {
     
     public let x: Number
+    
     public let y: Number
+    
     public let z: Number
     
     public init(_ x: Number, _ y: Number, _ z: Number) {
@@ -66,6 +68,8 @@ public func magnitude(_ v: Vector3D) -> Number {
 
 public func norm(_ v: Vector3D) -> Vector3D {
     let mag = magnitude(v)
+    
+    assert(mag > 0, "magnitude must not be zero")
     return Vector3D(v.x/mag, v.y/mag, v.z/mag)
 }
 

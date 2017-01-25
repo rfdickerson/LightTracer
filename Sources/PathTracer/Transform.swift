@@ -3,6 +3,7 @@ import Foundation
 public struct Transform {
     
     public let matrix: Matrix44
+    
     public let inverseMatrix: Matrix44
     
     public init() {

@@ -1,5 +1,7 @@
 import Foundation
 
+public typealias Color = Vector3D
+
 public struct Material {
     
     // name

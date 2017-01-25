@@ -14,6 +14,8 @@ public final class Scene {
     
     public var camera: Camera?
     
+    public var film: Film?
+    
     public var backgroundColor = Vector3D(1,1,1)
     
     var currentID = 0
@@ -98,11 +100,34 @@ public final class Scene {
             
             return Light(position: position, color: color)
             
-        } else {
-            return nil
+        }
+    
+        return nil
+        
+        
+    }
+    
+    func parseFilm(_ json: [String: AnyObject]) -> Film? {
+        
+        if let height = json["height"] as? Int,
+            let width = json["width"] as? Int,
+            let filename = json["filename"] as? String {
+                return Film(width: width, height: height, filename: filename)
+            
+        }
+        
+        return nil
+        
+    }
+    
+    func parseRenderSettings(_ json: [String: AnyObject]) {
+     
+        if let globalIllumination = json["enable_gi"] as? Bool {
+            RenderSettings.sharedInstance.useGlobalIllumination = globalIllumination
         }
         
     }
+
     
     func parseCamera(_ json: [String: AnyObject]) -> Camera? {
         
@@ -125,7 +150,6 @@ public final class Scene {
         } else {
             return nil
         }
-        
         
     }
     
@@ -155,8 +179,18 @@ public final class Scene {
             
             self.camera = camera
             
+            print("Loaded Camera: \(camera)")
+            
         } else {
             print("Could not create a Camera")
+        }
+        
+        if let renderSettingsJSON = json["render_settings"] as? [String: AnyObject] {
+            parseRenderSettings(renderSettingsJSON)
+        }
+        
+        if let filmJSON = json["film"] as? [String: AnyObject] {
+            self.film = parseFilm(filmJSON)
         }
         
         

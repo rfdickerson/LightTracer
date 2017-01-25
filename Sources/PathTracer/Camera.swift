@@ -22,6 +22,8 @@ public struct Camera {
     
     public let perspective: Transform
     
+    public let cameraToWorld: Transform
+    
     public init(position: Vector3D,
                 target: Vector3D,
                 up: Vector3D,
@@ -49,6 +51,8 @@ public struct Camera {
             fov: fov,
             aspect: aspectRatio
         )
+        
+        self.cameraToWorld = lookAt * perspective
         
         
     }
