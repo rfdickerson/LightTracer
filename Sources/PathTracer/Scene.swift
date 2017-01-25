@@ -189,8 +189,11 @@ public final class Scene {
             parseRenderSettings(renderSettingsJSON)
         }
         
-        if let filmJSON = json["film"] as? [String: AnyObject] {
-            self.film = parseFilm(filmJSON)
+        if let filmJSON = json["film"] as? [String: AnyObject],
+            let film = parseFilm(filmJSON) {
+            self.film = film
+        } else {
+            print("Could not read film")
         }
         
         

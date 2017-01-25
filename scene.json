@@ -30,8 +30,8 @@
     },
     "film":
     {
-        "xres": 500,
-        "yres": 400,
+        "width": 300,
+        "height": 200,
         "filename": "image.png"
     },
     "materials":

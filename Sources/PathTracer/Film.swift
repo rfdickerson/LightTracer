@@ -28,13 +28,8 @@ public struct Film {
             * Transform.scale(withVector: Vector3D(1, 1/aspectRatio, 1))
             * Transform.translate(delta: Vector3D(-Number(width)/2, -Number(height)/2, 0.0))
         
-        bitmap = Bitmap(repeating: [Pixel](), count: height)
-        
-        for _ in 0...height {
-            let row: [Pixel] = [Pixel](repeating: Pixel.srgb(0, 0, 0), count: width)
-            bitmap.append(row)
-            
-        }
+        bitmap = Bitmap(repeating: [Pixel](repeating: Pixel.srgb(0, 0, 0), count: width), count: height)
+    
         
     }
     

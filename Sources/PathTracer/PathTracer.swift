@@ -3,8 +3,6 @@
 import Foundation
 import Dispatch
 
-
-
 let maxDepth = Number(5000)
 
 public class PathTracer {
@@ -17,8 +15,11 @@ public class PathTracer {
         
         print("Rendering...")
         
-        let height = RenderSettings.sharedInstance.height
-        let width = RenderSettings.sharedInstance.width
+        guard let height = Scene.sharedInstance.film?.height,
+            let width = Scene.sharedInstance.film?.width else {
+                print("No film was set")
+                return
+        }
         
         let dispatchGroup = DispatchGroup()
         
@@ -43,7 +44,7 @@ public class PathTracer {
         
         dispatchGroup.wait()
         
-               
+        Scene.sharedInstance.film?.write()
     }
     
 }
@@ -59,13 +60,19 @@ func adaptiveSample(x: Number, y: Number, depth: Int) -> Color {
     testVertices.append( Vector3D(x+0.5*Number(depth), y+0.5*Number(depth), 1) )
     testVertices.append( Vector3D(x, y, 1) )
     
-    let camera = Scene.sharedInstance.camera!
+    guard let camera = Scene.sharedInstance.camera,
+        let film = Scene.sharedInstance.film else {
+            assertionFailure("Film or camera not set")
+            return Color(0,0,0)
+    }
     
     let sampleOrigin = Vector3D(0,0,0)
     
+    let rasterToWorld = film.screenToRaster.inverse * camera.cameraToWorld
+    
     for v in testVertices {
         
-        let direction = norm(camera.rasterToWorld * v)
+        let direction = norm(rasterToWorld * v)
         
         let ray = Ray(origin: sampleOrigin,
                       direction: direction)
